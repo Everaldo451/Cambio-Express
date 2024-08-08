@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from time import timezone
+from django.utils import timezone
 
 class UserManager(BaseUserManager):
 	
@@ -26,20 +26,19 @@ class UserManager(BaseUserManager):
 
 
 
-
 class User(AbstractBaseUser):
 	
 	username = models.CharField(max_length=100,unique=True,null=False)
 	email = models.EmailField(max_length=254,unique=True,null=False)
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
-	date_joined = models.DateTimeField(default=timezone.now)
+	date_joined = models.DateTimeField(default=timezone.now())
 	
 	
 	USERNAME_FIELD = 'email'
 	EMAIL_FIELD = 'email'
 	
-	REQUIRED_FIELDS = ["username","password","email"]
+	REQUIRED_FIELDS = ["username","password"]
 
 	objects = UserManager()
 
