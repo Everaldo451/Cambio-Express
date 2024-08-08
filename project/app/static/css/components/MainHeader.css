@@ -1,0 +1,33 @@
+body > header * {
+  font-family: "Lucida Console Monaco"
+}
+
+body > header > nav > ul {
+  margin: 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background-color: darkslategray
+}
+
+body > header > nav > ul li a{
+  display: block;
+  color: aquamarine;
+  text-decoration: none
+}
+
+body > header > nav > ul > li a {
+  padding: 10px
+}
+
+body > header > nav > ul > li:last-child{
+  margin-left: auto
+}
+
+body > header > nav > ul > li.img img{
+  height: 30px;
+}
+body > header > nav > ul > li.img a {
+  padding: 0
+}

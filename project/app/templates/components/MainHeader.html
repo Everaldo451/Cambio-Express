@@ -1,0 +1,13 @@
+{% load static %}
+<header>
+  <nav>
+    <ul>
+      <li class="img">
+        <a href="{% url 'home' %}">
+          <img src="{% static 'images/arvores.png'%}">
+        </a>
+      </li>
+      <li><a href="{% url 'loginview' %}">Login</a></li>
+    </ul>
+  </nav>
+</header>

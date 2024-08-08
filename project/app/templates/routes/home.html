@@ -1,0 +1,24 @@
+{% extends "routes/index.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block templaterows %}auto 1fr auto{% endblock %}
+
+{% block stylesheet %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/components/MainHeader.css' %}">
+<link rel="stylesheet" href="{% static 'css/components/MainFooter.css' %}">
+{% endblock %}
+
+{% block content %}
+
+{% include "components/MainHeader.html" %}
+
+<main>
+  
+</main>
+
+{% include "components/MainFooter.html" %}
+
+{% endblock %}
+
