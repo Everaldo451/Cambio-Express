@@ -1,61 +1,69 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.http import HttpRequest, HttpResponse
-from .models import UserManager
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
+from .models import User
 from .serializers import UserSerializer
 from .form import LoginForm, RegisterForm
+from django.utils import timezone
+from datetime import datetime
 
 serializer = UserSerializer()
-manager = UserManager()
 request = HttpRequest()
 
-@api_view(["POST"])
 def login(request):
 
-	form = LoginForm(request.POST)
+	if request.method == "POST":
 
-	if form.is_valid():
+		form = LoginForm(request.POST)
 
-		user = authenticate(request,username = form.email,password = form.password)
+		if form.is_valid():
 
-		if user:
-			serializer = UserSerializer(user)
-			response = HttpResponse(redirect("home",user=serializer))
-			response.set_cookie("access",serializer)
-			return response
-		else:
-			messages.error(request,"No user")
-			return redirect(request.get_full_path())
+			user = authenticate(request,username = form.cleaned_data.get("email"),password = form.cleaned_data.get("password"))
+
+			if user:
+
+				response = redirect("/")
+				serializer = UserSerializer(user)
+				refresh = RefreshToken()
+				refresh.payload = {"id":serializer.data.get("id")}
+				response.set_cookie("access",refresh.access_token,httponly=True,expires=timezone.now()+refresh.lifetime)
+				response.set_cookie("refresh",refresh,httponly=True,expires=timezone.now()+refresh.access_token.lifetime)
+				return response
+			
+			else:
+				messages.error(request,"No user")
+				return redirect("/login")
 	
-	else: return redirect(request.get_full_path())
+		else: return redirect("/login")
+	
+	else: return HttpResponseBadRequest("Method not allowed")
 	
 
 	
 
-@api_view(["POST"])
+
 def register(request):
 
 	form = RegisterForm(request.POST)
 
 	if form.is_valid():
 
-		user = authenticate(request,username = form.email ,password = form.password)
+		user = authenticate(request,username = form.cleaned_data.get("email") ,password = form.cleaned_data.get("password"))
 
 		if user:
 
 			messages.error(request,"Usuario ja existe")
-			return redirect(request.get_full_path())
+			return redirect("/login")
 	
 		else:
 
-			nuser = manager.create_user(form.email,form.username,form.password)
+			nuser = User.objects.create_user(form.cleaned_data.get("email"),form.cleaned_data.get("username"),form.cleaned_data.get("password"))
 			serializer = UserSerializer(nuser)
-			response = HttpResponse(redirect("home",user=serializer))
-			response.set_cookie("access",serializer)
+			response = HttpResponse(redirect("/",user=serializer.data))
+			response.set_cookie("access",serializer.data)
 			
 			return response
 	
-	else: return redirect(request.get_full_path())
+	else: return redirect("/login")

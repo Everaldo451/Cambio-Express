@@ -7,7 +7,17 @@
           <img src="{% static 'images/arvores.png'%}">
         </a>
       </li>
-      <li><a href="{% url 'loginview' %}">Login</a></li>
+      <li>
+        {%if current_user%}
+          <section>
+            <div></div>
+            <div></div>
+            <div></div>
+          </section>
+        {%else%}
+          <a href="{% url 'loginview' %}">Login</a>
+        {%endif%}
+      </li>
     </ul>
   </nav>
 </header>

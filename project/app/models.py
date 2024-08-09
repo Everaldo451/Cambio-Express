@@ -9,6 +9,8 @@ class UserManager(BaseUserManager):
 		now = timezone.now()
 		email = self.normalize_email(email)
 
+		print(email)
+
 		user = self.model(username=username, email=email, is_staff=is_staff, is_superuser=is_superuser, last_login=now, date_joined=now)
 		user.set_password(password)
 		user.save(using=self._db)
@@ -32,6 +34,7 @@ class User(AbstractBaseUser):
 	email = models.EmailField(max_length=254,unique=True,null=False)
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
+	is_superuser = models.BooleanField(default=False)
 	date_joined = models.DateTimeField(default=timezone.now())
 	
 	

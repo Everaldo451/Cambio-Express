@@ -8,6 +8,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/components/MainHeader.css' %}">
 <link rel="stylesheet" href="{% static 'css/components/MainFooter.css' %}">
+<link rel="stylesheet" href="{% static 'css/routes/home.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -15,6 +16,13 @@
 {% include "components/MainHeader.html" %}
 
 <main>
+
+    <section class="introduction">
+        <h1>CO<sub>2</sub> Exchange</h1>
+        <p>Bem vindo{%if current_user%}, <span>{{current_user.username}}</span>,{%endif%} à maior vendedora de créditos de carbono do país</p>
+    </section>
+    <section class="content">
+    </section>
   
 </main>
 

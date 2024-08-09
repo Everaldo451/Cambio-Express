@@ -31,3 +31,16 @@ body > header > nav > ul > li.img img{
 body > header > nav > ul > li.img a {
   padding: 0
 }
+
+body > header > nav section {
+  display: grid;
+  grid-template-rows: repeat(3,1fr);
+  gap: 5px;
+  width: 40px;
+  height: 20px;
+}
+
+body > header > nav section > * {
+  background-color: white;
+}
+

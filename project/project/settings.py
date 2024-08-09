@@ -33,6 +33,7 @@ AUTH_USER_MODEL = 'app.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework_simplejwt',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'app.middlewares.refresh_verify'
 ]
 
 ROOT_URLCONF = 'project.urls'
