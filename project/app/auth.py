@@ -1,13 +1,13 @@
-from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
+from django.http import HttpRequest, HttpResponseBadRequest
 from .models import User
 from .serializers import UserSerializer
 from .form import LoginForm, RegisterForm
-from django.utils import timezone
-from datetime import datetime
+
+
 
 serializer = UserSerializer()
 request = HttpRequest()
@@ -20,16 +20,18 @@ def login(request):
 
 		if form.is_valid():
 
-			user = authenticate(request,username = form.cleaned_data.get("email"),password = form.cleaned_data.get("password"))
+			user = authenticate(
+				request,
+				username = form.cleaned_data.get("email"),
+				password = form.cleaned_data.get("password")
+				)
 
-			if user:
+			if user is not None:
 
 				response = redirect("/")
-				serializer = UserSerializer(user)
-				refresh = RefreshToken()
-				refresh.payload = {"id":serializer.data.get("id")}
-				response.set_cookie("access",refresh.access_token,httponly=True,expires=timezone.now()+refresh.lifetime)
-				response.set_cookie("refresh",refresh,httponly=True,expires=timezone.now()+refresh.access_token.lifetime)
+				refresh = RefreshToken.for_user(user)
+				response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.lifetime)
+				response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.access_token.lifetime)
 				return response
 			
 			else:
@@ -46,24 +48,39 @@ def login(request):
 
 def register(request):
 
-	form = RegisterForm(request.POST)
+	if request.method == "POST":
 
-	if form.is_valid():
+		form = RegisterForm(request.POST)
 
-		user = authenticate(request,username = form.cleaned_data.get("email") ,password = form.cleaned_data.get("password"))
+		if form.is_valid():
 
-		if user:
+			user = authenticate(
+				request,
+				username = form.cleaned_data.get("email") ,
+				password = form.cleaned_data.get("password")
+				)
 
-			messages.error(request,"Usuario ja existe")
-			return redirect("/login")
+			if user:
+
+				messages.error(request,"Usuario ja existe")
+				return redirect("/login")
 	
-		else:
+			else:
 
-			nuser = User.objects.create_user(form.cleaned_data.get("email"),form.cleaned_data.get("username"),form.cleaned_data.get("password"))
-			serializer = UserSerializer(nuser)
-			response = HttpResponse(redirect("/",user=serializer.data))
-			response.set_cookie("access",serializer.data)
+				try:
+
+					nuser = User.objects.create_user(form.cleaned_data.get("email"),form.cleaned_data.get("username"),form.cleaned_data.get("password"))
+					refresh = RefreshToken.for_user(nuser)
+
+					response = redirect("/")
+					
+					response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.lifetime)
+					response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.access_token.lifetime)
 			
-			return response
+					return response
+				
+				except: return redirect("/")
 	
-	else: return redirect("/login")
+		else: return redirect("/login")
+
+	else: return redirect('/')

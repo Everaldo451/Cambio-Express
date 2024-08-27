@@ -29,6 +29,10 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'app.User'
 
+SIMPLE_JWT = {
+    "USER_ID_CLAIM":"id"
+}
+
 
 # Application definition
 

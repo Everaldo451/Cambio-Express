@@ -1,4 +1,4 @@
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils import timezone
 
 def refresh_verify(get_response):
@@ -12,7 +12,7 @@ def refresh_verify(get_response):
                 refresh = RefreshToken(request.COOKIES.get("refresh"))
 
                 response = get_response(request)
-                response.set_cookie("access",refresh.access_token,httponly=True,expires=timezone.now()+refresh.access_token.lifetime)
+                response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.access_token.lifetime)
 
                 return response
                
