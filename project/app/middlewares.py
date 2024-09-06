@@ -6,7 +6,7 @@ def refresh_verify(get_response):
     def middleware(request):
 
         if not request.COOKIES.get("access") and request.COOKIES.get("refresh"):
-               
+
                try:
                 print(timezone.now())
                 refresh = RefreshToken(request.COOKIES.get("refresh"))

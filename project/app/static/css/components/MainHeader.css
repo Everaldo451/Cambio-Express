@@ -32,15 +32,46 @@ body > header > nav > ul > li.img a {
   padding: 0
 }
 
-body > header > nav section {
+body > header nav section {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-left: auto;
+  align-self: stretch;
+}
+
+
+body > header > nav section > ul {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  padding: 0;
+  right: 0;
+  top: 100%;
+  list-style: none;
+  background-color: black;
+}
+
+body > header > nav section > ul li a {
+  padding: 10px;
+  text-align: center;
+  color: white;
+}
+
+body > header > nav section > div {
   display: grid;
   grid-template-rows: repeat(3,1fr);
-  gap: 5px;
+  gap: 3px;
   width: 40px;
   height: 20px;
 }
 
-body > header > nav section > * {
+
+body > header > nav section:hover > ul{
+  display: flex;
+}
+
+body > header > nav section > div > * {
   background-color: white;
 }
 

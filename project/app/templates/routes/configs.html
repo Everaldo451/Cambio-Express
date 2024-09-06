@@ -1,0 +1,48 @@
+{% extends "routes/index.html" %}
+
+{% block title %}Configurations{% endblock %}
+
+{% block templaterows %}auto 1fr auto{% endblock %}
+
+
+{% block stylesheet %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/components/MainHeader.css' %}">
+<link rel="stylesheet" href="{% static 'css/components/MainFooter.css'%}">
+<link rel="stylesheet" href="{% static 'css/routes/configs.css'%}">
+{% endblock %}
+
+
+{% block content %}
+{% include "components/MainHeader.html" %}
+<main>
+    {% if current_user %}
+        <section class="configs">
+            <form method="POST">
+                <div>
+                    <label for="email">Email: </label>
+                    <input type="email"  id="email" name="email" readonly value="{{current_user.email}}"/>
+                    <button>Change</button>
+                </div>
+
+                <div>
+                    <label for="username">Username: </label>
+                    <input type="text" id="username" name="username" readonly value="{{current_user.username}}"/>
+                    <button>Change</button>
+                </div>
+
+                <div>
+                    <label for="password">Password: </label>
+                    <input type="password" id="password" name="password" readonly valuer="{{current_user.password}}"/>
+                    <button>Change</button>
+                </div>
+                {% csrf_token %}
+                <input type="submit" value="Submit"/>
+            </form>
+        </section>
+    {% else %}
+    {% endif %}
+</main>
+{% include "components/MainFooter.html" %}
+<script src="{% static 'js/configbutton.js'%}"></script>
+{% endblock %}

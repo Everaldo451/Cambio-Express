@@ -30,8 +30,8 @@ def login(request):
 
 				response = redirect("/")
 				refresh = RefreshToken.for_user(user)
-				response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.lifetime)
-				response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.access_token.lifetime)
+				response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.access_token.lifetime)
+				response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.lifetime)
 				return response
 			
 			else:
@@ -84,3 +84,14 @@ def register(request):
 		else: return redirect("/login")
 
 	else: return redirect('/')
+
+
+def logout(request):
+
+	response = redirect("/")
+	response.delete_cookie("access")
+	response.delete_cookie("refresh")
+
+	return response
+	
+	
