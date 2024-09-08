@@ -3,10 +3,10 @@ from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.http import HttpRequest, HttpResponseBadRequest
+from django.db import IntegrityError
 from .models import User
 from .serializers import UserSerializer
 from .form import LoginForm, RegisterForm
-
 
 
 serializer = UserSerializer()
@@ -26,7 +26,7 @@ def login(request):
 				password = form.cleaned_data.get("password")
 				)
 
-			if user is not None:
+			if user is not None and user.is_active:
 
 				response = redirect("/")
 				refresh = RefreshToken.for_user(user)
@@ -54,32 +54,27 @@ def register(request):
 
 		if form.is_valid():
 
-			user = authenticate(
-				request,
-				username = form.cleaned_data.get("email") ,
-				password = form.cleaned_data.get("password")
-				)
+			try:
 
-			if user:
+				nuser = User.objects.create_user(form.cleaned_data.get("email"),form.cleaned_data.get("username"),form.cleaned_data.get("password"))
+				refresh = RefreshToken.for_user(nuser)
 
-				messages.error(request,"Usuario ja existe")
-				return redirect("/login")
-	
-			else:
-
-				try:
-
-					nuser = User.objects.create_user(form.cleaned_data.get("email"),form.cleaned_data.get("username"),form.cleaned_data.get("password"))
-					refresh = RefreshToken.for_user(nuser)
-
-					response = redirect("/")
+				response = redirect("/")
 					
-					response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.lifetime)
-					response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.access_token.lifetime)
+				response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.lifetime)
+				response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.access_token.lifetime)
 			
-					return response
+				return response
 				
-				except: return redirect("/")
+			except IntegrityError as e:
+				error = str(e)
+				if error.startswith("UNIQUE"):
+					if error.find('app.email'):
+						messages.error(request,"email já existente")
+					elif error.find('app.username'):
+						messages.error(request,"username já existente")
+				
+				return redirect("/login")
 	
 		else: return redirect("/login")
 

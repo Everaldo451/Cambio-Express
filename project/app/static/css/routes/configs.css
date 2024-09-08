@@ -4,6 +4,9 @@ main{
 }
 
 main > section {
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
     width: 80%;
 }
 
@@ -33,4 +36,8 @@ main > section form > div > input.write {
 
 main > section form > div > button{
     margin-left: auto;
+}
+
+main > section form > input[type="submit"] {
+    align-self: flex-start;
 }
