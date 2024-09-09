@@ -2,7 +2,7 @@ body > footer{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: darkslategray;
+  background-color: black;
   padding: 10px
 }
 
