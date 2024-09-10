@@ -1,5 +1,5 @@
 from django.urls import path, include
-from . import views, auth
+from . import views, auth, graphs
 
 urlpatterns = [
    path("auth/",include([
@@ -11,5 +11,8 @@ urlpatterns = [
        path("",views.home,name="home"),
        path("login/",views.login,name="loginview"),
        path("configs/",views.configs,name="configurations")
+   ])),
+   path("graphs/",include([
+       path("get/<coin>",graphs.get)
    ]))
 ]

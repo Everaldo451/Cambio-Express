@@ -18,20 +18,22 @@
 <main>
 
     <section class="introduction">
-        <div class="">
-            <h1>CO<sub>2</sub> Exchange</h1>
-            <p>Bem vindo{%if current_user%}, <span>{{current_user.username}}</span>,{%endif%} à maior gestora de créditos de carbono do país</p>
+        <div>
+            <h1>Câmbio Express</h1>
+            <p>Bem vindo{%if current_user%}, <span>{{current_user.username}}</span>,{%endif%} à maior agência de câmbio do país</p>
+        </div>
+        <div class="imgcontainer">
+            <img src=""/>
         </div>
     </section>
     <section class="content">
         <section class="information">
-            
         </section>
     </section>
   
 </main>
 
 {% include "components/MainFooter.html" %}
-
+<script src="{% static 'js/apiconsume.js'%}"></script>
 {% endblock %}
 
