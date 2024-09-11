@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from requests import request as rq
+import matplotlib
 from matplotlib import pyplot as plt
 import numpy as np
 import io
 import base64
+from datetime import datetime
 
+matplotlib.use("Agg")
 
 def get(request,coin):
 
@@ -22,34 +25,43 @@ def get(request,coin):
         lows = []
         highs = []
 
+        xpoints = []
+
         for dt in data:
+            timestamp = int(dt.get("timestamp"))
+            time = datetime.fromtimestamp(timestamp)
+            timestr = time.strftime("%d/%m")
+            xpoints.append(timestr)
             lows.append(float(dt.get("low")))
             highs.append(float(dt.get("high")))
 
-        xpoints= np.array(list(range(1,days+1)))
+        xpoints= np.array(xpoints)
 
-        plt.plot(xpoints,np.array(lows), marker = "o")
-        plt.plot(xpoints,np.array(highs), marker = "o")
+        fig, ax = plt.subplots()
 
-        plt.xlabel("Last 7 days")
-        plt.ylabel(f"{code}/{codein}")
+        ax.plot(xpoints,np.array(lows), marker = "o", color="orange", label="Low Values")
+        ax.plot(xpoints,np.array(highs), marker = "o", color="green", label="High Values")
+
+        
+        ax.set_ylabel(f"{code}/{codein}")
+        ax.set_title(f"Last 7 days {coin}/{codein}")
+        ax.grid()
+        ax.legend()
 
         buffer = io.BytesIO()
 
-        plt.savefig(buffer, format="png")
-        plt.close()
+        plt.savefig(buffer, format="svg")
 
         buffer.seek(0)
 
         img = base64.b64encode(buffer.getvalue()).decode("utf-8")
 
+        plt.close(fig)
+
         buffer.close()
 
-
-        return JsonResponse({"image":f'data:image/png;base64,{img}'})
+        return JsonResponse({"image":f'data:image/svg+xml;base64,{img}'})
 
     except: pass
 
-
-	
     return render(request, 'routes/home.html')

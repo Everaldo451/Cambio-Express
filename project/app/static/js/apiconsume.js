@@ -1,27 +1,33 @@
 const main = document.querySelector("main")
 const content = main.querySelector(".introduction")
-const information = content?.querySelector(".imgcontainer")
-const img = information?.querySelector("img")
+const container = content?.querySelector(".imgcontainer")
+const img = container?.querySelector("img")
 
+const buttons = container?.querySelectorAll("button")
 
-async function fetchData() {
-    const protocol = window.location.protocol
-    const host = window.location.host
-    console.log(host,protocol)
+async function fetchData(coin) {
 
     try {
-        const response = await fetch(`/graphs/get/USD`)
-
+        const response = await fetch(`/graphs/get/${coin}`)
         const data = await response.json()
-        
-        console.log(data)
 
         if (img) {
             img.src = data.image
         }
+
+        return
     }
     catch (error) {}
 }
 
+fetchData("USD")
 
-console.log(fetchData())
+if (buttons) {
+    for (const button of buttons) {
+        const input = button.querySelector("input")
+        button.addEventListener("click",(e) => {
+            e.preventDefault()
+            fetchData(input.value)
+        })
+    }
+}
