@@ -1,7 +1,12 @@
+main {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
 main section.introduction{
     display: grid;
     grid-template-columns: repeat(2,1fr);
     color: black;
+    background-color: white;
     padding: 40px 20px;
     height: 100%;
 }

@@ -1,5 +1,5 @@
 body > header * {
-  font-family: "Lucida Console Monaco"
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
 body > header > nav > ul {
@@ -11,7 +11,7 @@ body > header > nav > ul {
   background-color: transparent
 }
 
-body > header > nav > ul li a{
+body > header > nav > ul > li a{
   position: relative;
   display: block;
   color: black;
@@ -28,7 +28,7 @@ body > header > nav > ul > li:nth-child(n+2) a::after{
   left: 50%;
   bottom: 0;
   height: 2px;
-  background-color: rgba(255, 140, 0, 0.774);
+  background-color: rgb(202, 132, 2);
   width: 0;
   transition: all 0.5s;
 }
