@@ -79,11 +79,11 @@ main section.feedbacks > div.feedback > div.person {
     display: flex;
 }
 
-main section.feedbacks > div.feedback > div.person > div.starscontainer {
+main section.feedbacks > div.feedback > div.person > div.stars {
     margin-left: auto;
 }
 
-main section.feedbacks > div.feedback > div.person > div.starscontainer img {
+main section.feedbacks > div.feedback > div.person > div.stars img {
     width: 20px;
 }
 

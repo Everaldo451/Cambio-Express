@@ -73,7 +73,9 @@
             <div class="person">
                 <img src=""/>
                 <p class="name"></p>
-                <div class="starscontainer">
+                <div class="stars">
+                    <input type="hidden" value="{% static 'images/selectedstar.png'%}"/>
+                    <input class="" type="hidden" value="0"/>
                     <img src="{% static 'images/star.png' %}"/>
                     <img src="{% static 'images/star.png' %}"/>
                     <img src="{% static 'images/star.png' %}"/>
@@ -91,6 +93,6 @@
 </main>
 
 {% include "components/MainFooter.html" %}
-<script src="{% static 'js/apiconsume.js'%}"></script>
+<script src="{% static 'js/home.js'%}"></script>
 {% endblock %}
 
