@@ -10,13 +10,11 @@
   <style>
      body{
         display: grid;
-        min-height: 100%;
+        min-height: 100vh;
         grid-template-rows: {% block templaterows %}{% endblock %};
         padding: 0;
         margin: 0
      }
-  
-     html{height: 100%}
   </style>
   {% block stylesheet %}{% endblock %}
 </head>

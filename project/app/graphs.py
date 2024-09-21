@@ -50,7 +50,7 @@ def get(request,coin):
 
         buffer = io.BytesIO()
 
-        plt.savefig(buffer, format="svg")
+        plt.savefig(buffer, format="png")
 
         buffer.seek(0)
 
@@ -60,7 +60,7 @@ def get(request,coin):
 
         buffer.close()
 
-        return JsonResponse({"image":f'data:image/svg+xml;base64,{img}'})
+        return JsonResponse({"image":f'data:image/png;base64,{img}'})
 
     except: pass
 

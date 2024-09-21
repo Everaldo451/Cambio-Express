@@ -2,13 +2,15 @@ main {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
+main > section {
+    padding: 40px 20px;
+}
+
 main section.introduction{
     display: grid;
     grid-template-columns: repeat(2,1fr);
     color: black;
     background-color: white;
-    padding: 40px 20px;
-    height: 100%;
 }
 
 main section.introduction * {
@@ -56,6 +58,33 @@ main section.introduction > .imgcontainer > section button:hover {
 main section.introduction p{
     font-size: 15px;
     margin-top: 10px;
+}
+
+main section.feedbacks {
+    background-color: lightgray;
+}
+
+main section.feedbacks > h2 {
+    text-align: center;
+    text-transform: uppercase;
+}
+
+main section.feedbacks > div.feedback {
+    border-radius: 20px;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+main section.feedbacks > div.feedback > div.person {
+    display: flex;
+}
+
+main section.feedbacks > div.feedback > div.person > div.starscontainer {
+    margin-left: auto;
+}
+
+main section.feedbacks > div.feedback > div.person > div.starscontainer img {
+    width: 20px;
 }
 
 main{

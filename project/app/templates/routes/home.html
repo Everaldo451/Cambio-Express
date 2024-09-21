@@ -12,11 +12,10 @@
 {% endblock %}
 
 {% block content %}
-
+{%  load static %}
 {% include "components/MainHeader.html" %}
 
 <main>
-
     <section class="introduction">
         <div>
             <h1>Câmbio Express</h1>
@@ -66,11 +65,29 @@
             </section>
         </div>
     </section>
-    <section class="content">
-        <section class="information">
-        </section>
+    <section class="feedbacks">
+
+        <h2>FeedBacks</h2>
+        <div class="feedback">
+
+            <div class="person">
+                <img src=""/>
+                <p class="name"></p>
+                <div class="starscontainer">
+                    <img src="{% static 'images/star.png' %}"/>
+                    <img src="{% static 'images/star.png' %}"/>
+                    <img src="{% static 'images/star.png' %}"/>
+                    <img src="{% static 'images/star.png' %}"/>
+                    <img src="{% static 'images/star.png' %}"/>
+                </div>
+            </div>
+            <div class="avaliation">
+
+            </div>
+
+        </div>
+
     </section>
-  
 </main>
 
 {% include "components/MainFooter.html" %}
