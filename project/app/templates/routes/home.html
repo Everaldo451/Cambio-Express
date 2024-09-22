@@ -68,14 +68,36 @@
     <section class="feedbacks">
 
         <h2>FeedBacks</h2>
+        {%if current_user%}
+            <div class="feedback">
+
+                <div class="person">
+                    <img src=""/>
+                    <p class="name">{{current_user.username}}</p>
+                    <div class="stars">
+                        <input type="hidden" value="{% static 'images/selectedstar.png'%}"/>
+                        <input class="total" type="hidden" value="0"/>
+                        <img src="{% static 'images/star.png' %}"/>
+                        <img src="{% static 'images/star.png' %}"/>
+                        <img src="{% static 'images/star.png' %}"/>
+                        <img src="{% static 'images/star.png' %}"/>
+                        <img src="{% static 'images/star.png' %}"/>
+                    </div>
+                </div>
+                <div class="avaliation">
+
+                </div>
+
+            </div>
+        {%endif%}
         <div class="feedback">
 
             <div class="person">
-                <img src=""/>
+                <img src="{% static 'images/avatar.png' %}%}"/>
                 <p class="name"></p>
                 <div class="stars">
                     <input type="hidden" value="{% static 'images/selectedstar.png'%}"/>
-                    <input class="" type="hidden" value="0"/>
+                    <input class="total" type="hidden" value="0"/>
                     <img src="{% static 'images/star.png' %}"/>
                     <img src="{% static 'images/star.png' %}"/>
                     <img src="{% static 'images/star.png' %}"/>
