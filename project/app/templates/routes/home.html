@@ -68,6 +68,10 @@
     <section class="feedbacks">
 
         <h2>FeedBacks</h2>
+        <input type="hidden" class="enterimg" value="{% static 'images/star.png' %}"/>
+        <input type="hidden" class="leaveimg" value="{% static 'images/selectedstar.png'%}"/>
+        <input type="hidden" class="noneuser" value="{% static 'images/avatar.png' %}"/>
+        <!--
         {%if current_user%}
             <div class="feedback">
 
@@ -93,7 +97,7 @@
         <div class="feedback">
 
             <div class="person">
-                <img src="{% static 'images/avatar.png' %}%}"/>
+                <img src="{% static 'images/avatar.png' %}"/>
                 <p class="name"></p>
                 <div class="stars">
                     <input type="hidden" value="{% static 'images/selectedstar.png'%}"/>
@@ -110,7 +114,7 @@
             </div>
 
         </div>
-
+        -->
     </section>
 </main>
 

@@ -34,6 +34,17 @@ if (buttons) {
     }
 }
 
+class Star {
+    constructor(imgsrc) {
+
+        const img = document.createElement("img")
+
+        img.src = imgsrc
+
+        return img
+    }
+}
+
 class StarCounter {
 
     #starsarray
@@ -86,7 +97,67 @@ class StarCounter {
 
 }
 
+class Feedback {
+
+    constructor(parentElement, readOnly, enterImg, leaveImg, noneUserImg) {
+
+        if (parentElement instanceof HTMLElement && parentElement.classList.contains("feedbacks")) {
+
+            //USER AVALIATION
+            const feedback = document.createElement("div")
+            feedback.classList.add(["feedback"])
+            parentElement.appendChild(feedback)
+
+            const person = document.createElement("div")
+            person.classList.add(["person"])
+            feedback.appendChild(person)
+
+            const userimg = document.createElement("img")
+            userimg.src = noneUserImg
+            person.appendChild(userimg)
+
+            const username = document.createElement("p")
+            username.innerHTML = "None"
+            person.appendChild(username)
+
+            const divstars = document.createElement("div")
+            divstars.classList.add(["stars"])
+            person.appendChild(divstars)
+
+            for (let i = 1; i<=5; i++) {
+                const star = document.createElement("img")
+
+                star.src = enterImg
+                divstars.appendChild(star)
+            }
+            const stars = divstars.querySelectorAll("img")
+
+            new StarCounter(stars, leaveImg, readOnly, readOnly?0:null)
+
+            //USER COMMENT
+            const avaliation = document.createElement("div")
+            avaliation.classList.add(["avaliation"])
+            feedback.appendChild(avaliation)
+        }
+    }
+}
+
+
 const feedbacks = main.querySelector("section.feedbacks")
+if (feedbacks) {
+
+    const enterimg = feedbacks.querySelector("input.enterimg")
+    const leaveimg = feedbacks.querySelector("input.leaveimg")
+    const noneUserImg = feedbacks.querySelector("input.noneuser")
+
+    console.log(enterimg,leaveimg)
+
+    if (enterimg instanceof HTMLInputElement && leaveimg instanceof HTMLInputElement && noneUserImg instanceof HTMLInputElement) {
+        console.log(feedbacks)
+        new Feedback(feedbacks, false, enterimg.value, leaveimg.value, noneUserImg.value)
+    }
+}
+/*
 const feedbackList = feedbacks.querySelectorAll("div.feedback")
 
 if (feedbackList) {
@@ -99,4 +170,4 @@ if (feedbackList) {
 
         if (imginput) {new StarCounter(stars,imginput.value,false)}
     }
-}
+}*/

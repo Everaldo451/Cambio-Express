@@ -77,6 +77,12 @@ main section.feedbacks > div.feedback {
 
 main section.feedbacks > div.feedback > div.person {
     display: flex;
+    align-items: center;
+}
+
+main section.feedbacks > div.feedback > div.person > img {
+    width: 30px;
+    height: 30px;
 }
 
 main section.feedbacks > div.feedback > div.person > div.stars {
