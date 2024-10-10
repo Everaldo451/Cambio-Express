@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { UserContext } from "../../main";
 import { ReactNode, useContext, useState, useEffect, SetStateAction } from "react";
 import StarImage from "../FeedBacks/assets/star.png"
+import SelectedStarImage from "../FeedBacks/assets/selectedstar.png"
 import Avatar from "../FeedBacks/assets/avatar.png"
 
 const FeedBackSection = styled.section`
@@ -49,12 +50,13 @@ export interface FeedBack {
 interface StarItf {
     starIndex: number,
     indexState:number,
-    setIndex: React.Dispatch<SetStateAction<number>>
+    setIndex: React.Dispatch<SetStateAction<number>>,
+    src:string
 }
 
-function Star({starIndex, indexState, setIndex}:StarItf) {
+function Star({starIndex, indexState, setIndex,src}:StarItf) {
 
-    function onClick() {
+    function onMouse() {
         if (indexState == 0) {
             setIndex(starIndex)
         } else {
@@ -62,7 +64,7 @@ function Star({starIndex, indexState, setIndex}:StarItf) {
         }
     }
 
-    return <img src={StarImage} onMouseEnter={(e) => {setIndex(starIndex)}}/>
+    return <img src={src} onMouseEnter={(e) => {onMouse()}} onMouseLeave={(e) => {onMouse()}}/>
     
 }
 
@@ -70,12 +72,28 @@ function Stars({readonly}:Pick<FeedBack,"readonly">){
 
     const [index,setIndex] = useState(0)
 
-    const Arr:Array<JSX.Element> = []
+    const [Arr,setArr] = useState<Array<JSX.Element>>([])
 
-    for (let i = 0; i<=4; i++) {
+    useEffect(() => {
 
-        Arr.push(<Star starIndex={i} indexState={index} setIndex={setIndex}/>)
-    }
+        setArr([])
+
+        for (let i=1; i<=index; i++) {
+            setArr((previtems) => [
+                ...previtems,
+                <Star starIndex={i} indexState={index} setIndex={setIndex} src={SelectedStarImage} key={i}/>
+            ])
+        }
+
+        for (let i=index+1; i<=5; i++) {
+            console.log(i,index)
+            setArr((previtems) => [
+                ...previtems, 
+                <Star starIndex={i} indexState={index} setIndex={setIndex} src={StarImage} key={i}/>
+            ])
+        }
+
+    },[index])
 
     return (
         <StarsDIV>
