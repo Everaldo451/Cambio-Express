@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactNode, useContext } from "react";
+import { ReactNode, useContext, useState } from "react";
 import { UserContext } from "../../main";
 import FeedBacks from "../../components/FeedBacks";
 
@@ -21,6 +21,10 @@ const IntroducSection = styled.section`
 
     &p span{
         color: orange;
+    }
+
+    &ul > li{
+        margin-top: 20px;
     }
 `
 
@@ -56,19 +60,35 @@ const StyledButton = styled.button`
 
 interface ButtonProps {
     children: ReactNode,
-    money: string
+    money: string,
+    func:(money:string) => void
 }
 
-function ConvertionButton({children,money}:ButtonProps) {
+function ConvertionButton({children,money,func}:ButtonProps) {
 
-    return <StyledButton>{children}</StyledButton>
+    return <StyledButton onClick={(e) => {func(money)}}>{children}</StyledButton>
     
 }
 
 
 function Home() {
 
+    const [src, setSrc] = useState("")
     const [user,setUser] = useContext(UserContext)
+
+    async function GetImageWithMoney(money:string) {
+        try {
+            const response = await fetch(`127.0.0.1:8000/graphs/get/${money}`)
+            const data = await response.json()
+    
+            if (data) {setSrc(data.image)}
+    
+            return
+        }
+        catch (error) {}
+    }
+
+    GetImageWithMoney("USD")
 
     return (
             <main>
@@ -104,11 +124,11 @@ function Home() {
                         </ul>
                     </IntroducDiv>
                     <ImgContainer>
-                        <img src=""/>
+                        <img src={src}/>
                         <section>
-                            <ConvertionButton money="USD">Dólar</ConvertionButton>
-                            <ConvertionButton money="EUR">Euro</ConvertionButton>
-                            <ConvertionButton money="BTC">Bitcoin</ConvertionButton>
+                            <ConvertionButton money="USD" func={GetImageWithMoney}>Dólar</ConvertionButton>
+                            <ConvertionButton money="EUR" func={GetImageWithMoney}>Euro</ConvertionButton>
+                            <ConvertionButton money="BTC" func={GetImageWithMoney}>Bitcoin</ConvertionButton>
                         </section>
                     </ImgContainer>
                 </IntroducSection>
