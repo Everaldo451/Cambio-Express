@@ -84,7 +84,7 @@ function Header() {
             <nav>
                 <HeaderUL>
                     <NavLi className="img">
-                        <ImageLink to="/">
+                        <ImageLink to={"/"}>
                             <IMG src={Logo}/>
                         </ImageLink>
                     </NavLi>
@@ -102,7 +102,7 @@ function Header() {
                         </DropdownContainer>
                     :
                         <NavLi>
-                            <NavLink to="/login">Login</NavLink>
+                            <NavLink to={"/login"}>Login</NavLink>
                         </NavLi>
                     }   
                 </HeaderUL>

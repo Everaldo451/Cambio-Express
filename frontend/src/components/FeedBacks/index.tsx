@@ -86,7 +86,6 @@ function Stars({readonly}:Pick<FeedBack,"readonly">){
         }
 
         for (let i=index+1; i<=5; i++) {
-            console.log(i,index)
             setArr((previtems) => [
                 ...previtems, 
                 <Star starIndex={i} indexState={index} setIndex={setIndex} src={StarImage} key={i}/>

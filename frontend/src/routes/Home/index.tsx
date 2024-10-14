@@ -10,20 +10,20 @@ const IntroducSection = styled.section`
     color: black;
     background-color: white;
 
-    &* {
+    & * {
         margin: 0;
     }
     
-    &p{
+    & p {
         font-size: 15px;
         margin-top: 10px;
     }
 
-    &p span{
+    & p span{
         color: orange;
     }
 
-    &ul > li{
+    & ul > li{
         margin-top: 20px;
     }
 `
@@ -48,6 +48,7 @@ const StyledButton = styled.button`
     border: 1px solid rgb(202, 132, 2);
     background-color: inherit;
     color:black;
+    margin: 0 5px;
     transition: all 0.5s;
 
     &:hover {

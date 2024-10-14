@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from rest_framework.decorators import api_view
 from requests import request as rq
 import matplotlib
 from matplotlib import pyplot as plt
@@ -10,6 +11,7 @@ from datetime import datetime
 
 matplotlib.use("Agg")
 
+@api_view(methods=["GET"])
 def get(request,coin):
 
     days = 7
@@ -60,8 +62,8 @@ def get(request,coin):
 
         buffer.close()
 
-        return JsonResponse({"image":f'data:image/png;base64,{img}'})
+        return {"image":f'data:image/png;base64,{img}'}
 
     except: pass
 
-    return render(request, 'routes/home.html')
+    return None

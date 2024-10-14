@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useState } from 'react'
 import Header from './components/Head'
 import Home from './routes/Home'
+import Login from './routes/Login'
 import './App.css'
 
 
@@ -14,6 +15,7 @@ function App() {
         <Header/>
         <Routes>
           <Route path='/' element={<Home/>}/>
+          <Route path='/login' element={<Login/>}/>
         </Routes>
       </BrowserRouter>
     </>

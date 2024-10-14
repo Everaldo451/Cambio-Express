@@ -14,5 +14,7 @@ urlpatterns = [
    ])),
    path("graphs/",include([
        path("get/<coin>",graphs.get)
-   ]))
+   ])),
+   path("get_csrf/",views.get_csrf),
+   path("get_user/",views.get_user),
 ]
