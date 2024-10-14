@@ -1,3 +1,4 @@
+"""
 from django.shortcuts import redirect
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from .models import User
@@ -23,3 +24,4 @@ def get_user(request):
 		except: return {}
 	
 	else: return {}
+"""

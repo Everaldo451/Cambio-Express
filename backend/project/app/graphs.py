@@ -11,7 +11,7 @@ from datetime import datetime
 
 matplotlib.use("Agg")
 
-@api_view(methods=["GET"])
+@api_view(["GET"])
 def get(request,coin):
 
     days = 7

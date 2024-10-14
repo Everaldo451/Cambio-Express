@@ -34,7 +34,7 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "localhost:5173"
+    "http://localhost:5173"
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -63,7 +63,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'app.middlewares.refresh_verify'
 ]
 
 ROOT_URLCONF = 'project.urls'

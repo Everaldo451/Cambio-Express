@@ -5,7 +5,7 @@ async function GetCSRF() {
 
     try {
 
-        const response = await fetch("localhost:8000/get_csrf",{
+        const response = await fetch("http://localhost:8000/get_csrf",{
             method:"GET",
             credentials:"include"
         })
@@ -23,7 +23,7 @@ export async function GetUser() {
 
     try {
 
-        const response = await fetch("localhost:8000/",{
+        const response = await fetch("http://localhost:8000/get_user",{
             method:"GET",
             credentials:"include"
         })
@@ -46,6 +46,7 @@ async function Load({setUser, setCSRF}:LoadFunctionProps) {
 
     const [userData, csrfData] = await Promise.all([GetUser(), GetCSRF()])
 
+    console.log(userData,csrfData)
     setUser(userData)
     setCSRF(csrfData)
 

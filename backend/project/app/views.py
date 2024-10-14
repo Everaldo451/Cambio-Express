@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.middleware.csrf import get_token
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 from requests import request as rq
 from matplotlib import pyplot as plt
@@ -60,16 +61,18 @@ def configs(request):
 	return render(request, "routes/configs.html")
 
 
-@api_view(methods=["GET"])
+@api_view(["GET"])
 def get_csrf(request):
 
-	if request.headers.get("Origin"): return {"csrf":get_token(request)}
+	if request.headers.get("Origin"): return Response({"csrf":get_token(request)})
 	else: return None
 
 
 
-@api_view(methods=["GET"])
+@api_view(["GET"])
 def get_user(request):
+
+	print("oi")
 
 	if request.COOKIES.get("access"):
 
@@ -83,10 +86,14 @@ def get_user(request):
 			serializer = serializer.data
 			serializer.pop("id")
 
-			return {"current_user":serializer}
+			print("ola")
 
-		except: return {}
+			return Response({"current_user":"HELLO"})
+
+		except: return None
 	
-	else: return {}
+	else:
+		print("ola")
+		return None
 
 # Create your views here.
