@@ -86,14 +86,14 @@ def get_user(request):
 			serializer = serializer.data
 			serializer.pop("id")
 
-			print("ola")
+			print(request.COOKIES)
 
-			return Response({"current_user":"HELLO"})
+			return Response({"current_user":serializer})
 
-		except: return None
+		except: return Response(None)
 	
 	else:
 		print("ola")
-		return None
+		return Response(None)
 
 # Create your views here.

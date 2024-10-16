@@ -33,18 +33,16 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM":"id"
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
-]
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework',
-    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,6 +53,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -74,7 +73,6 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'app.processors.get_user',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',

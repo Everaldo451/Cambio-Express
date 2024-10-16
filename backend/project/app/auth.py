@@ -58,8 +58,8 @@ def register(request):
 
 			response = redirect("/")
 					
-			response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.lifetime)
-			response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.access_token.lifetime)
+			response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.access_token.lifetime)
+			response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.lifetime)
 			
 			return response
 				
