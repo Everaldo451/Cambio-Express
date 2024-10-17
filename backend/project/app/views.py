@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from django.middleware.csrf import get_token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from requests import request as rq
 from matplotlib import pyplot as plt
 from .models import User
@@ -72,8 +72,6 @@ def get_csrf(request):
 @api_view(["GET"])
 def get_user(request):
 
-	print("oi")
-
 	if request.COOKIES.get("access"):
 
 		try:
@@ -86,14 +84,25 @@ def get_user(request):
 			serializer = serializer.data
 			serializer.pop("id")
 
-			print(request.COOKIES)
-
 			return Response({"current_user":serializer})
 
 		except: return Response(None)
 	
+	elif request.COOKIES.get("refresh"):
+
+		refresh = RefreshToken(request.COOKIES.get("refresh"))
+
+		user = User.objects.get(id=refresh.payload.get("id"))
+
+		serializer = UserSerializer(user)
+		serializer = serializer.data
+		serializer.pop("id")
+
+		response = Response({"current_user":serializer})
+		response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.access_token.lifetime)
+
+		return response
 	else:
-		print("ola")
 		return Response(None)
 
 # Create your views here.

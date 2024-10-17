@@ -4,9 +4,20 @@ import { FormProps } from "../LoginForm";
 
 const StyledButton = styled.button`
 
+    background-color: white;
+    border: 1px solid black;
+    transition: all 0.5s;
+
+    &:hover {
+        cursor: pointer;
+        background-color: gray;
+        color: white;
+    }
+
 `
 
 const StyledDiv = styled.div`
+    width: 100%;
     display: grid;
     grid-template-rows: auto;
     grid-auto-columns: repeat(2, 1fr);
@@ -22,7 +33,6 @@ interface ChangeURLProps {
 
 
 function Button({children,setURL,url}:ChangeURLProps) {
-
 
     return <StyledButton onClick={(e) => {url?setURL(url):null}}>{children?children:""}</StyledButton>
     

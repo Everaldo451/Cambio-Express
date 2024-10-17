@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { ReactNode, useContext, useState } from "react";
 import { UserContext } from "../../main";
 import FeedBacks from "../../components/FeedBacks";
+import CommonStyleProps, {StyledButton} from "../../components/CommonButton";
 
 const IntroducSection = styled.section`
     padding: 40px 20px;
@@ -43,20 +44,8 @@ const ImgContainer = styled(IntroducDiv)`
     }
 `
 
-const StyledButton = styled.button`
-    padding: 5px 10px;
-    border: 1px solid rgb(202, 132, 2);
-    background-color: inherit;
-    color:black;
+const Button = styled(StyledButton)`
     margin: 0 5px;
-    transition: all 0.5s;
-
-    &:hover {
-        cursor: pointer;
-        border: 1px solid transparent;
-        background-color: rgb(202, 132, 2);
-        color:white;
-    }
 `
 
 interface ButtonProps {
@@ -67,7 +56,14 @@ interface ButtonProps {
 
 function ConvertionButton({children,money,func}:ButtonProps) {
 
-    return <StyledButton onClick={(e) => {func(money)}}>{children}</StyledButton>
+    const styleProps:CommonStyleProps = {
+        borderColor: "rgb(202, 132, 2)",
+        color: "black",
+        hoverColor: "white",
+        hoverBg: "rgb(202, 132, 2)"
+    }
+
+    return <Button {...styleProps} onClick={(e) => {func(money)}}>{children}</Button>
     
 }
 

@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.http import HttpRequest, HttpResponseBadRequest
 from django.db import IntegrityError
+from django.views.decorators.csrf import csrf_protect
 from .models import User
 from .serializers import UserSerializer
 from .form import LoginForm, RegisterForm
@@ -15,6 +16,7 @@ request = HttpRequest()
 
 
 @api_view(["POST"])
+@csrf_protect
 def login(request):
 
 	form = LoginForm(request.POST)
@@ -29,22 +31,24 @@ def login(request):
 
 		if user is not None and user.is_active:
 
-			response = redirect("/")
+			response = redirect(request.headers.get("Origin"))
 			refresh = RefreshToken.for_user(user)
 			response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.access_token.lifetime)
 			response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.lifetime)
 			return response
 			
 		else:
+			print("No user")
 			messages.error(request,"No user")
-			return redirect("/login")
+			return redirect(request.headers.get("Origin")+"/login")
 	
-	else: return redirect("/login")
+	else: return redirect(request.headers.get("Origin")+"/login")
 	
 
 	
 
 @api_view(["POST"])
+@csrf_protect
 def register(request):
 
 	form = RegisterForm(request.POST)
@@ -76,9 +80,11 @@ def register(request):
 	else: return redirect("/login")
 
 
+@api_view(["GET"])
 def logout(request):
 
-	response = redirect("/")
+	print(request.headers)
+	response = redirect(request.headers.get("Origin"))
 	response.delete_cookie("access")
 	response.delete_cookie("refresh")
 

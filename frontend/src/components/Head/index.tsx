@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../../main";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/logo.png"
@@ -13,7 +13,7 @@ const HeaderUL = styled.ul`
     margin: 0;
     list-style: none;
     align-items: center;
-    padding: 5px 10px 0 10px;
+    padding: 0 10px 0 10px;
     background-color: transparent
 `
 
@@ -23,6 +23,25 @@ const DropdownContainer = styled.section`
     position: relative;
     margin-left: auto;
     align-self: stretch;
+
+    &:hover ul {
+        display:flex;
+    }
+`
+
+const DropdownButton = styled.button`
+`
+
+const GridDiv = styled.div`
+    width: 30px;
+    height: 60%;
+    display: grid;
+    gap: 4px;
+    grid-auto-rows: 1fr;
+
+    & div {
+        background-color: black;
+    }
 `
 
 const DropdownUL = styled.ul`
@@ -35,6 +54,25 @@ const DropdownUL = styled.ul`
     list-style: none;
     background-color: black;
 `   
+
+const DropdownLi = styled.li`
+    padding: 10px;
+
+    & a, button {
+        background-color: black;
+        border: none;
+        display: block;
+        width: 100%;
+        color: white;
+        text-decoration: none;
+        text-align: center;
+        font-size: 15px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+`
 
 const NavLi = styled.li`
     &:last-child{
@@ -58,6 +96,7 @@ const NavLi = styled.li`
     }
 `
 
+
 const NavLink = styled(Link)`
     position: relative;
     display: block;
@@ -78,6 +117,21 @@ const IMG = styled.img`
 function Header() {
 
     const [user,setUser] = useContext(UserContext)
+
+    async function logoutFunc(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        e.preventDefault()
+
+        try {
+
+            const response = await fetch("http://localhost:8000/auth/logout",{
+                method:"GET",
+                credentials:"include"
+            })
+
+            if (response.redirected) {window.location.assign(response.url)}
+        }
+        catch(e) {window.location.assign("/")}
+    }
     
     return (
         <HeaderElement>
@@ -90,14 +144,18 @@ function Header() {
                     </NavLi>
                     {user?
                         <DropdownContainer>
-                            <div>
+                            <GridDiv>
                                 <div></div>
                                 <div></div>
                                 <div></div>
-                            </div>
+                            </GridDiv>
                             <DropdownUL>
-                                <li><a href="{% url 'configurations' %}">Configurations</a></li>
-                                <li><a href="{% url 'logout' %}">Logout</a></li>
+                                <DropdownLi>
+                                    <Link to="/configurations">Configurations</Link>
+                                </DropdownLi>
+                                <DropdownLi>
+                                    <button onClick={logoutFunc}>Logout</button>
+                                </DropdownLi>
                             </DropdownUL>
                         </DropdownContainer>
                     :

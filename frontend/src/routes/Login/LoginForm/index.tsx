@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import { ReactNode, useState, useContext, useEffect } from 'react'
+import React, { ReactNode, useState, useContext, useEffect, act } from 'react'
 import { CSRFContext } from '../../../main'
+import CommonStyleProps, { StyledInput } from '../../../components/CommonButton'
 
 interface InputStyleType {
     top: number,
@@ -30,6 +31,8 @@ const Label = styled.label<{inputStyle:InputStyleType, focused:boolean}>`
     transform: ${(props) => props.focused?"none":"translate(0, -50%)"};
     color: ${(props) => props.focused?"black":"gray"};
     transition: all 0.5s;
+
+    &:hover {cursor:text;}
 `
 
 const Input = styled.input<{inputStyle:InputStyleType}>`
@@ -37,12 +40,16 @@ const Input = styled.input<{inputStyle:InputStyleType}>`
     padding: ${(props)=> props.inputStyle?`${props.inputStyle.top}px ${props.inputStyle.left}px`:0}
 `
 
+const SubmitInput = styled(StyledInput)`
+    margin-top: 20px;
+`
+
 interface ContainerProps {
     inputStyle:InputStyleType,
-    name:string,
+    inputAttrs: React.HTMLProps<HTMLInputElement>
 }
 
-function InputContainer({inputStyle,name}:ContainerProps) { 
+function InputContainer({inputStyle,inputAttrs}:ContainerProps) { 
 
     const [focused, setFocused] = useState<boolean>(false)
 
@@ -50,17 +57,21 @@ function InputContainer({inputStyle,name}:ContainerProps) {
         if (event.currentTarget.value.length == 0) {setFocused(!focused)}
     }
 
-    const Name = name[0].toUpperCase() + name.slice(1,name.length)
+    const Name = inputAttrs.name?inputAttrs.name[0].toUpperCase() + inputAttrs.name.slice(1,inputAttrs.name.length):""
 
     return (
         <InputDiv>
-            <Label inputStyle={inputStyle} focused={focused} htmlFor={name}>{focused?Name+":":Name}</Label>
-            <Input inputStyle={inputStyle} name={name} id={name} onFocus={onFocusChange} onBlur={onFocusChange}/>
+            <Label inputStyle={inputStyle} focused={focused} htmlFor={inputAttrs.id?inputAttrs.id:""}>{focused?Name+":":Name}</Label>
+            <Input inputStyle={inputStyle} {...inputAttrs} onFocus={onFocusChange} onBlur={onFocusChange}/>
         </InputDiv>
     )
 }
 
 const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     & legend {
         text-align: center;
     }
@@ -74,6 +85,7 @@ export interface FormProps {
 function LoginForm ({children,url}:FormProps) {
 
     const [csrf] = useContext(CSRFContext)
+    console.log(csrf)
 
     const inputStyle:InputStyleType = {
         top: 10,
@@ -81,15 +93,32 @@ function LoginForm ({children,url}:FormProps) {
         fontSize:15,
     }
 
+    const submitProps:CommonStyleProps = {
+        color:"black",
+        hoverBg:"darkorange",
+        borderColor:"black",
+        hoverColor:"white"
+    }
+
     return (
-        <StyledForm action={`http://localhost:8000/auth/${url}`} method='POST'>
+        <StyledForm action={`http://localhost:8000/auth/${url}/`} method='POST'>
             {children}
             {url == "register"?
-            <InputContainer inputStyle={inputStyle} name='username'/>
+            <InputContainer 
+                inputStyle={inputStyle} 
+                inputAttrs={{name:"username",id:"username",required: true}}
+            />
             :null}
-            <InputContainer inputStyle={inputStyle} name='email'/>
-            <InputContainer inputStyle={inputStyle} name='password'/>
+            <InputContainer 
+                inputStyle={inputStyle} 
+                inputAttrs={{name:"email",id:"email",required: true}}
+            />
+            <InputContainer 
+                inputStyle={inputStyle} 
+                inputAttrs={{name:"password",id:"password",required: true}}
+            />
             <input type="hidden" name='csrfmiddlewaretoken' value={csrf?csrf:""}/>
+            <SubmitInput {...submitProps} type='submit' value="Enter"/>
         </StyledForm>
     )
 

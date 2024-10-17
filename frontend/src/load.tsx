@@ -56,7 +56,7 @@ async function Load({setUser, setCSRF}:LoadFunctionProps) {
     const [userData, csrfData] = await Promise.all([GetUser(), GetCSRF()])
 
     console.log(userData,csrfData.csrf)
-    setUser(userData)
+    setUser(userData?userData.current_user:null)
     setCSRF(csrfData.csrf)
 
 }
