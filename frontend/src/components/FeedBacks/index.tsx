@@ -19,15 +19,21 @@ const FeedBackDIV = styled.div`
     border-radius: 20px;
     padding: 10px;
     border: 1px solid black;
+
+    &:nth-child(n+1) {
+        margin-top: 20px;
+    }
 `
 
 const PersonDIV = styled.div`
     display: flex;
     align-items: center;
+    margin-bottom: 20px;
 
     & > img {
         width: 30px;
         height: 30px;
+        margin-right: 10px;
     }
 `
 
@@ -42,7 +48,7 @@ const StarsDIV = styled.div`
 export interface FeedBack {
     
     username: string,
-    stars: number,
+    stars?: number,
     readonly: boolean,
     comment:string
 }
@@ -50,49 +56,78 @@ export interface FeedBack {
 interface StarItf {
     starIndex: number,
     indexState:number,
-    setIndex: React.Dispatch<SetStateAction<number>>,
+    setIndex?: React.Dispatch<SetStateAction<number>>,
     src:string
 }
 
 function Star({starIndex, indexState, setIndex,src}:StarItf) {
 
     function onMouse() {
-        if (indexState == 0) {
-            setIndex(starIndex)
-        } else {
-            setIndex(0)
+        if (setIndex) {
+            if (indexState == 0) {
+                setIndex(starIndex)
+            } else {
+                setIndex(0)
+            }
         }
-    }
 
-    return <img src={src} onMouseEnter={(e) => {onMouse()}} onMouseLeave={(e) => {onMouse()}}/>
+    }
+    
+    if (setIndex) {
+        return <img src={src} onMouseEnter={(e) => {onMouse()}} onMouseLeave={(e) => {onMouse()}}/>
+    } else {return <img src={src}/>}
     
 }
 
-function Stars({readonly}:Pick<FeedBack,"readonly">){
+interface StarsType {
+    readonly: FeedBack['readonly'],
+    starNumber?: FeedBack['stars']
+}
 
-    const [index,setIndex] = useState(0)
+function Stars({readonly, starNumber}:StarsType){
+
+    const [index,setIndex] = useState(starNumber?starNumber:0)
 
     const [Arr,setArr] = useState<Array<JSX.Element>>([])
 
-    useEffect(() => {
+    interface setStar{
+        func:React.Dispatch<SetStateAction<Array<JSX.Element>>>,
+        setIndex?: React.Dispatch<SetStateAction<number>>
+    }
 
-        setArr([])
-
+    function setSelectedStars(func:setStar['func'],setIndex:setStar['setIndex']) {
         for (let i=1; i<=index; i++) {
-            setArr((previtems) => [
+            func((previtems) => [
                 ...previtems,
                 <Star starIndex={i} indexState={index} setIndex={setIndex} src={SelectedStarImage} key={i}/>
             ])
         }
+    }
 
+    function setCommonStars(func:setStar['func'],setIndex:setStar['setIndex']) {
         for (let i=index+1; i<=5; i++) {
-            setArr((previtems) => [
+            func((previtems) => [
                 ...previtems, 
                 <Star starIndex={i} indexState={index} setIndex={setIndex} src={StarImage} key={i}/>
             ])
         }
+    }
 
-    },[index])
+
+    if (readonly) {
+        useEffect(() => {
+            setSelectedStars(setArr, undefined)
+            setCommonStars(setArr, undefined)
+        },[])
+    } else {
+        useEffect(() => {
+
+            setArr([])
+            setSelectedStars(setArr, setIndex)
+            setCommonStars(setArr, setIndex)
+
+        },[index])
+    }
 
     return (
         <StarsDIV>
@@ -111,7 +146,7 @@ function FeedBack({username,stars,readonly,comment}:FeedBack) {
             <PersonDIV>
                 <img src={Avatar}/>
                 <p className="name">{username}</p>
-                <Stars readonly={readonly}/>
+                <Stars readonly={readonly} starNumber={stars?stars:undefined}/>
             </PersonDIV>
             <div className="avaliation">
                 {comment}
@@ -123,16 +158,16 @@ function FeedBack({username,stars,readonly,comment}:FeedBack) {
 
 function FeedBacks() {
 
-    const [user,setUser] = useContext(UserContext)
+    const [user] = useContext(UserContext)
 
     return (
         <FeedBackSection>
             <h2>FeedBacks</h2>
             {user?
-            <FeedBack username={user.username} stars={1} comment="adsad" readonly={true}/>
+            <FeedBack username={user.username} comment="adsad" readonly={false}/>
             :null
             }
-            <FeedBack username={"João"} stars={1} comment="adsad" readonly={true}/>
+            <FeedBack username={"João"} stars={3} comment="adsad" readonly={true}/>
         </FeedBackSection>
     )
 }

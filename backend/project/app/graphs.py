@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from requests import request as rq
 import matplotlib
 from matplotlib import pyplot as plt
@@ -62,7 +63,7 @@ def get(request,coin):
 
         buffer.close()
 
-        return {"image":f'data:image/png;base64,{img}'}
+        return Response({"image":f'data:image/png;base64,{img}'})
 
     except: pass
 

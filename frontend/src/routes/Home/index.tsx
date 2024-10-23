@@ -3,6 +3,7 @@ import { ReactNode, useContext, useState } from "react";
 import { UserContext } from "../../main";
 import FeedBacks from "../../components/FeedBacks";
 import CommonStyleProps, {StyledButton} from "../../components/CommonButton";
+import APIConsumer from "./ApiConsume";
 
 const IntroducSection = styled.section`
     padding: 40px 20px;
@@ -73,26 +74,12 @@ function Home() {
     const [src, setSrc] = useState("")
     const [user,setUser] = useContext(UserContext)
 
-    async function GetImageWithMoney(money:string) {
-        try {
-            const response = await fetch(`127.0.0.1:8000/graphs/get/${money}`)
-            const data = await response.json()
-    
-            if (data) {setSrc(data.image)}
-    
-            return
-        }
-        catch (error) {}
-    }
-
-    GetImageWithMoney("USD")
-
     return (
             <main>
                 <IntroducSection>
                     <IntroducDiv>
                         <h1>Câmbio Express</h1>
-                        <p>Bem vindo{user? <span>{user.username}</span>:null} à maior agência de câmbio do país, onde você encontra:</p>
+                        <p>Bem vindo{user? <span>, {user.username},</span>:null} à maior agência de câmbio do país, onde você encontra:</p>
                         <ul>
                             <li>
                                 <strong>Taxas Competitivas:</strong>
@@ -120,14 +107,7 @@ function Home() {
                             </li>
                         </ul>
                     </IntroducDiv>
-                    <ImgContainer>
-                        <img src={src}/>
-                        <section>
-                            <ConvertionButton money="USD" func={GetImageWithMoney}>Dólar</ConvertionButton>
-                            <ConvertionButton money="EUR" func={GetImageWithMoney}>Euro</ConvertionButton>
-                            <ConvertionButton money="BTC" func={GetImageWithMoney}>Bitcoin</ConvertionButton>
-                        </section>
-                    </ImgContainer>
+                    <APIConsumer/>
                 </IntroducSection>
 
                 <FeedBacks/>

@@ -45,6 +45,20 @@ class User(AbstractBaseUser):
 
 	objects = UserManager()
 
+
+class FeedBacks(models.Model):
+
+	user = models.OneToOneField(
+		User,
+		on_delete=models.CASCADE,
+		verbose_name="user"
+	)
+
+	comment = models.CharField(max_length=500, null=True)
+	stars = models.IntegerField(choices={i: i for i in range(1, 6)})
+
+
+
 	
 
 # Create your models here.
