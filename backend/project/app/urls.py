@@ -7,13 +7,11 @@ urlpatterns = [
        path("register/",auth.register,name="register"),
        path("logout/",auth.logout,name="logout")
    ])),
-   path("",include([
-       path("",views.home,name="home"),
-       path("login/",views.login,name="loginview"),
-       path("configs/",views.configs,name="configurations")
-   ])),
    path("graphs/",include([
        path("get/<coin>",graphs.get)
+   ])),
+   path("feedbacks/",include([
+       path("get/", views.get_feedbacks)
    ])),
    path("getcsrf/",views.get_csrf),
    path("getuser/",views.get_user),

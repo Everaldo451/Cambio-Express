@@ -12,8 +12,10 @@ async function GetCSRF() {
         })
 
         console.log(response.url)
+        console.log(response)
 
         const data = await response.json()
+        console.log(data)
 
         return data?data:null
 
@@ -59,7 +61,7 @@ async function Load({setUser, setCSRF, setLoaded}:LoadFunctionProps) {
 
     try {
         console.log(userData,csrfData.csrf)
-        setUser(userData?userData.current_user:null)
+        setUser(userData?userData:null)
         setCSRF(csrfData.csrf)
     }catch(e) {}
     

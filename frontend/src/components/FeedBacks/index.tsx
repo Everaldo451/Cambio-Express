@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import { UserContext } from "../../main";
-import { ReactNode, useContext, useState, useEffect, SetStateAction } from "react";
-import StarImage from "../FeedBacks/assets/star.png"
-import SelectedStarImage from "../FeedBacks/assets/selectedstar.png"
+import { ReactNode, useContext, useState, useEffect, SetStateAction, createContext } from "react";
+import Stars from "./Stars";
 import Avatar from "../FeedBacks/assets/avatar.png"
 
 const FeedBackSection = styled.section`
@@ -37,135 +36,102 @@ const PersonDIV = styled.div`
     }
 `
 
-const StarsDIV = styled.div`
-    margin-left: auto;
-
-    & img {
-        width: 20px;
-    }
-`
+export const StarsContext = createContext<[number,React.Dispatch<SetStateAction<number>>]>([0,() => {}])
 
 export interface FeedBack {
-    
     username: string,
     stars?: number,
     readonly: boolean,
     comment:string
 }
 
-interface StarItf {
-    starIndex: number,
-    indexState:number,
-    setIndex?: React.Dispatch<SetStateAction<number>>,
-    src:string
+interface StarInputAttrs {
+    inputAttrs: React.InputHTMLAttributes<HTMLInputElement>,
 }
+function StarInput({inputAttrs}:StarInputAttrs) {
 
-function Star({starIndex, indexState, setIndex,src}:StarItf) {
+    const [stars] = useContext(StarsContext)
 
-    function onMouse() {
-        if (setIndex) {
-            if (indexState == 0) {
-                setIndex(starIndex)
-            } else {
-                setIndex(0)
-            }
-        }
-
-    }
-    
-    if (setIndex) {
-        return <img src={src} onMouseEnter={(e) => {onMouse()}} onMouseLeave={(e) => {onMouse()}}/>
-    } else {return <img src={src}/>}
-    
-}
-
-interface StarsType {
-    readonly: FeedBack['readonly'],
-    starNumber?: FeedBack['stars']
-}
-
-function Stars({readonly, starNumber}:StarsType){
-
-    const [index,setIndex] = useState(starNumber?starNumber:0)
-
-    const [Arr,setArr] = useState<Array<JSX.Element>>([])
-
-    interface setStar{
-        func:React.Dispatch<SetStateAction<Array<JSX.Element>>>,
-        setIndex?: React.Dispatch<SetStateAction<number>>
-    }
-
-    function setSelectedStars(func:setStar['func'],setIndex:setStar['setIndex']) {
-        for (let i=1; i<=index; i++) {
-            func((previtems) => [
-                ...previtems,
-                <Star starIndex={i} indexState={index} setIndex={setIndex} src={SelectedStarImage} key={i}/>
-            ])
-        }
-    }
-
-    function setCommonStars(func:setStar['func'],setIndex:setStar['setIndex']) {
-        for (let i=index+1; i<=5; i++) {
-            func((previtems) => [
-                ...previtems, 
-                <Star starIndex={i} indexState={index} setIndex={setIndex} src={StarImage} key={i}/>
-            ])
-        }
-    }
-
-
-    if (readonly) {
-        useEffect(() => {
-            setSelectedStars(setArr, undefined)
-            setCommonStars(setArr, undefined)
-        },[])
-    } else {
-        useEffect(() => {
-
-            setArr([])
-            setSelectedStars(setArr, setIndex)
-            setCommonStars(setArr, setIndex)
-
-        },[index])
-    }
-
-    return (
-        <StarsDIV>
-            {Arr.map(value => 
-                value
-            )}
-        </StarsDIV>
-    )
+    return <input {...inputAttrs} value={stars}/>
 }
 
 function FeedBack({username,stars,readonly,comment}:FeedBack) {
 
     return (
-        <FeedBackDIV>
+        <StarsContext.Provider value={useState(stars?stars:0)}>
 
-            <PersonDIV>
-                <img src={Avatar}/>
-                <p className="name">{username}</p>
-                <Stars readonly={readonly} starNumber={stars?stars:undefined}/>
-            </PersonDIV>
-            <div className="avaliation">
-                {comment}
-            </div>
+            <FeedBackDIV>
 
-        </FeedBackDIV>
+                <PersonDIV>
+                    <img src={Avatar}/>
+                    <p className="name">{username}</p>
+                    <Stars readonly={readonly}/>
+                </PersonDIV>
+
+                {readonly==true?
+                    <div className="avaliation">
+                        <p>{comment}</p>
+                    </div>
+                    :
+                    <form>
+                        <div className="avaliation">
+                            <textarea name="comment"></textarea>
+                        </div>
+
+                        <StarInput inputAttrs={{type:"hidden", name:"stars"}}/>
+
+                        <input type="submit" value="Enviar"/>
+                    </form>
+                }   
+
+            </FeedBackDIV>
+        </StarsContext.Provider>
     )
 }
+
+
 
 function FeedBacks() {
 
     const [user] = useContext(UserContext)
+    const [feedbacks, setFeedBacks] = useState<Array<FeedBack>|null>(null)
+
+    async function GetFeedBacks() {
+
+        try{
+
+            const response = await fetch("/api/feedbacks/get/",{
+                method:"GET",
+                credentials:"include"
+            })
+
+            const feedbacks = await response.json()
+
+            if (feedbacks instanceof Array) {
+                setFeedBacks(feedbacks)
+            }
+
+        } catch(e) {}
+
+    }
+
+    useEffect(() => {
+        GetFeedBacks()
+        console.log(feedbacks)
+    },[])
 
     return (
         <FeedBackSection>
             <h2>FeedBacks</h2>
-            {user?
-            <FeedBack username={user.username} comment="adsad" readonly={false}/>
-            :null
+            {
+                user && feedbacks?.filter((feedback) => feedback.username == user.username).length==0?
+                    <FeedBack username={user.username} comment="adsad" readonly={false}/>
+                :null
+            }
+            {
+                feedbacks?.map((fdb) => 
+                    <FeedBack username={fdb.username} stars={fdb.stars} comment={fdb.comment} readonly={true}/>
+                )   
             }
             <FeedBack username={"João"} stars={3} comment="adsad" readonly={true}/>
         </FeedBackSection>
