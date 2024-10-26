@@ -101,7 +101,7 @@ function LoginForm ({children,url}:FormProps) {
     }
 
     return (
-        <StyledForm action={`http://localhost:8000/auth/${url}/`} method='POST'>
+        <StyledForm action={`api/auth/${url}/`} method='POST'>
             {children}
             {url == "register"?
             <InputContainer 

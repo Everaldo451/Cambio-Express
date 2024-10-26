@@ -6,9 +6,9 @@ async function GetCSRF() {
 
     try {
 
-        const response = await fetch("http://localhost:8000/getcsrf",{
+        const response = await fetch("/api/getcsrf/",{
             method:"GET",
-            credentials:"include"
+            credentials:"include",
         })
 
         console.log(response.url)
@@ -29,12 +29,13 @@ export async function GetUser() {
 
     try {
 
-        const response = await fetch("http://localhost:8000/getuser",{
+        const response = await fetch("/api/getuser/",{
             method:"GET",
             credentials:"include"
         })
 
         const data = await response.json()
+        console.log(data)
 
         return data?data:null
 
@@ -48,16 +49,21 @@ export async function GetUser() {
 
 export interface LoadFunctionProps {
     setUser: React.Dispatch<SetStateAction<UserType|null>>,
-    setCSRF: React.Dispatch<SetStateAction<CSRFType|null>>
+    setCSRF: React.Dispatch<SetStateAction<CSRFType|null>>,
+    setLoaded: React.Dispatch<SetStateAction<boolean>>
 }
 
-async function Load({setUser, setCSRF}:LoadFunctionProps) {
+async function Load({setUser, setCSRF, setLoaded}:LoadFunctionProps) {
 
     const [userData, csrfData] = await Promise.all([GetUser(), GetCSRF()])
 
-    console.log(userData,csrfData.csrf)
-    setUser(userData?userData.current_user:null)
-    setCSRF(csrfData.csrf)
+    try {
+        console.log(userData,csrfData.csrf)
+        setUser(userData?userData.current_user:null)
+        setCSRF(csrfData.csrf)
+    }catch(e) {}
+    
+    setLoaded(false)
 
 }
 

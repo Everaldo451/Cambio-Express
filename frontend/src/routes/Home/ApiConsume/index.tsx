@@ -48,7 +48,7 @@ function APIConsumer() {
 
     async function GetImageWithMoney(money:string) {
         try {
-            const response = await fetch(`http://localhost:8000/graphs/get/${money}`)
+            const response = await fetch(`/api/graphs/get/${money}`)
             const data = await response.json()
     
             if (data) {setSrc(data.image)}

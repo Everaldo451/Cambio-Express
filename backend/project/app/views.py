@@ -63,9 +63,8 @@ def configs(request):
 
 @api_view(["GET"])
 def get_csrf(request):
-
-	if request.headers.get("Origin"): return Response({"csrf":get_token(request)})
-	else: return None
+	return Response({"csrf":get_token(request)})
+	
 
 
 

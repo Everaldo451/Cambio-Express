@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { ReactNode, useContext, useState } from "react";
 import { UserContext } from "../../main";
 import FeedBacks from "../../components/FeedBacks";
-import CommonStyleProps, {StyledButton} from "../../components/CommonButton";
 import APIConsumer from "./ApiConsume";
 
 const IntroducSection = styled.section`
@@ -36,42 +35,9 @@ const IntroducDiv = styled.div`
     justify-content: center;
 `
 
-const ImgContainer = styled(IntroducDiv)`
-    align-items: center;
-
-    &> img {
-        width: 100%;
-        max-height: 80%;
-    }
-`
-
-const Button = styled(StyledButton)`
-    margin: 0 5px;
-`
-
-interface ButtonProps {
-    children: ReactNode,
-    money: string,
-    func:(money:string) => void
-}
-
-function ConvertionButton({children,money,func}:ButtonProps) {
-
-    const styleProps:CommonStyleProps = {
-        borderColor: "rgb(202, 132, 2)",
-        color: "black",
-        hoverColor: "white",
-        hoverBg: "rgb(202, 132, 2)"
-    }
-
-    return <Button {...styleProps} onClick={(e) => {func(money)}}>{children}</Button>
-    
-}
-
 
 function Home() {
 
-    const [src, setSrc] = useState("")
     const [user,setUser] = useContext(UserContext)
 
     return (

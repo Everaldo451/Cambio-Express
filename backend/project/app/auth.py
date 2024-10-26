@@ -83,8 +83,7 @@ def register(request):
 @api_view(["GET"])
 def logout(request):
 
-	print(request.headers)
-	response = redirect(request.headers.get("Origin"))
+	response = redirect("http://localhost:3000")
 	response.delete_cookie("access")
 	response.delete_cookie("refresh")
 

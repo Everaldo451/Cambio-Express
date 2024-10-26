@@ -123,7 +123,7 @@ function Header() {
 
         try {
 
-            const response = await fetch("http://localhost:8000/auth/logout",{
+            const response = await fetch("/api/auth/logout/",{
                 method:"GET",
                 credentials:"include"
             })

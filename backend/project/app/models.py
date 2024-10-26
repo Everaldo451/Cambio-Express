@@ -56,7 +56,6 @@ class FeedBacks(models.Model):
 
 	comment = models.CharField(max_length=500, null=True)
 	stars = models.IntegerField(choices={i: i for i in range(1, 6)})
-	ola = False
 
 
 

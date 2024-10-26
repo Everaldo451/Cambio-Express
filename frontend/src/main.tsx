@@ -16,24 +16,30 @@ function Main({loadData}:MainType) {
 
   const [csrf, setCSRF] = useState<CSRFType|null>(null)
   const [user,setUser] = useState<UserType|null>(null)
+  const [loading, setLoaded] = useState<boolean>(true)
 
   useEffect(() => {
-    loadData({setUser, setCSRF})
+    loadData({setUser, setCSRF, setLoaded})
   },[])
 
+  if (loading) {
+    return (<></>)
+  }
+  else {
   return (
-    <>
-      <UserContext.Provider value={[user,setUser]}>
-        <CSRFContext.Provider value={[csrf,setCSRF]}>
-          <App/>
-        </CSRFContext.Provider>
-      </UserContext.Provider>
-    </>
-  )
+      <>
+        <UserContext.Provider value={[user,setUser]}>
+          <CSRFContext.Provider value={[csrf,setCSRF]}>
+            <App/>
+          </CSRFContext.Provider>
+        </UserContext.Provider>
+      </>
+    )
+  }
 }
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Main loadData={Load}/>
-  </StrictMode>,
+  </StrictMode>
 )
