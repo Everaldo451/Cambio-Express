@@ -18,9 +18,17 @@ const StarsDIV = styled.div`
     }
 `
 
+const StyledStarImage = styled.img`
+
+    &:nth-child(n+2) {
+        margin-left:2px;
+    }
+`
+
 function Star({starIndex, setIndex, src}:StarItf) {
 
     const [stars] = useContext(StarsContext)
+    const [clicked, setClicked] = useState(false)
 
     function onMouse() {
         if (setIndex) {
@@ -34,8 +42,12 @@ function Star({starIndex, setIndex, src}:StarItf) {
     }
     
     if (setIndex) {
-        return <img src={src} onMouseEnter={(e) => {onMouse()}} onMouseLeave={(e) => {onMouse()}}/>
-    } else {return <img src={src}/>}
+        return <StyledStarImage src={src} 
+            onMouseEnter={(e) => {!clicked?onMouse():null;setClicked(false)}} 
+            onMouseLeave={(e) => {!clicked?onMouse():null}} 
+            onClick={(e) => {setClicked(!clicked)}}
+        />
+    } else {return <StyledStarImage src={src}/>}
     
 }
 

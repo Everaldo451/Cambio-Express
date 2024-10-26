@@ -68,12 +68,12 @@ function FeedBack({username,stars,readonly,comment}:FeedBack) {
                     <Stars readonly={readonly}/>
                 </PersonDIV>
 
-                {readonly==true?
+                {readonly?
                     <div className="avaliation">
                         <p>{comment}</p>
                     </div>
                     :
-                    <form>
+                    <form method="POST" action="/api/feedbacks/set/">
                         <div className="avaliation">
                             <textarea name="comment"></textarea>
                         </div>

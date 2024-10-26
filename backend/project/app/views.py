@@ -101,6 +101,9 @@ def set_user_feedback(request):
 			access = AccessToken(request.COOKIES.get("access"))
 			user = User.objects.get(id=access.payload.get("id"))
 
+
+			feedback = FeedBacks.objects.get(user=user)
+			if feedback: raise Exception
 			comment = request.POST.get("comment")
 			stars = int(request.POST.get("stars"))
 
