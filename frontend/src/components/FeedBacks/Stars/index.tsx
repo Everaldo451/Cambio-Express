@@ -86,8 +86,11 @@ function Stars({readonly}:StarsType){
 
     if (readonly) {
         useEffect(() => {
+
+            setArr([])
             setSelectedStars(setArr, undefined)
             setCommonStars(setArr, undefined)
+            
         },[])
     } else {
         useEffect(() => {

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.middleware.csrf import get_token
+from django.db import DataError
 from rest_framework.decorators import api_view
 from rest_framework.serializers import ListSerializer
 from rest_framework.response import Response
@@ -8,7 +9,7 @@ from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from requests import request as rq
 from matplotlib import pyplot as plt
 from .models import User, FeedBacks
-from .form import ConfigForm
+from .form import ConfigForm, SetFeedbackForm
 from .serializers import UserSerializer, FeedBackSerializer
 
 @api_view(["GET"])
@@ -91,26 +92,31 @@ def get_feedbacks(request):
 @api_view(["POST"])
 def set_user_feedback(request):
 
-	rq = HttpRequest()
-	rq.POST.get
+	form = SetFeedbackForm(request.POST)
 
-	if request.COOKIES.get("access"):
+	if form.is_valid() and request.COOKIES.get("access"):
+
+		print("ola")
 
 		try:
 
 			access = AccessToken(request.COOKIES.get("access"))
 			user = User.objects.get(id=access.payload.get("id"))
 
+			print("ola")
 
-			feedback = FeedBacks.objects.get(user=user)
+			feedback = FeedBacks.objects.filter(user=user).first()
+			print("ola")
 			if feedback: raise Exception
-			comment = request.POST.get("comment")
-			stars = int(request.POST.get("stars"))
+			comment = form.cleaned_data.get("comment")
+			stars = int(form.cleaned_data.get("stars"))
+
+			print("ola")
 
 			newFeedback = FeedBacks(user=user, comment=comment, stars=stars)
 			newFeedback.save()
 		
-		except: pass
+		except Exception as e: print(e)
 
 	return redirect("http://localhost:3000")
 

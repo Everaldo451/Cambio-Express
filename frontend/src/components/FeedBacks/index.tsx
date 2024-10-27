@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { UserContext } from "../../main";
 import { ReactNode, useContext, useState, useEffect, SetStateAction, createContext } from "react";
+import { StyledInput } from "../CommonButton";
 import Stars from "./Stars";
 import Avatar from "../FeedBacks/assets/avatar.png"
 
@@ -36,6 +37,21 @@ const PersonDIV = styled.div`
     }
 `
 
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    & textarea {
+        width: 100%;
+        resize: none;
+        margin-bottom: 20px;
+        border: 1px solid black;
+        min-height: 100px;
+    }
+`
+
 export const StarsContext = createContext<[number,React.Dispatch<SetStateAction<number>>]>([0,() => {}])
 
 export interface FeedBack {
@@ -43,16 +59,6 @@ export interface FeedBack {
     stars?: number,
     readonly: boolean,
     comment:string
-}
-
-interface StarInputAttrs {
-    inputAttrs: React.InputHTMLAttributes<HTMLInputElement>,
-}
-function StarInput({inputAttrs}:StarInputAttrs) {
-
-    const [stars] = useContext(StarsContext)
-
-    return <input {...inputAttrs} value={stars}/>
 }
 
 function FeedBack({username,stars,readonly,comment}:FeedBack) {
@@ -73,15 +79,20 @@ function FeedBack({username,stars,readonly,comment}:FeedBack) {
                         <p>{comment}</p>
                     </div>
                     :
-                    <form method="POST" action="/api/feedbacks/set/">
-                        <div className="avaliation">
-                            <textarea name="comment"></textarea>
-                        </div>
+                    <Form method="POST" action="/api/feedbacks/set/">
+                        <textarea name="comment" required></textarea>
 
-                        <StarInput inputAttrs={{type:"hidden", name:"stars"}}/>
+                        <StarsContext.Consumer>
+                            {context => <input type="hidden" name="stars" value={context[0]} required/>}
+                        </StarsContext.Consumer>
 
-                        <input type="submit" value="Enviar"/>
-                    </form>
+                        <StyledInput
+                            borderColor="black"
+                            color="black"
+                            hoverBg="rgb(150,50,0)"
+                            hoverColor="white"
+                         type="submit" value="Send"/>
+                    </Form>
                 }   
 
             </FeedBackDIV>
@@ -108,7 +119,9 @@ function FeedBacks() {
             const feedbacks = await response.json()
 
             if (feedbacks instanceof Array) {
-                setFeedBacks(feedbacks)
+                setFeedBacks(feedbacks.map((value) => {
+                    return {...value, readonly:true}
+                }))
             }
 
         } catch(e) {}
@@ -130,7 +143,7 @@ function FeedBacks() {
             }
             {
                 feedbacks?.map((fdb) => 
-                    <FeedBack username={fdb.username} stars={fdb.stars} comment={fdb.comment} readonly={true}/>
+                    <FeedBack username={fdb.username} stars={fdb.stars} comment={fdb.comment} readonly={fdb.readonly}/>
                 )   
             }
             <FeedBack username={"João"} stars={3} comment="adsad" readonly={true}/>

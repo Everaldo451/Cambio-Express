@@ -13,7 +13,7 @@ const HeaderUL = styled.ul`
     margin: 0;
     list-style: none;
     align-items: center;
-    padding: 0 10px 0 10px;
+    padding: 5px 10px 0 10px;
     background-color: transparent
 `
 
@@ -152,6 +152,9 @@ function Header() {
                             <DropdownUL>
                                 <DropdownLi>
                                     <Link to="/configurations">Configurations</Link>
+                                </DropdownLi>
+                                <DropdownLi>
+                                    <Link to="/investiments">Investiments</Link>
                                 </DropdownLi>
                                 <DropdownLi>
                                     <button onClick={logoutFunc}>Logout</button>
