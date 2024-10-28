@@ -35,6 +35,25 @@ const IntroducDiv = styled.div`
     justify-content: center;
 `
 
+const StyledSummary = styled.summary`
+    position: relative;
+    transition: all 0.5s;
+
+    &:marker {
+        content: ">";
+        font-size: 15px;
+        transition: all 0.5s;
+    }
+
+    &:hover {
+        background-color: red;
+    }
+
+    &:hover :marker {
+        transform: rotate(90deg);
+    }
+
+`
 
 function Home() {
 
@@ -48,28 +67,36 @@ function Home() {
                         <p>Bem vindo{user? <span>, {user.username},</span>:null} à maior agência de câmbio do país, onde você encontra:</p>
                         <ul>
                             <li>
-                                <strong>Taxas Competitivas:</strong>
-                                <p>
-                                Oferecemos as melhores taxas de câmbio do mercado, garantindo que você obtenha o máximo valor pelo seu dinheiro.
-                                </p>
+                                <details>
+                                    <StyledSummary>Taxas Competitivas:</StyledSummary>
+                                    <p>
+                                    Oferecemos as melhores taxas de câmbio do mercado, garantindo que você obtenha o máximo valor pelo seu dinheiro.
+                                    </p>
+                                </details>
                             </li>
                             <li>
-                                <strong>Transações Seguras:</strong>
-                                <p>
-                                Utilizamos tecnologia avançada para garantir a segurança de todas as suas transações e proteger seus dados.
-                                </p>
+                                <details>
+                                    <StyledSummary>Transações Seguras:</StyledSummary>
+                                    <p>
+                                    Utilizamos tecnologia avançada para garantir a segurança de todas as suas transações e proteger seus dados.
+                                    </p>
+                                </details>
                             </li>
                             <li>
-                                <strong>Plataforma Online Intuitiva:</strong>
-                                <p>
-                                Oferecemos uma plataforma digital fácil de usar para que você possa consultar taxas, fazer transações e monitorar seu saldo a qualquer hora e de qualquer lugar.
-                                </p>
+                                <details>
+                                    <StyledSummary>Plataforma Online Intuitiva:</StyledSummary>
+                                    <p>
+                                    Oferecemos uma plataforma digital fácil de usar para que você possa consultar taxas, fazer transações e monitorar seu saldo a qualquer hora e de qualquer lugar.
+                                    </p>
+                                </details>
                             </li>
                             <li>
-                                <strong>Variedade de Moedas:</strong>
-                                <p>
-                                Disponibilizamos uma ampla gama de moedas estrangeiras para que você possa realizar suas operações com facilidade, independentemente do destino.
-                                </p>
+                                <details>
+                                    <StyledSummary>Variedade de Moedas:</StyledSummary>
+                                    <p>
+                                    Disponibilizamos uma ampla gama de moedas estrangeiras para que você possa realizar suas operações com facilidade, independentemente do destino.
+                                    </p>
+                                </details>
                             </li>
                         </ul>
                     </IntroducDiv>

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { UserContext } from "../../main";
-import { ReactNode, useContext, useState, useEffect, SetStateAction, createContext } from "react";
+import { useContext, useState, useEffect, SetStateAction, createContext } from "react";
 import { StyledInput } from "../CommonButton";
 import Stars from "./Stars";
 import Avatar from "../FeedBacks/assets/avatar.png"

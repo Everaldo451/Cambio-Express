@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction, useContext } from "react"
+import React, { useState, useEffect, SetStateAction, useContext } from "react"
 import styled from "styled-components"
 import StarImage from "../../FeedBacks/assets/star.png"
 import SelectedStarImage from "../../FeedBacks/assets/selectedstar.png"
@@ -8,6 +8,18 @@ interface StarItf {
     starIndex: number,
     setIndex?: React.Dispatch<SetStateAction<number>>,
     src:string
+}
+
+interface StarsType {
+    readonly: FeedBack['readonly'],
+}
+
+interface setStar{
+    setArr:React.Dispatch<SetStateAction<Array<JSX.Element>>>,
+    setIndex?: React.Dispatch<SetStateAction<number>>,
+    init: number,
+    end: number,
+    src: string
 }
 
 const StarsDIV = styled.div`
@@ -30,82 +42,80 @@ function Star({starIndex, setIndex, src}:StarItf) {
     const [stars] = useContext(StarsContext)
     const [clicked, setClicked] = useState(false)
 
-    function onMouse() {
-        if (setIndex) {
-            if (stars == 0) {
-                setIndex(starIndex)
-            } else {
-                setIndex(0)
-            }
-        }
+    function MouseEnter(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
+        if (!clicked && setIndex && starIndex != stars) {setIndex(starIndex)}
+        if (clicked) {setClicked(false)}
+    }
 
+    function MouseLeave(e:React.MouseEvent<HTMLImageElement, MouseEvent>) {
+        if (!clicked && setIndex) {setIndex(0)}
     }
     
     if (setIndex) {
-        return <StyledStarImage src={src} 
-            onMouseEnter={(e) => {!clicked?onMouse():null;setClicked(false)}} 
-            onMouseLeave={(e) => {!clicked?onMouse():null}} 
+        return <StyledStarImage src={src}
+            onMouseEnter={MouseEnter}
+            onMouseLeave={MouseLeave}
             onClick={(e) => {setClicked(!clicked)}}
         />
     } else {return <StyledStarImage src={src}/>}
     
 }
 
-interface StarsType {
-    readonly: FeedBack['readonly'],
-}
 
 function Stars({readonly}:StarsType){
 
     const [stars, setStars] = useContext(StarsContext)
 
-    const [Arr,setArr] = useState<Array<JSX.Element>>([])
+    console.log(stars)
 
-    interface setStar{
-        func:React.Dispatch<SetStateAction<Array<JSX.Element>>>,
-        setIndex?: React.Dispatch<SetStateAction<number>>
-    }
+    //const [Arr,setArr] = useState<Array<JSX.Element>>([])
 
-    function setSelectedStars(func:setStar['func'],setIndex:setStar['setIndex']) {
-        for (let i=1; i<=stars; i++) {
-            func((previtems) => [
+    /*
+    function setStarsSrc({setArr,setIndex,init,end,src}:setStar) {
+
+        for (let i=init; i<=end; i++) {
+            setArr((previtems) => [
                 ...previtems,
-                <Star starIndex={i} setIndex={setIndex} src={SelectedStarImage} key={i}/>
+                <Star starIndex={i} setIndex={setIndex} src={src} key={i}/>
             ])
         }
     }
 
-    function setCommonStars(func:setStar['func'],setIndex:setStar['setIndex']) {
-        for (let i=stars+1; i<=5; i++) {
-            func((previtems) => [
-                ...previtems, 
-                <Star starIndex={i} setIndex={setIndex} src={StarImage} key={i}/>
-            ])
-        }
+    function setSelectedStars(func:setStar['setArr'],setIndex:setStar['setIndex']) {
+        setStarsSrc({setArr: func, setIndex: setIndex, init: 1, end: stars, src: SelectedStarImage})
     }
 
-    if (readonly) {
-        useEffect(() => {
+    function setCommonStars(func:setStar['setArr'],setIndex:setStar['setIndex']) {
+        setStarsSrc({setArr: func, setIndex: setIndex, init: stars + 1, end: 5, src: StarImage})
+    }
+    */
 
-            setArr([])
-            setSelectedStars(setArr, undefined)
-            setCommonStars(setArr, undefined)
+    const Array:Array<JSX.Element> = []
+
+    for (let i=1; i<= 5; i++) {
+        Array.push(<Star starIndex={i} setIndex={readonly?undefined:setStars} src={StarImage} key={i}/>)
+    }
+    
+    /*
+    useEffect(() => {
+
+        setArr([])
+        setSelectedStars(setArr, readonly?undefined:setStars)
+        setCommonStars(setArr, readonly?undefined:setStars)
             
-        },[])
-    } else {
-        useEffect(() => {
-
-            setArr([])
-            setSelectedStars(setArr, setStars)
-            setCommonStars(setArr, setStars)
-
-        },[stars])
-    }
+    },[stars])
+    */
+   
 
     return (
         <StarsDIV>
-            {Arr.map(value => 
-                value
+            {Array.map((value, index) => {
+
+                    if (index < stars) {
+                        return <Star {...value.props} src={SelectedStarImage}/>
+                    }
+                    return value
+                }
             )}
         </StarsDIV>
     )
