@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import styled from "styled-components";
 import CommonStyleProps, { StyledButton } from "../../../components/CommonButton";
 
@@ -12,8 +12,7 @@ const ImgContainer = styled(IntroducDiv)`
     align-items: center;
 
     &> img {
-        width: 100%;
-        max-height: 80%;
+        width: 60%;
     }
 `
 
@@ -57,6 +56,10 @@ function APIConsumer() {
         }
         catch (error) {}
     }
+
+    useEffect(() => {
+        GetImageWithMoney("USD")
+    }, [])
 
     return (
         <ImgContainer>

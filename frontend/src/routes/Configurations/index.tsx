@@ -1,7 +1,15 @@
 import styled from "styled-components";
 import { Navigate } from "react-router-dom";
-import { useContext } from "react";
+import { ReactNode, SetStateAction, useContext, useState } from "react";
+import DadosPessoais from "./ConfigRoutes/DadosPessoais";
+import Seguranca from "./ConfigRoutes/Segurança";
 import { UserContext } from "../../main";
+
+interface ButtonProps {
+    children: ReactNode,
+    configElement: JSX.Element,
+    setElement: React.Dispatch<SetStateAction<JSX.Element|null>>,
+}
 
 const Main = styled.main`
     display: flex;
@@ -39,6 +47,10 @@ const MenuButtons = styled.section`
     }
 `
 
+export const ConfigRoute = styled.section`
+    padding: 15px;
+`
+
 const StyledConfigButton = styled.button`
     position: relative;
     padding: 10px;
@@ -56,9 +68,21 @@ const StyledConfigButton = styled.button`
     }
 `
 
+function ConfigButton({children,configElement, setElement}:ButtonProps) {
+
+    return (
+        <StyledConfigButton onClick={(e) => {setElement(configElement)}}>
+            {children}
+        </StyledConfigButton>
+    )
+
+
+}
+
 function ConfigurationPage() {
 
     const [user] = useContext(UserContext)
+    const [element, setElement] = useState<JSX.Element|null>(null)
 
     return (
         <Main>
@@ -66,18 +90,24 @@ function ConfigurationPage() {
                 <ConfigSection>
                     <MenuButtons>
 
-                        <StyledConfigButton>
+                        <ConfigButton setElement={setElement} configElement={<DadosPessoais/>}>
                             Dados Pessoais
-                        </StyledConfigButton>
-                        <StyledConfigButton>
+                        </ConfigButton>
+                        <ConfigButton setElement={setElement} configElement={<Seguranca/>}>
                             Segurança
-                        </StyledConfigButton>
+                        </ConfigButton>
                         <StyledConfigButton>
                             Assinaturas
                         </StyledConfigButton>
 
                     </MenuButtons>
+                    {element?
+                        <section>
+                            {element}
+                        </section>
+                    :null}
                 </ConfigSection>
+                
                 :
                 <Navigate to={"/"}/>
             }
