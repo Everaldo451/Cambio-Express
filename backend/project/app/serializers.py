@@ -4,8 +4,10 @@ from . import models
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = models.User
-		fields = ["id","username","email","is_staff"]
+		fields = ["id","username","email","is_staff","is_company"]
 		read_only_fields = ['__all__']
+
+
 
 
 class FeedBackSerializer(serializers.ModelSerializer):

@@ -1,6 +1,28 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, GroupManager
+from django.core.exceptions import ValidationError
 from django.utils import timezone
+import re
+
+####MODEL VALIDATORS
+
+def validate_cnpj(value:str):
+	x = re.search(r"\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}", value)
+	if not x.group():
+		raise ValidationError(
+			("%(value) não é um CNPJ válido"),
+			params={"value":value},
+		)
+
+def validate_phone(value:str):
+	x = re.search(r"\(\d{2}\)\s\d{5}-\d{4}", value)
+	if not x.group():
+		raise ValidationError(
+			("%(value) não é um telefone válido"),
+			params={"value":value}
+		)
+
+####MODELS
 
 class UserManager(BaseUserManager):
 	
@@ -23,20 +45,20 @@ class UserManager(BaseUserManager):
 	def create_superuser(self,email,username,password, **extra_fields):
 
 		return self._create_user(email,username,password,True,True, **extra_fields)
-	
-
-
 
 
 class User(AbstractBaseUser):
 	
 	username = models.CharField(max_length=100,unique=True,null=False)
 	email = models.EmailField(max_length=254,unique=True,null=False)
+	money = models.FloatField(default=0)
+
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
+	is_company = models.BooleanField(default=False)
+
 	date_joined = models.DateTimeField(default=timezone.now())
-	
 	
 	USERNAME_FIELD = 'email'
 	EMAIL_FIELD = 'email'
@@ -46,6 +68,45 @@ class User(AbstractBaseUser):
 	objects = UserManager()
 
 
+class Company(models.Model):
+
+	user = models.OneToOneField(
+		User,
+		on_delete=models.CASCADE,
+	)
+	name = models.CharField(max_length=100)
+	phone = models.CharField(unique=True, validators=[validate_phone])
+	CNPJ = models.CharField(unique=True, validators=[validate_cnpj])
+
+
+class Offert(models.Model):
+
+	company = models.OneToOneField(Company, on_delete=models.CASCADE)
+	coin = models.CharField(null=False, choices={
+		"USD": "Dólar",
+		"BTC": "Bitcoin",
+		"EUR": "Euro"
+	})
+	value = models.FloatField()
+	indexVar= models.CharField()
+	fees = models.FloatField()
+
+
+class Transaction(models.Model):
+	
+	buyer = models.ForeignKey(User, on_delete=models.PROTECT)
+	seller = models.ForeignKey(User, on_delete=models.PROTECT)
+	offert = models.ForeignKey(
+		Offert, 
+		on_delete=models.PROTECT, 
+		limit_choices_to={"company.user":seller}
+	)
+
+
+
+
+
+
 class FeedBacks(models.Model):
 
 	user = models.OneToOneField(
@@ -53,7 +114,6 @@ class FeedBacks(models.Model):
 		on_delete=models.CASCADE,
 		verbose_name="user"
 	)
-
 	comment = models.CharField(max_length=500, null=True)
 	stars = models.IntegerField(choices={i: i for i in range(1, 6)})
 
