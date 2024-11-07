@@ -75,37 +75,8 @@ class Company(models.Model):
 		on_delete=models.CASCADE,
 	)
 	name = models.CharField(max_length=100)
-	phone = models.CharField(unique=True, validators=[validate_phone])
-	CNPJ = models.CharField(unique=True, validators=[validate_cnpj])
-
-
-class Offert(models.Model):
-
-	company = models.OneToOneField(Company, on_delete=models.CASCADE)
-	coin = models.CharField(null=False, choices={
-		"USD": "Dólar",
-		"BTC": "Bitcoin",
-		"EUR": "Euro"
-	})
-	value = models.FloatField()
-	indexVar= models.CharField()
-	fees = models.FloatField()
-
-
-class Transaction(models.Model):
-	
-	buyer = models.ForeignKey(User, on_delete=models.PROTECT)
-	seller = models.ForeignKey(User, on_delete=models.PROTECT)
-	offert = models.ForeignKey(
-		Offert, 
-		on_delete=models.PROTECT, 
-		limit_choices_to={"company.user":seller}
-	)
-
-
-
-
-
+	phone = models.CharField(unique=True, validators=[validate_phone], max_length=16)
+	CNPJ = models.CharField(unique=True, validators=[validate_cnpj], max_length=20)
 
 class FeedBacks(models.Model):
 

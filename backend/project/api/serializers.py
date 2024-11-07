@@ -8,8 +8,6 @@ class UserSerializer(serializers.ModelSerializer):
 		read_only_fields = ['__all__']
 
 
-
-
 class FeedBackSerializer(serializers.ModelSerializer):
 
 	username = serializers.CharField(source="user.username")

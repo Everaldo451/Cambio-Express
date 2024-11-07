@@ -3,11 +3,11 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.http import HttpRequest, HttpResponseBadRequest
+from django.http import HttpRequest
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_protect
-from .models import User
-from .serializers import UserSerializer
+from api.models import User
+from api.serializers import UserSerializer
 from .form import LoginForm, RegisterForm
 
 
@@ -90,3 +90,5 @@ def logout(request):
 	return response
 	
 	
+
+# Create your views here.

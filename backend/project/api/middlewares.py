@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
-from app.models import User
-from app.serializers import UserSerializer
+from api.models import User
+from api.serializers import UserSerializer
 
 def RefreshJWT(get_response):
 
