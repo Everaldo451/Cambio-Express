@@ -89,7 +89,7 @@ const DetailsParagraph = styled.p`
 
 function Home() {
 
-    const [user,setUser] = useContext(UserContext)
+    const [user,_] = useContext(UserContext)
 
     return (
             <main>

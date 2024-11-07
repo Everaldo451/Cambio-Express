@@ -29,8 +29,23 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'api.User'
 
+##CORS AND CSRF
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000'
+]
+
+##REST FRAMEWORK
 SIMPLE_JWT = {
     "USER_ID_CLAIM":"id"
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ]
 }
 
 
@@ -46,9 +61,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api',
-    'authe',
-    'transactions'
+    'api.apps.ApiConfig',
+    'authe.apps.AutheConfig',
+    'transactions.apps.TransactionsConfig'
 ]
 
 MIDDLEWARE = [

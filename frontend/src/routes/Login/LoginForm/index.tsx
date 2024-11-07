@@ -1,7 +1,9 @@
 import styled from 'styled-components'
-import React, { ReactNode, useState, useContext, useEffect, act } from 'react'
-import { CSRFContext } from '../../../main'
+import React, { ReactNode, useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { CSRFContext, JWTContext } from '../../../main'
 import CommonStyleProps, { StyledInput } from '../../../components/CommonButton'
+import axios from 'axios'
 
 interface InputStyleType {
     top: number,
@@ -85,7 +87,28 @@ export interface FormProps {
 function LoginForm ({children,url}:FormProps) {
 
     const [csrf] = useContext(CSRFContext)
+    const [_, setJwt] = useContext(JWTContext)
     console.log(csrf)
+    const navigate = useNavigate()
+
+    async function onSubmit(e:React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+
+        try {
+            const response = await axios.request({
+                url: e.currentTarget.action,
+                method: "POST",
+                data: new FormData(e.currentTarget),
+                withCredentials: true,
+            })
+
+            setJwt(response.data)
+            navigate("/")
+        } catch (error) {
+            console.log(error)
+            navigate("/")
+        }
+    }
 
     const inputStyle:InputStyleType = {
         top: 10,
@@ -101,7 +124,7 @@ function LoginForm ({children,url}:FormProps) {
     }
 
     return (
-        <StyledForm action={`api/auth/${url}/`} method='POST'>
+        <StyledForm action={`api/auth/${url}/`} method='POST' onSubmit={onSubmit}>
             {children}
             {url == "register"?
             <InputContainer 

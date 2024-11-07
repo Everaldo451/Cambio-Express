@@ -33,7 +33,7 @@ class UserManager(BaseUserManager):
 
 		print(email)
 
-		user = self.model(username=username, email=email, is_staff=is_staff, is_superuser=is_superuser, last_login=now, date_joined=now)
+		user = self.model(username=username, email=email, is_staff=is_staff, is_superuser=is_superuser, last_login=now)
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
@@ -56,9 +56,8 @@ class User(AbstractBaseUser):
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
-	is_company = models.BooleanField(default=False)
 
-	date_joined = models.DateTimeField(default=timezone.now())
+	date_joined = models.DateTimeField(auto_now_add=True)
 	
 	USERNAME_FIELD = 'email'
 	EMAIL_FIELD = 'email'
@@ -73,6 +72,7 @@ class Company(models.Model):
 	user = models.OneToOneField(
 		User,
 		on_delete=models.CASCADE,
+		related_name="company",
 	)
 	name = models.CharField(max_length=100)
 	phone = models.CharField(unique=True, validators=[validate_phone], max_length=16)

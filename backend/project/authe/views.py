@@ -1,5 +1,7 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -9,10 +11,6 @@ from django.views.decorators.csrf import csrf_protect
 from api.models import User
 from api.serializers import UserSerializer
 from .form import LoginForm, RegisterForm
-
-
-serializer = UserSerializer()
-request = HttpRequest()
 
 
 @api_view(["POST"])
@@ -31,18 +29,19 @@ def login(request):
 
 		if user is not None and user.is_active:
 
-			response = redirect(request.headers.get("Origin"))
 			refresh = RefreshToken.for_user(user)
-			response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.access_token.lifetime)
-			response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.lifetime)
-			return response
+			response = {
+				"refresh": str(refresh),
+				"access": str(refresh.access_token)
+			}
+			return Response(response)
 			
 		else:
 			print("No user")
 			messages.error(request,"No user")
-			return redirect(request.headers.get("Origin")+"/login")
+			return Response(None, status=status.HTTP_401_UNAUTHORIZED)
 	
-	else: return redirect(request.headers.get("Origin")+"/login")
+	else: return Response(None, status=status.HTTP_401_UNAUTHORIZED)
 	
 
 	
@@ -60,24 +59,29 @@ def register(request):
 			nuser = User.objects.create_user(form.cleaned_data.get("email"),form.cleaned_data.get("username"),form.cleaned_data.get("password"))
 			refresh = RefreshToken.for_user(nuser)
 
-			response = redirect("/")
-					
-			response.set_cookie("access",refresh.access_token,httponly=True,max_age=refresh.access_token.lifetime)
-			response.set_cookie("refresh",refresh,httponly=True,max_age=refresh.lifetime)
-			
-			return response
+			response = {
+				"refresh": str(refresh),
+				"access": str(refresh.access_token)
+			}
+
+			print("ola")
+			return Response(response)
 				
 		except IntegrityError as e:
 			error = str(e)
+
+			print(e)
 			if error.startswith("UNIQUE"):
 				if error.find('app.email'):
 					messages.error(request,"email já existente")
 				elif error.find('app.username'):
 					messages.error(request,"username já existente")
 				
-			return redirect("/login")
+			return Response(None, status=status.HTTP_400_BAD_REQUEST)
 	
-	else: return redirect("/login")
+	else: 
+		print("not valid")
+		return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])

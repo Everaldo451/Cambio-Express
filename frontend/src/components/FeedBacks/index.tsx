@@ -4,6 +4,7 @@ import { useContext, useState, useEffect, SetStateAction, createContext } from "
 import { StyledInput } from "../CommonButton";
 import Stars from "./Stars";
 import Avatar from "../FeedBacks/assets/avatar.png"
+import { customAxios } from "../../main";
 
 const FeedBackSection = styled.section`
     background-color: lightgray;
@@ -111,12 +112,9 @@ function FeedBacks() {
 
         try{
 
-            const response = await fetch("/api/feedbacks/get/",{
-                method:"GET",
-                credentials:"include"
-            })
+            const response = await customAxios.get("/api/feedbacks/get/")
 
-            const feedbacks = await response.json()
+            const feedbacks = response.data
 
             if (feedbacks instanceof Array) {
                 setFeedBacks(feedbacks.map((value) => {
