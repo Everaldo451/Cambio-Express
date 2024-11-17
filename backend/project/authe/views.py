@@ -1,17 +1,16 @@
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.http import HttpRequest
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_protect
 from api.models import User
 from api.serializers import UserSerializer
 from .form import LoginForm, RegisterForm
-
+from .utils import generate_tokens
+	
 
 @api_view(["POST"])
 @csrf_protect
@@ -29,12 +28,7 @@ def login(request):
 
 		if user is not None and user.is_active:
 
-			refresh = RefreshToken.for_user(user)
-			response = {
-				"refresh": str(refresh),
-				"access": str(refresh.access_token)
-			}
-			return Response(response)
+			return generate_tokens(request, user)
 			
 		else:
 			print("No user")
@@ -57,15 +51,8 @@ def register(request):
 		try:
 
 			nuser = User.objects.create_user(form.cleaned_data.get("email"),form.cleaned_data.get("username"),form.cleaned_data.get("password"))
-			refresh = RefreshToken.for_user(nuser)
-
-			response = {
-				"refresh": str(refresh),
-				"access": str(refresh.access_token)
-			}
-
-			print("ola")
-			return Response(response)
+			
+			return generate_tokens(request, nuser)
 				
 		except IntegrityError as e:
 			error = str(e)

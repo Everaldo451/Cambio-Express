@@ -13,11 +13,24 @@ from matplotlib import pyplot as plt
 from .models import User, FeedBacks
 from .form import ConfigForm, SetFeedbackForm
 from .serializers import UserSerializer, FeedBackSerializer
+from authe.utils import generate_token_response
 
 @api_view(["GET"])
 def get_csrf(request):
 	print(request.COOKIES)
-	return Response({"csrf":get_token(request)})
+	return Response(get_token(request))
+
+
+@api_view(["GET"])
+def get_jwt(request):
+
+	if request.COOKIES.get("access_token") and request.COOKIES.get("refresh_token"):
+		try:
+			refresh = RefreshToken(request.COOKIES.get("refresh_token"))
+			return generate_token_response(refresh)
+		
+		except: return Response(None)
+	return Response(None)
 
 
 @api_view(["GET"])

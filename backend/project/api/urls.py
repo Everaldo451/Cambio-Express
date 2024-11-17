@@ -11,4 +11,5 @@ urlpatterns = [
    ])),
    path("getcsrf/",views.get_csrf),
    path("getuser/",views.get_user),
+   path("getjwt/", views.get_jwt),
 ]

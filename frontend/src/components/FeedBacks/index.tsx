@@ -4,7 +4,7 @@ import { useContext, useState, useEffect, SetStateAction, createContext } from "
 import { StyledInput } from "../CommonButton";
 import Stars from "./Stars";
 import Avatar from "../FeedBacks/assets/avatar.png"
-import { customAxios } from "../../main";
+import {customAxios} from "../../load";
 
 const FeedBackSection = styled.section`
     background-color: lightgray;
