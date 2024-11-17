@@ -6,11 +6,11 @@ import pytest
 def rqData():
     string = ""
     data = {
-        "@dataCotacao":"'11-10-2024'",
+        "@dataCotacao":"'11-10-2023'",
         "$format":"json",
         "$select":"cotacaoCompra,cotacaoVenda",
         "$skip": "0",
-        "$top": "100",
+        "$top": "10",
     }
 
     for key, value in data.items():
@@ -31,8 +31,11 @@ def rq(url):
 
 def test_api(rq):
 
+    assert rq.status_code == 200
+    assert rq.content == {}
+
     with pytest.raises(Exception) as excinfo:
         rq.raise_for_status()
 
-    assert rq.status_code == 200
+    
     assert excinfo.value == ""
