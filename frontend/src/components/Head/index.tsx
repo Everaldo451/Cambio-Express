@@ -1,11 +1,17 @@
 import styled from "styled-components";
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState} from "react";
 import { UserContext } from "../../main";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png"
 
 const HeaderElement = styled.header`
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-family: InstrumentSans;
+    width: 100%;
+    z-index: 2;
+    box-shadow: 0 0 3px gray;
 `
 
 const HeaderUL = styled.ul`
@@ -13,8 +19,9 @@ const HeaderUL = styled.ul`
     margin: 0;
     list-style: none;
     align-items: center;
-    padding: 5px 10px 0 10px;
-    background-color: transparent
+    padding: 5px 10px;
+    background-color: #D9D9D9;
+    backdrop-filter: blur(10px);
 `
 
 const DropdownContainer = styled.section`
@@ -75,24 +82,17 @@ const DropdownLi = styled.li`
 `
 
 const NavLi = styled.li`
+
     &:last-child{
         margin-left: auto;
     }
 
     &:nth-child(n+2) a::after{
-        content: "";
-        position: absolute;
-        left: 50%;
-        bottom: 0;
-        height: 2px;
-        background-color: rgb(202, 132, 2);
-        width: 0;
-        transition: all 0.5s;
+        
     }
 
     &:nth-child(n+2) a:hover::after{
-        left: 0;
-        width: 100%;
+        
     }
 `
 
@@ -111,12 +111,14 @@ const ImageLink = styled(NavLink)`
 
 const IMG = styled.img`
     height: 30px;
+    display: block;
 `
 
 
 function Header() {
 
     const [user,setUser] = useContext(UserContext)
+    const navigate = useNavigate()
 
     async function logoutFunc(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault()
@@ -128,9 +130,9 @@ function Header() {
                 credentials:"include"
             })
 
-            if (response.redirected) {window.location.assign(response.url)}
+            if (response.redirected) {navigate("/")}
         }
-        catch(e) {window.location.assign("/")}
+        catch(e) {navigate("/")}
     }
     
     return (

@@ -1,7 +1,5 @@
-import styled, {ThemeProvider} from "styled-components";
+import styled, {keyframes} from "styled-components";
 import HomeImage from "../../../../assets/HomePageImage.jpg"
-import { useContext } from "react";
-import { UserContext } from "../../../../main";
 
 const IntroducSection = styled.section`
     display: grid;
@@ -12,14 +10,6 @@ const IntroducSection = styled.section`
 
     & * {
         margin: 0;
-    }
-    
-    & p {
-        font-size: 15px;
-    }
-
-    & p span{
-        color: orange;
     }
 
     & ul > li{
@@ -36,10 +26,6 @@ const IntroductText = styled.section`
     color: white;
     padding: 15%;
 
-    & h1 {
-        font-size: 32px;
-    }
-
     & p {
         font-size: 20px;
     }
@@ -53,12 +39,41 @@ const ImageContainer = styled.div`
     clip-path: ellipse(100% 100% at right); 
 `
 
+const SlideText = keyframes`
+
+    0% {
+        transform: translateX(-200%);
+        opacity: 0;
+    }
+
+    40% {
+        opacity: 0.3;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+`
+
+const P = styled.p`
+    font-size: 20px;
+    animation-name: ${SlideText};
+    animation-duration: 1.5s
+`
+
+const H1 = styled.h1`
+    font-size: 32px;
+    animation-name: ${SlideText};
+    animation-duration: 1.5s;
+`
+
 export default function Introduction() {
     return (
         <IntroducSection>
             <IntroductText>
-                <h1>Câmbio Express</h1>
-                <p>A maior agência de câmbio do país.</p>
+                <H1>Câmbio Express</H1>
+                <P>A maior agência de câmbio do país.</P>
             </IntroductText>
             <ImageContainer>
             </ImageContainer>

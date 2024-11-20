@@ -1,112 +1,115 @@
 import styled from "styled-components";
 import { UserContext } from "../../main";
-import { useContext, useState, useEffect, SetStateAction, createContext } from "react";
+import { useContext, useState, useEffect, SetStateAction, createContext, ReactNode } from "react";
 import { StyledInput } from "../CommonButton";
-import Stars from "./Stars";
-import Avatar from "../FeedBacks/assets/avatar.png"
+import Triangle from "./assets/Triangle.png"
 import {customAxios} from "../../load";
 
-const FeedBackSection = styled.section`
-    background-color: lightgray;
-    padding: 40px 20px;
+const Section = styled.section`
+    background-color: #3F4156;
+    padding: 60px 40px;
 
     & > h2 {
-        text-align: center;
-        text-transform: uppercase;
+        color:white;
+        margin:0;
+        font-family: InstrumentSans;
     }
+`
+
+const Div = styled.div`
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-auto-flow: column;
+`
+
+const FeedSection = styled.section`
+    margin: 0 10px;
+    display: grid;
+    grid-auto-columns: calc(24% - (14px/4));
+    gap: calc(4%/3);
+    grid-auto-flow: column;
+    overflow: hidden;
 `
 
 const FeedBackDIV = styled.div`
-    border-radius: 20px;
-    padding: 10px;
-    border: 1px solid black;
+    border-radius: 20px 0;
+    background-color: #BEC1C1;
+    padding:20px;
+    font-family: InstrumentSans;
+    box-shadow: 7px 10px 10px #2D2F3F;
 
-    &:nth-child(n+1) {
-        margin-top: 20px;
+    & h5 {
+        font-size: 15px;
+        margin: 0;
+    }
+
+    & h6 {
+        font-size: 10px;
+        color: #5F5F5F;
+        margin: 0;
+        font-weight: normal;
+    }
+
+    & p {
+        font-size: 12px;
+        margin: 20px 0 30px 0;
     }
 `
 
-const PersonDIV = styled.div`
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-
-    & > img {
-        width: 30px;
-        height: 30px;
-        margin-right: 10px;
-    }
+const Seta = styled.img`
+    width: 20px;
+    margin: auto 0;
 `
 
-const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-
-    & textarea {
-        width: 100%;
-        resize: none;
-        margin-bottom: 20px;
-        border: 1px solid black;
-        min-height: 100px;
-    }
+const Seta2 = styled(Seta)`
+    transform: rotate(180deg);
 `
-
-export const StarsContext = createContext<[number,React.Dispatch<SetStateAction<number>>]>([0,() => {}])
 
 export interface FeedBack {
     username: string,
-    stars?: number,
-    readonly: boolean,
+    date: Date,
     comment:string
 }
 
-function FeedBack({username,stars,readonly,comment}:FeedBack) {
-
-    return (
-        <StarsContext.Provider value={useState(stars?stars:0)}>
-
-            <FeedBackDIV>
-
-                <PersonDIV>
-                    <img src={Avatar}/>
-                    <p className="name">{username}</p>
-                    <Stars readonly={readonly}/>
-                </PersonDIV>
-
-                {readonly?
-                    <div className="avaliation">
-                        <p>{comment}</p>
-                    </div>
-                    :
-                    <Form method="POST" action="/api/feedbacks/set/">
-                        <textarea name="comment" required></textarea>
-
-                        <StarsContext.Consumer>
-                            {context => <input type="hidden" name="stars" value={context[0]} required/>}
-                        </StarsContext.Consumer>
-
-                        <StyledInput
-                            borderColor="black"
-                            color="black"
-                            hoverBg="rgb(150,50,0)"
-                            hoverColor="white"
-                         type="submit" value="Send"/>
-                    </Form>
-                }   
-
-            </FeedBackDIV>
-        </StarsContext.Provider>
-    )
+interface Feed {
+    children: ReactNode,
+    elNum: number,
 }
 
+function FeedBack({username,date,comment}:FeedBack) {
+
+    return (
+        
+        <FeedBackDIV>
+
+            <h5 className="name">{username}</h5>
+            <h6>{`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}</h6>
+            
+            <div className="avaliation">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus, consectetur cum natus sunt iure tempora dolor, aliquid, dolorum praesentium laudantium sequi soluta quibusdam ipsam. Vitae quidem error ipsum velit eos.</p>
+            </div>            
+
+        </FeedBackDIV>
+        
+    )
+
+}
+
+function FeedComponent({children,elNum}:Feed) {
+
+
+    return <FeedSection>
+        {children}
+    </FeedSection>
+}
 
 
 function FeedBacks() {
 
     const [user] = useContext(UserContext)
-    const [feedbacks, setFeedBacks] = useState<Array<FeedBack>|null>(null)
+    const [feedbacks, setFeedBacks] = useState<Array<FeedBack>>([])
+    const [element, setElement] = useState<number>(0)
 
     async function GetFeedBacks() {
 
@@ -117,9 +120,7 @@ function FeedBacks() {
             const feedbacks = response.data
 
             if (feedbacks instanceof Array) {
-                setFeedBacks(feedbacks.map((value) => {
-                    return {...value, readonly:true}
-                }))
+                setFeedBacks(feedbacks)
             }
 
         } catch(e) {}
@@ -129,23 +130,43 @@ function FeedBacks() {
     useEffect(() => {
         GetFeedBacks()
         console.log(feedbacks)
+
+        setFeedBacks(prev => [...prev, 
+            {username:"João", date: new Date(), comment: "asadasd"},
+            {username:"João", date: new Date(), comment: "asadasd"},
+            {username:"João", date: new Date(), comment: "asadasd"},
+            {username:"João", date: new Date(), comment: "asadasd"},
+            {username:"João", date: new Date(), comment: "asadasd"},
+            {username:"João", date: new Date(), comment: "asadasd"},
+        ])
     },[])
 
     return (
-        <FeedBackSection>
-            <h2>FeedBacks</h2>
-            {
-                user && feedbacks?.filter((feedback) => feedback.username == user.username).length==0?
-                    <FeedBack username={user.username} comment="adsad" readonly={false}/>
-                :null
-            }
-            {
-                feedbacks?.map((fdb) => 
-                    <FeedBack username={fdb.username} stars={fdb.stars} comment={fdb.comment} readonly={fdb.readonly}/>
-                )   
-            }
-            <FeedBack username={"João"} stars={3} comment="adsad" readonly={true}/>
-        </FeedBackSection>
+        <Section>
+            <h2>Comentários</h2>
+            <Div>
+                <Seta 
+                    src={Triangle} 
+                    onClick={(e) => {setElement(prev => prev-1>=0?prev-1:prev)}}
+                />
+                <FeedSection>
+                    {
+                        user && feedbacks?.filter((feedback) => feedback.username == user.username).length==0?
+                            <FeedBack username={user.username} comment="adsad" date={new Date()}/>
+                        :null
+                    }
+                    {
+                        feedbacks.map((fdb) => 
+                            <FeedBack username={fdb.username} date={fdb.date} comment={fdb.comment}/>
+                        )   
+                    }
+                </FeedSection>
+                <Seta2 
+                    src={Triangle} 
+                    onClick={(e) => {setElement(prev => prev+1>=feedbacks.length?prev+1:prev)}}
+                />
+            </Div>
+        </Section>
     )
 }
 

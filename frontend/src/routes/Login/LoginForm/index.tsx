@@ -88,7 +88,6 @@ function LoginForm ({children,url}:FormProps) {
 
     const [csrf] = useContext(CSRFContext)
     const [_, setJwt] = useContext(JWTContext)
-    console.log(csrf)
     const navigate = useNavigate()
 
     async function onSubmit(e:React.FormEvent<HTMLFormElement>) {
@@ -97,7 +96,7 @@ function LoginForm ({children,url}:FormProps) {
         try {
             const response = await axios.request({
                 url: e.currentTarget.action,
-                method: "POST",
+                method: e.currentTarget.method,
                 data: new FormData(e.currentTarget),
                 withCredentials: true,
             })

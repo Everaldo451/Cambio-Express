@@ -1,4 +1,4 @@
-import { StrictMode, createContext, useState, useEffect } from 'react'
+import { StrictMode, createContext, useState, useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { UserContextType, UserType, CSRFContextType, CSRFType, JWTContextType, JWT } from './Types.ts'
 import {GetCSRF, GetUser, GetJWT, UpdateAxios} from './load.tsx'
@@ -25,7 +25,7 @@ function Main() {
     setLoaded(false)
   },[])
 
-  useEffect(() => {
+  useMemo(() => {
     UpdateAxios(jwt)
     GetUser(setUser)
     console.log(jwt)
