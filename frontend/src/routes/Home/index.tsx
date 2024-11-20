@@ -3,6 +3,8 @@ import { ReactNode, useContext, useState } from "react";
 import { UserContext } from "../../main";
 import FeedBacks from "../../components/FeedBacks";
 import APIConsumer from "./ApiConsume";
+import Introduction from "./Frames/Introduction";
+import WeOffer from "./Frames/PositivePoints";
 
 const IntroducSection = styled.section`
     padding: 40px 20px;
@@ -93,6 +95,9 @@ function Home() {
 
     return (
             <main>
+                <Introduction/>
+                <WeOffer/>
+                {/*
                 <IntroducSection>
                     <IntroducDiv>
                         <h1>Câmbio Express</h1>
@@ -136,6 +141,7 @@ function Home() {
                     </IntroducDiv>
                     <APIConsumer/>
                 </IntroducSection>
+                */}
 
                 <FeedBacks/>
         </main>

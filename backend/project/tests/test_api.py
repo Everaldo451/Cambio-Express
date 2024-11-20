@@ -9,7 +9,7 @@ def rqData():
         "@dataInicial":"'11-11-2024'",
         "@dataFinalCotacao":"'11-16-2024'",
         "$format":"json",
-        "$select":"cotacaoCompra,cotacaoVenda",
+        "$select":"cotacaoCompra,cotacaoVenda,dataHoraCotacao",
         "$skip": "0",
         "$top": "100",
     }
@@ -58,3 +58,6 @@ def test_api(rq):
 
     
     assert excinfo.value == ""
+
+
+

@@ -1,3 +1,10 @@
 from django.contrib import admin
+from api.models import Company, FeedBacks, User
+from transactions.models import Transaction, Offert
 
-# Register your models here.
+admin.site.register(User)
+admin.site.register(Company)
+admin.site.register(FeedBacks)
+admin.site.register(Transaction)
+admin.site.register(Offert)
+

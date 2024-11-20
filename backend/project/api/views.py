@@ -1,23 +1,19 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.http import HttpRequest
 from django.middleware.csrf import get_token
-from django.db import DataError
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from requests import request as rq
-from matplotlib import pyplot as plt
-from .models import User, FeedBacks
-from .form import ConfigForm, SetFeedbackForm
+from .models import FeedBacks
+from .form import SetFeedbackForm
 from .serializers import UserSerializer, FeedBackSerializer
 from authe.utils import generate_token_response
 
 @api_view(["GET"])
 def get_csrf(request):
-	print(request.COOKIES)
 	return Response(get_token(request))
 
 
@@ -41,7 +37,10 @@ def get_user(request):
 	try:
 		serializer = UserSerializer(request.user)
 		serializer = serializer.data
+		print(serializer)
 		serializer.pop("id")
+		if not request.user.groups.filter(name="Company").exists():
+			serializer.pop("company")
 
 		return Response(serializer)
 
@@ -65,9 +64,7 @@ def get_feedbacks(request):
 	try:
 		
 		if request.user is not AnonymousUser:
-
 			feedback = FeedBacks.objects.get(user=request.user)
-
 			serialized = FeedBackSerializer(feedback)
 
 			if results: results.data.append(serialized.data) 

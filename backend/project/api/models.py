@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, GroupManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import re
@@ -47,7 +47,7 @@ class UserManager(BaseUserManager):
 		return self._create_user(email,username,password,True,True, **extra_fields)
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
 	
 	username = models.CharField(max_length=100,unique=True,null=False)
 	email = models.EmailField(max_length=254,unique=True,null=False)
@@ -72,11 +72,17 @@ class Company(models.Model):
 	user = models.OneToOneField(
 		User,
 		on_delete=models.CASCADE,
-		related_name="company",
+		related_name="company"
 	)
+
 	name = models.CharField(max_length=100)
 	phone = models.CharField(unique=True, validators=[validate_phone], max_length=16)
 	CNPJ = models.CharField(unique=True, validators=[validate_cnpj], max_length=20)
+
+	def __str__(self):
+		return self.name
+	
+
 
 class FeedBacks(models.Model):
 
@@ -87,6 +93,9 @@ class FeedBacks(models.Model):
 	)
 	comment = models.CharField(max_length=500, null=True)
 	stars = models.IntegerField(choices={i: i for i in range(1, 6)})
+
+	def __str__(self):
+		return self.id
 
 
 

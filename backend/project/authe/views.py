@@ -7,7 +7,6 @@ from django.shortcuts import redirect
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_protect
 from api.models import User
-from api.serializers import UserSerializer
 from .form import LoginForm, RegisterForm
 from .utils import generate_tokens
 	
@@ -24,7 +23,7 @@ def login(request):
 			request,
 			username = form.cleaned_data.get("email"),
 			password = form.cleaned_data.get("password")
-			)
+		)
 
 		if user is not None and user.is_active:
 
@@ -75,8 +74,8 @@ def register(request):
 def logout(request):
 
 	response = redirect("http://localhost:3000")
-	response.delete_cookie("access")
-	response.delete_cookie("refresh")
+	response.delete_cookie("access_token")
+	response.delete_cookie("refresh_token")
 
 	return response
 	

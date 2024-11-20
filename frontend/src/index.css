@@ -11,3 +11,8 @@ body{
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
 }
+
+@font-face {
+    font-family: "InstrumentSans";
+    src: url("assets/fonts/InstrumentSans-Regular.ttf");
+}
