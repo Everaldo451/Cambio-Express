@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { UserContext } from "../../main";
-import { useContext, useState, useEffect, SetStateAction, createContext, ReactNode, useRef } from "react";
-import { StyledInput } from "../CommonButton";
+import { useContext, useState, useEffect, ReactNode, useRef } from "react";
 import Triangle from "./assets/Triangle.png"
 import {customAxios} from "../../load";
 

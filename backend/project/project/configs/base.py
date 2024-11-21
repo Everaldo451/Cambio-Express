@@ -74,9 +74,10 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'api.middlewares.RefreshJWT',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'api.middlewares.JWTAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'api.middlewares.LogRequest'
+    'api.middlewares.LogRequest',
 ]
 
 ROOT_URLCONF = 'project.urls'

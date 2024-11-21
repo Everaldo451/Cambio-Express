@@ -30,9 +30,10 @@ def get_jwt(request):
 
 
 @api_view(["GET"])
-@authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def get_user(request):
+
+	print(request.user)
 
 	try:
 		serializer = UserSerializer(request.user)
@@ -51,7 +52,6 @@ def get_user(request):
 
 
 @api_view(["GET"])
-@authentication_classes([JWTAuthentication])
 def get_feedbacks(request):
 
 	try:
@@ -76,7 +76,6 @@ def get_feedbacks(request):
 
 
 @api_view(["POST"])
-@authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def set_user_feedback(request):
 

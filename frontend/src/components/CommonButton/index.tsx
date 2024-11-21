@@ -18,7 +18,7 @@ export const StyledButton = styled.button<{
     border: 1px solid ${(props) => props.borderColor};
     background-color: inherit;
     color:${(props) => props.color};
-    transition: all 0.5s;
+    transition: all 0.2s;
 
     &:hover {
         cursor: pointer;
@@ -38,7 +38,7 @@ export const StyledInput = styled.input<{
     border: 1px solid ${(props) => props.borderColor};
     background-color: inherit;
     color:${(props) => props.color};
-    transition: all 0.5s;
+    transition: all 0.2s;
 
     &:hover {
         cursor: pointer;

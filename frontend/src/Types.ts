@@ -1,9 +1,15 @@
 import React, { SetStateAction } from "react"
 
+interface Company {
+    name: string,
+    phone: string,
+    CNPJ: string
+}
+
 export interface UserType {
     username: string,
     email: string,
-    is_staff: boolean
+    company: Company | null
 }
 
 export type UserContextType = [UserType|null, React.Dispatch<SetStateAction<UserType|null>>]

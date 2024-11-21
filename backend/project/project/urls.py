@@ -16,9 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+import os
+
+
+os.environ.setdefault("DJANGO_ADMIN_URL",'admin/')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(os.environ.get("DJANGO_ADMIN_URL"), admin.site.urls),
     path("", include("api.urls")),
     path("auth/", include("authe.urls")),
     path("tran/", include("transactions.urls"))

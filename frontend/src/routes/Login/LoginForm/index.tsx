@@ -31,7 +31,7 @@ const Label = styled.label<{inputStyle:InputStyleType, focused:boolean}>`
         (props) => props.inputStyle && !props.focused?props.inputStyle.left:0
     }px;
     transform: ${(props) => props.focused?"none":"translate(0, -50%)"};
-    color: ${(props) => props.focused?"black":"gray"};
+    color: ${(props) => props.focused?"white":"white"};
     transition: all 0.5s;
 
     &:hover {cursor:text;}
@@ -39,7 +39,15 @@ const Label = styled.label<{inputStyle:InputStyleType, focused:boolean}>`
 
 const Input = styled.input<{inputStyle:InputStyleType}>`
     font-size: ${(props) => props.inputStyle?props.inputStyle.fontSize:0}px;
-    padding: ${(props)=> props.inputStyle?`${props.inputStyle.top}px ${props.inputStyle.left}px`:0}
+    padding: ${(props)=> props.inputStyle?`${props.inputStyle.top}px ${props.inputStyle.left}px`:0};
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    color: #BEC1C1;
+
+    &:focus {
+        outline: none;
+    }
 `
 
 const SubmitInput = styled(StyledInput)`
@@ -111,14 +119,14 @@ function LoginForm ({children,url}:FormProps) {
 
     const inputStyle:InputStyleType = {
         top: 10,
-        left: 20,
+        left: 15,
         fontSize:15,
     }
 
     const submitProps:CommonStyleProps = {
-        color:"black",
-        hoverBg:"darkorange",
-        borderColor:"black",
+        color:"white",
+        hoverBg:"#2C2D52",
+        borderColor:"white",
         hoverColor:"white"
     }
 
@@ -129,6 +137,7 @@ function LoginForm ({children,url}:FormProps) {
             <InputContainer 
                 inputStyle={inputStyle} 
                 inputAttrs={{name:"username",id:"username",required: true}}
+
             />
             :null}
             <InputContainer 

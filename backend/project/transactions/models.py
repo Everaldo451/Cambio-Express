@@ -29,7 +29,7 @@ class Transaction(models.Model):
 		limit_choices_to={"company.user":seller}
 	)
 
-	date = models.DateTimeField(default=datetime.now())
+	date = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
 		return self.id
