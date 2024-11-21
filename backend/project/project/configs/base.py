@@ -70,12 +70,13 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'api.middlewares.RefreshJWT',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'api.middlewares.RefreshJWT',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'api.middlewares.LogRequest'
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -132,6 +133,37 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+##### LOGGING
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    
+    "formatters": {
+        "request": {
+            "format": "[{asctime}] {username}, {message} {method} {endpoint} {status}",
+            "style": "{"
+        }
+    },
+
+    "handlers": {
+        "request": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "requests.log",
+            "formatter": "request",
+        }
+    },
+
+    "loggers": {
+        "api.middlewares" : {
+            "level": "INFO",
+            "handlers": ["request"],
+            "propagate": False,
+        }
+    }
+}
 
 
 # Static files (CSS, JavaScript, Images)
