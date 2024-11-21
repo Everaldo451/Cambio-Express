@@ -9,5 +9,4 @@ class ConfigForm(forms.Form):
 
 class SetFeedbackForm(forms.Form):
 
-    stars = forms.CharField(label="stars", max_length=1, required=True)
     comment = forms.CharField(label="comment", widget=forms.Textarea)

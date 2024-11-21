@@ -92,7 +92,7 @@ class FeedBacks(models.Model):
 		verbose_name="user"
 	)
 	comment = models.CharField(max_length=500, null=True)
-	stars = models.IntegerField(choices={i: i for i in range(1, 6)})
+	date = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
 		return self.id

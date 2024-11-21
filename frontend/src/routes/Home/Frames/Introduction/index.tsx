@@ -59,13 +59,13 @@ const SlideText = keyframes`
 const P = styled.p`
     font-size: 20px;
     animation-name: ${SlideText};
-    animation-duration: 1.5s
+    animation-duration: 1s
 `
 
 const H1 = styled.h1`
     font-size: 32px;
     animation-name: ${SlideText};
-    animation-duration: 1.5s;
+    animation-duration: 1s;
 `
 
 export default function Introduction() {

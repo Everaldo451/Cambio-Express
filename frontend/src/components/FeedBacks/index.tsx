@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { UserContext } from "../../main";
-import { useContext, useState, useEffect, SetStateAction, createContext, ReactNode } from "react";
+import { useContext, useState, useEffect, SetStateAction, createContext, ReactNode, useRef } from "react";
 import { StyledInput } from "../CommonButton";
 import Triangle from "./assets/Triangle.png"
 import {customAxios} from "../../load";
@@ -98,10 +98,32 @@ function FeedBack({username,date,comment}:FeedBack) {
 
 function FeedComponent({children,elNum}:Feed) {
 
+    const sectionRef = useRef<HTMLElement|null>(null)
 
-    return <FeedSection>
-        {children}
-    </FeedSection>
+    useEffect(() => {
+
+        console.log(elNum)
+
+        if (sectionRef.current) {
+            const childrens = sectionRef.current.querySelectorAll(":scope > div")
+
+            const element = childrens[elNum]
+            console.log(element)
+            if (element) {
+                element.scrollIntoView({
+                    inline:"start",
+                    behavior:"smooth"
+                })
+            }
+        }
+        
+    },[elNum])
+
+    return (
+        <FeedSection ref={sectionRef}>
+            {children}
+        </FeedSection>
+    )
 }
 
 
@@ -133,11 +155,9 @@ function FeedBacks() {
 
         setFeedBacks(prev => [...prev, 
             {username:"João", date: new Date(), comment: "asadasd"},
-            {username:"João", date: new Date(), comment: "asadasd"},
-            {username:"João", date: new Date(), comment: "asadasd"},
-            {username:"João", date: new Date(), comment: "asadasd"},
-            {username:"João", date: new Date(), comment: "asadasd"},
-            {username:"João", date: new Date(), comment: "asadasd"},
+            {username:"Maria", date: new Date(), comment: "asadasd"},
+            {username:"Rafaela", date: new Date(), comment: "asadasd"},
+            {username:"José", date: new Date(), comment: "asadasd"},
         ])
     },[])
 
@@ -149,7 +169,7 @@ function FeedBacks() {
                     src={Triangle} 
                     onClick={(e) => {setElement(prev => prev-1>=0?prev-1:prev)}}
                 />
-                <FeedSection>
+                <FeedComponent elNum={element}>
                     {
                         user && feedbacks?.filter((feedback) => feedback.username == user.username).length==0?
                             <FeedBack username={user.username} comment="adsad" date={new Date()}/>
@@ -160,10 +180,10 @@ function FeedBacks() {
                             <FeedBack username={fdb.username} date={fdb.date} comment={fdb.comment}/>
                         )   
                     }
-                </FeedSection>
+                </FeedComponent>
                 <Seta2 
                     src={Triangle} 
-                    onClick={(e) => {setElement(prev => prev+1>=feedbacks.length?prev+1:prev)}}
+                    onClick={(e) => {setElement(prev => prev+1<=feedbacks.length?prev+1:prev)}}
                 />
             </Div>
         </Section>

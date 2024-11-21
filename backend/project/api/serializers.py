@@ -19,5 +19,5 @@ class FeedBackSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = models.FeedBacks
-		fields = ["username","comment","stars"]
+		fields = ["username","comment","date"]
 		read_only_fields = ['__all__']
