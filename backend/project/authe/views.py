@@ -49,7 +49,11 @@ def register(request):
 
 		try:
 
-			nuser = User.objects.create_user(form.cleaned_data.get("email"),form.cleaned_data.get("username"),form.cleaned_data.get("password"))
+			nuser = User.objects.create_user(
+				form.cleaned_data.get("email"),
+				form.cleaned_data.get("full_name"),
+				form.cleaned_data.get("password")
+			)
 			
 			return generate_tokens(request, nuser)
 				

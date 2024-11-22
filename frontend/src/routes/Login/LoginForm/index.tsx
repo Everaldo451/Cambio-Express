@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { CSRFContext, JWTContext } from '../../../main'
 import CommonStyleProps, { StyledInput } from '../../../components/CommonButton'
 import axios from 'axios'
+import { InputContainer, Label, Input } from '../../../components/StyledInputLabel'
 
 interface InputStyleType {
     top: number,
@@ -17,37 +18,20 @@ const InputDiv = styled.div`
     display:flex;
     flex-direction:column;
 `
-
-const Label = styled.label<{inputStyle:InputStyleType, focused:boolean}>`
-    position: absolute;
-    font-size: ${(props) => 
-        props.inputStyle?
-            props.focused?
-                props.inputStyle.fontSize - 3:
-                props.inputStyle.fontSize
-            :0}px;
-    top: ${(props) => props.inputStyle && props.focused?`${- (props.inputStyle.fontSize + 4)}px`:'50%'};
-    left: ${
-        (props) => props.inputStyle && !props.focused?props.inputStyle.left:0
-    }px;
-    transform: ${(props) => props.focused?"none":"translate(0, -50%)"};
-    color: ${(props) => props.focused?"white":"white"};
-    transition: all 0.5s;
-
-    &:hover {cursor:text;}
-`
-
-const Input = styled.input<{inputStyle:InputStyleType}>`
-    font-size: ${(props) => props.inputStyle?props.inputStyle.fontSize:0}px;
-    padding: ${(props)=> props.inputStyle?`${props.inputStyle.top}px ${props.inputStyle.left}px`:0};
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid white;
-    color: #BEC1C1;
+/*
+    font-size: ${(props) => props.style?props.style.fontSize:0}px;
+    padding: ${(props)=> props.style?`${props.style.paddingTop}px ${props.style.paddingLeft}px`:0};
 
     &:focus {
         outline: none;
     }
+*/
+
+const NInput = styled(Input)`
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    color: #BEC1C1;
 `
 
 const SubmitInput = styled(StyledInput)`
@@ -57,24 +41,6 @@ const SubmitInput = styled(StyledInput)`
 interface ContainerProps {
     inputStyle:InputStyleType,
     inputAttrs: React.HTMLProps<HTMLInputElement>
-}
-
-function InputContainer({inputStyle,inputAttrs}:ContainerProps) { 
-
-    const [focused, setFocused] = useState<boolean>(false)
-
-    function onFocusChange (event:React.FocusEvent<HTMLInputElement, Element>) {
-        if (event.currentTarget.value.length == 0) {setFocused(!focused)}
-    }
-
-    const Name = inputAttrs.name?inputAttrs.name[0].toUpperCase() + inputAttrs.name.slice(1,inputAttrs.name.length):""
-
-    return (
-        <InputDiv>
-            <Label inputStyle={inputStyle} focused={focused} htmlFor={inputAttrs.id?inputAttrs.id:""}>{focused?Name+":":Name}</Label>
-            <Input inputStyle={inputStyle} {...inputAttrs} onFocus={onFocusChange} onBlur={onFocusChange}/>
-        </InputDiv>
-    )
 }
 
 const StyledForm = styled.form`
@@ -136,10 +102,11 @@ function LoginForm ({children,url}:FormProps) {
             {url == "register"?
             <InputContainer 
                 inputStyle={inputStyle} 
-                inputAttrs={{name:"username",id:"username",required: true}}
-
+                inputAttrs={{name:"Full Name",id:"full_name",required: true}}
+                InputObject={NInput}
             />
             :null}
+            <Ninput/>
             <InputContainer 
                 inputStyle={inputStyle} 
                 inputAttrs={{name:"email",id:"email",required: true}}

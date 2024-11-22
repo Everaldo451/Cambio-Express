@@ -7,9 +7,10 @@ interface Company {
 }
 
 export interface UserType {
-    username: string,
+    first_name: string,
     email: string,
-    company: Company | null
+    company: Company | null,
+    money: number,
 }
 
 export type UserContextType = [UserType|null, React.Dispatch<SetStateAction<UserType|null>>]

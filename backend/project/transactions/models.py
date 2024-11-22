@@ -18,15 +18,16 @@ class Offert(models.Model):
 		return self.id
 
 
+
 class Transaction(models.Model):
 	
-	buyer = models.ForeignKey(User, on_delete=models.PROTECT, related_name="bought_transactions")
-	seller = models.ForeignKey(User, on_delete=models.PROTECT)
+	buyer = models.ForeignKey(User, on_delete=models.PROTECT, related_name="bought_offerts")
+	seller = models.ForeignKey(Company, on_delete=models.PROTECT, related_name="selled_offerts")
 
 	offert = models.ForeignKey(
 		Offert, 
 		on_delete=models.PROTECT, 
-		limit_choices_to={"company.user":seller}
+		limit_choices_to={"company":seller}
 	)
 
 	date = models.DateTimeField(auto_now=True)

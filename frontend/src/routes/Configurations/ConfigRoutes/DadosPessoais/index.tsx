@@ -13,7 +13,7 @@ function DadosPessoais() {
 
     return (
         <ConfigRoute>
-            <p>Username: <span>{user?.username}</span></p>
+            <p>Username: <span>{user?.first_name}</span></p>
             <p>Email: <span>{user?.email}</span></p>
 
             <p>Conta Empresarial:</p>

@@ -10,7 +10,7 @@ function Seguranca() {
 
     return (
         <ConfigRoute>
-            <p>Username: <span>{user?.username}</span></p>
+            <p>Username: <span>{user?.first_name}</span></p>
         </ConfigRoute>
     )
 

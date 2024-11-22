@@ -66,7 +66,7 @@ const Seta2 = styled(Seta)`
 `
 
 export interface FeedBack {
-    username: string,
+    first_name: string,
     date: Date,
     comment:string
 }
@@ -76,13 +76,13 @@ interface Feed {
     elNum: number,
 }
 
-function FeedBack({username,date,comment}:FeedBack) {
+function FeedBack({first_name,date,comment}:FeedBack) {
 
     return (
         
         <FeedBackDIV>
 
-            <h5 className="name">{username}</h5>
+            <h5 className="name">{first_name}</h5>
             <h6>{`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}</h6>
             
             <div className="avaliation">
@@ -153,10 +153,10 @@ function FeedBacks() {
         console.log(feedbacks)
 
         setFeedBacks(prev => [...prev, 
-            {username:"João", date: new Date(), comment: "asadasd"},
-            {username:"Maria", date: new Date(), comment: "asadasd"},
-            {username:"Rafaela", date: new Date(), comment: "asadasd"},
-            {username:"José", date: new Date(), comment: "asadasd"},
+            {first_name:"João", date: new Date(), comment: "asadasd"},
+            {first_name:"Maria", date: new Date(), comment: "asadasd"},
+            {first_name:"Rafaela", date: new Date(), comment: "asadasd"},
+            {first_name:"José", date: new Date(), comment: "asadasd"},
         ])
     },[])
 
@@ -170,13 +170,13 @@ function FeedBacks() {
                 />
                 <FeedComponent elNum={element}>
                     {
-                        user && feedbacks?.filter((feedback) => feedback.username == user.username).length==0?
-                            <FeedBack username={user.username} comment="adsad" date={new Date()}/>
+                        user && feedbacks?.filter((feedback) => feedback.first_name == user.first_name).length==0?
+                            <FeedBack first_name={user.first_name} comment="adsad" date={new Date()}/>
                         :null
                     }
                     {
                         feedbacks.map((fdb) => 
-                            <FeedBack username={fdb.username} date={fdb.date} comment={fdb.comment}/>
+                            <FeedBack first_name={fdb.first_name} date={fdb.date} comment={fdb.comment}/>
                         )   
                     }
                 </FeedComponent>
