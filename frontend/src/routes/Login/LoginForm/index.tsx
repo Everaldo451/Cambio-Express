@@ -13,7 +13,7 @@ interface InputStyleType {
 
 const InputDiv = styled.div`
     position: relative;
-    margin-top: 40px;
+    margin-top: 30px;
     display:flex;
     flex-direction:column;
 `
@@ -51,7 +51,7 @@ const Input = styled.input<{inputStyle:InputStyleType}>`
 `
 
 const SubmitInput = styled(StyledInput)`
-    margin-top: 20px;
+    margin-top: 40px;
 `
 
 interface ContainerProps {

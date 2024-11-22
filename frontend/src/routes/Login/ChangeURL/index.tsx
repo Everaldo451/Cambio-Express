@@ -4,8 +4,10 @@ import { FormProps } from "../LoginForm";
 
 const StyledButton = styled.button`
     position: relative;
-    background-color: transparent;
+    background-color: #8C8A6C;
     border: none;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
     padding: 3px;
     transition: all 0.5s;
     color: white;
@@ -14,21 +16,22 @@ const StyledButton = styled.button`
     &:before {
         content: "";
         position: absolute;
-        background-color: #3F4156;
-        width: 100%;
-        height: 2px;
-        left: 0;
+        background-color: white;
+        width: 2px;
+        height: 0;
         top: -2px;
+        right: -2px;
+        transition: all 0.5s;
     }
 
     &:after {
         content: "";
-        z-index: -10;
         position: absolute;
         background-color: white;
-        width: calc(100% + 4px);
-        height: 2px;
-        top: 100%;
+        borde: 2px solid white;
+        width: 2px;
+        height: 0;
+        top: calc(100% + 2px);
         left: -2px;
         transition: all 0.5s;
     }
@@ -41,6 +44,10 @@ const StyledButton = styled.button`
             height: calc(100% + 4px);
             top: -2px;
         }
+
+        &:before{   
+            height: calc(100% + 4px);
+        }
     }
 
 `
@@ -49,9 +56,9 @@ const StyledDiv = styled.div`
     width: 100%;
     display: grid;
     grid-template-rows: auto;
-    grid-auto-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-auto-flow: column;
-    gap: 8px;
+    gap: 20px;
 `
 
 interface ChangeURLProps {
@@ -71,8 +78,8 @@ function ChangeURL({setURL}:ChangeURLProps) {
 
     return (
         <StyledDiv>
-            <Button setURL={setURL} url="login">Login</Button>
-            <Button setURL={setURL} url="register">Register</Button>
+            <Button setURL={setURL} url="login">Entrar</Button>
+            <Button setURL={setURL} url="register">Registrar</Button>
         </StyledDiv>
     )
 
