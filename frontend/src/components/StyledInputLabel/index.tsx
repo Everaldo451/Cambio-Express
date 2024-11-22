@@ -11,32 +11,35 @@ const InputDiv = styled.div`
     display:flex;
     flex-direction:column;
 `
+type inputPropsType = {Style:React.CSSProperties}
+type labelPropsType = {Style:React.CSSProperties, focused:boolean}
 
-export const Label = styled.label<{style:React.CSSProperties, focused:boolean}>`
+
+export const Label = styled.label<labelPropsType>`
 
     position: absolute;
     font-size: ${(props) => 
-        props.style.fontSize && typeof props.style.fontSize == "number"?
+        props.Style.fontSize && typeof props.Style.fontSize == "number"?
             props.focused?
-                props.style.fontSize - 3:props.style.fontSize
+                props.Style.fontSize - 3:props.Style.fontSize
             :15}px;
     top: ${(props) => 
-        props.style.fontSize && typeof props.style.fontSize == "number" && props.focused ?
-        `${- (props.style.fontSize + 4)}px`
+        props.Style.fontSize && typeof props.Style.fontSize == "number" && props.focused?
+        `${- (props.Style.fontSize + 4)}px`
         :'50%'};
     left: ${
-        (props) => props.style && !props.focused?props.style.left:0
+        (props) => props.Style && !props.focused?props.Style.left:0
     }px;
     transform: ${(props) => props.focused?"none":"translate(0, -50%)"};
-    color: ${(props) => props.focused?props.style.color:"white"};
+    color: ${(props) => props.focused?props.Style.color:"white"};
     transition: all 0.5s;
 
     &:hover {cursor:text;}
 `
 
-export const Input = styled.input<{style:React.CSSProperties}>`
-    font-size: ${(props) => props.style?props.style.fontSize:0}px;
-    padding: ${(props)=> props.style?`${props.style.paddingTop}px ${props.style.paddingLeft}px`:0};
+export const Input = styled.input<inputPropsType>`
+    font-size: ${(props) => props.Style?props.Style.fontSize:0}px;
+    padding: ${(props)=> props.Style?`${props.Style.paddingTop}px ${props.Style.paddingLeft}px`:0};
 
     &:focus {
         outline: none;
@@ -44,39 +47,11 @@ export const Input = styled.input<{style:React.CSSProperties}>`
 `
 
 
-type inputType = IStyledComponentBase<"web", 
-    FastOmit<
-        Omit<
-            FastOmit<
-                React.DetailedHTMLProps<
-                    React.InputHTMLAttributes<HTMLInputElement>, 
-                    HTMLInputElement
-                >, 
-                "style"
-            > & {
-                    ...;
-                }, "ref"> & {
-    ...;
-}, never>> & string
-
 interface ContainerProps {
     inputStyle:React.CSSProperties,
     inputAttrs: React.HTMLProps<HTMLInputElement>,
-
-    InputObject:  IStyledComponentBase<
-        "web", 
-        Substitute<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, {
-            style: React.CSSProperties;
-        }>
-    > & string,
-
-    LabelObject: IStyledComponentBase<
-        "web", 
-        Substitute<React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>, {
-            style: React.CSSProperties;
-            focused: boolean;
-        }>
-    > & string,
+    InputObject: (props:inputPropsType & {[key:string]: any}) => JSX.Element,
+    LabelObject: (props:labelPropsType & {[key:string]: any}) => JSX.Element,
 }
 
 export function InputContainer({inputStyle,inputAttrs, InputObject, LabelObject}:ContainerProps) { 
@@ -86,20 +61,28 @@ export function InputContainer({inputStyle,inputAttrs, InputObject, LabelObject}
     const labelStyle:React.CSSProperties = {
         left: inputStyle.paddingLeft,
         fontSize: inputStyle.fontSize,
-        top: inputStyle.paddingTop
+        color: "white"
     }
 
     function onFocusChange (event:React.FocusEvent<HTMLInputElement, Element>) {
         if (event.currentTarget.value.length == 0) {setFocused(!focused)}
     }
 
+    
+    let name = inputAttrs.name?inputAttrs.name:""
+    if (name.includes("_")) {
+        let n = ""
+        for (const [k, v] of name.split("_")) {
+
+        }
+    }
     const Name = inputAttrs.name?inputAttrs.name[0].toUpperCase() + inputAttrs.name.slice(1,inputAttrs.name.length):""
     
     return (
 
         <InputDiv>
-            <InputObject style={inputStyle} onFocus={onFocusChange} onBlur={onFocusChange} {...inputAttrs}/>
-            <LabelObject style={labelStyle} focused={focused} htmlFor={inputAttrs.id?inputAttrs.id:""}>
+            <InputObject Style={inputStyle} onFocus={onFocusChange} onBlur={onFocusChange} {...inputAttrs}/>
+            <LabelObject Style={labelStyle} focused={focused} htmlFor={inputAttrs.id?inputAttrs.id:""}>
                 {focused?Name+":":Name}
             </LabelObject>
         </InputDiv>

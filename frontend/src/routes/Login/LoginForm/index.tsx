@@ -6,26 +6,12 @@ import CommonStyleProps, { StyledInput } from '../../../components/CommonButton'
 import axios from 'axios'
 import { InputContainer, Label, Input } from '../../../components/StyledInputLabel'
 
-interface InputStyleType {
-    top: number,
-    left: number,
-    fontSize:number,
-}
-
 const InputDiv = styled.div`
     position: relative;
     margin-top: 30px;
     display:flex;
     flex-direction:column;
 `
-/*
-    font-size: ${(props) => props.style?props.style.fontSize:0}px;
-    padding: ${(props)=> props.style?`${props.style.paddingTop}px ${props.style.paddingLeft}px`:0};
-
-    &:focus {
-        outline: none;
-    }
-*/
 
 const NInput = styled(Input)`
     background-color: transparent;
@@ -37,11 +23,6 @@ const NInput = styled(Input)`
 const SubmitInput = styled(StyledInput)`
     margin-top: 40px;
 `
-
-interface ContainerProps {
-    inputStyle:InputStyleType,
-    inputAttrs: React.HTMLProps<HTMLInputElement>
-}
 
 const StyledForm = styled.form`
     display: flex;
@@ -83,9 +64,9 @@ function LoginForm ({children,url}:FormProps) {
         }
     }
 
-    const inputStyle:InputStyleType = {
-        top: 10,
-        left: 15,
+    const inputStyle:React.CSSProperties= {
+        paddingTop: 10,
+        paddingLeft: 15,
         fontSize:15,
     }
 
@@ -99,21 +80,26 @@ function LoginForm ({children,url}:FormProps) {
     return (
         <StyledForm action={`api/auth/${url}/`} method='POST' onSubmit={onSubmit}>
             {children}
-            {url == "register"?
-            <InputContainer 
-                inputStyle={inputStyle} 
-                inputAttrs={{name:"Full Name",id:"full_name",required: true}}
-                InputObject={NInput}
-            />
-            :null}
-            <Ninput/>
+                {url == "register"?
+                    <InputContainer 
+                        inputStyle={inputStyle} 
+                        inputAttrs={{name:"full_name",id:"full_name",required: true}}
+                        InputObject={NInput}
+                        LabelObject={Label}
+                    />
+                :null
+                }
             <InputContainer 
                 inputStyle={inputStyle} 
                 inputAttrs={{name:"email",id:"email",required: true}}
+                InputObject={NInput}
+                LabelObject={Label}
             />
             <InputContainer 
                 inputStyle={inputStyle} 
                 inputAttrs={{name:"password",id:"password",required: true}}
+                InputObject={NInput}
+                LabelObject={Label}
             />
             <input type="hidden" name='csrfmiddlewaretoken' value={csrf?csrf:""}/>
             <SubmitInput {...submitProps} type='submit' value="Enter"/>
