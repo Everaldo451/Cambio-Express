@@ -3,6 +3,8 @@ from authe.form import LoginForm
 from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 @pytest.fixture
 def valid_login_data():
@@ -51,7 +53,7 @@ def response(django_user_model, auth):
 
 
 @pytest.mark.django_db
-def test_login_form(create_user, login_form, auth, response):
+def test_login_form(create_user, login_form, auth):
 
     assert login_form
     user, isNoNone = auth
@@ -60,13 +62,29 @@ def test_login_form(create_user, login_form, auth, response):
 
 @pytest.mark.django_db
 def test_login_response(response):
-    
+
     assert isinstance(response, Response)
     assert isinstance(response.data, dict)
     assert response.data.get("access")
     assert response.data.get("refresh")
     assert response.cookies.get("access_token")
     assert response.cookies.get("refresh_token")
+
+    try: 
+
+        access = AccessToken(response.data.get("access"))
+        refresh = RefreshToken(response.data.get("refresh"))
+
+        access_token = AccessToken(response.cookies.get("access_token"))
+        refresh_token = RefreshToken(response.cookies.get("refresh_token"))
+
+        assert access == access_token
+        assert refresh == refresh_token
+
+    except TokenError as excinfo:
+
+        assert False
+
 
 
 
