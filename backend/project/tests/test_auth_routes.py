@@ -17,7 +17,7 @@ def valid_login_data():
 @pytest.fixture
 def invalid_login_data():
     return  {
-        "password": "validPassword"
+        "email": "valid@email.com"
     }
 
 
