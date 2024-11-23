@@ -1,9 +1,5 @@
 import styled from "styled-components";
-import { Substitute } from "styled-components/dist/types";
-import React, { DetailedHTMLProps, useState } from "react"
-import { IStyledComponentBase, FastOmit } from "styled-components/dist/types";
-
-type style = DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>,HTMLInputElement>
+import React, { useState } from "react"
 
 const InputDiv = styled.div`
     position: relative;
@@ -69,15 +65,19 @@ export function InputContainer({inputStyle,inputAttrs, InputObject, LabelObject}
     }
 
     
-    let name = inputAttrs.name?inputAttrs.name:""
-    if (name.includes("_")) {
+    let Name = inputAttrs.name?inputAttrs.name:""
+    if (Name.includes("_")) {
+        console.log(true)
         let n = ""
-        for (const [k, v] of name.split("_")) {
-
+        for (const v of Name.split("_")) {
+            console.log(Name.split("_"))
+            n += v[0].toUpperCase() + v.slice(1,v.length) + " "
         }
+        Name = n
+    } else {
+        Name = Name[0].toUpperCase() + Name.slice(1,Name.length)
     }
-    const Name = inputAttrs.name?inputAttrs.name[0].toUpperCase() + inputAttrs.name.slice(1,inputAttrs.name.length):""
-    
+        
     return (
 
         <InputDiv>

@@ -6,9 +6,10 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_protect
-from api.models import User
-from .form import LoginForm, RegisterForm
+from api.models import User, Company
+from .form import LoginForm, RegisterFormForCompany, RegisterFormForUser
 from .utils import generate_tokens
+from django.http import HttpRequest
 	
 
 @api_view(["POST"])
@@ -43,32 +44,56 @@ def login(request):
 @csrf_protect
 def register(request):
 
-	form = RegisterForm(request.POST)
+	formForUser = RegisterFormForUser(request.POST)
+	formForCompany = RegisterFormForCompany(request.POST)
 
-	if form.is_valid():
+
+	if formForUser.is_valid():
 
 		try:
 
+			first_name = ""
+			last_name = ""
+
+			full_name = formForUser.cleaned_data.get("full_name")
+			if type(full_name) == str:
+				splited_name = full_name.split(maxsplit=1)
+
+				first_name = splited_name[0]
+				last_name = splited_name[1]
+
 			nuser = User.objects.create_user(
-				form.cleaned_data.get("email"),
-				form.cleaned_data.get("full_name"),
-				form.cleaned_data.get("password")
+				email=formForUser.cleaned_data.get("email"),
+				password = formForUser.cleaned_data.get("password"),
+				first_name = first_name,
+				last_name = last_name
 			)
-			
+
 			return generate_tokens(request, nuser)
 				
 		except IntegrityError as e:
 			error = str(e)
-
-			print(e)
-			if error.startswith("UNIQUE"):
-				if error.find('app.email'):
-					messages.error(request,"email já existente")
-				elif error.find('app.username'):
-					messages.error(request,"username já existente")
-				
 			return Response(None, status=status.HTTP_400_BAD_REQUEST)
 	
+	elif formForCompany.is_valid():
+
+		try:
+
+			nuser = User.objects.create_user(
+				email=formForCompany.cleaned_data.get("email"),
+				password = formForCompany.cleaned_data.get("password")
+			)
+			
+			ncompany = Company(
+				user = nuser,
+				name = formForCompany.cleaned_data.get("name"),
+				CNPJ = formForCompany.cleaned_data.get("CNPJ")
+			)
+			ncompany.save()
+
+			return generate_tokens(request, nuser)
+		
+		except: pass
 	else: 
 		print("not valid")
 		return Response(None, status=status.HTTP_400_BAD_REQUEST)

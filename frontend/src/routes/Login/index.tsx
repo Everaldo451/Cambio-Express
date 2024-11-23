@@ -2,8 +2,7 @@ import styled from "styled-components";
 import { Navigate } from "react-router-dom";
 import { SetStateAction, useContext, useState } from "react";
 import { UserContext } from "../../main";
-import LoginForm from "./LoginForm";
-import { FormProps } from "./LoginForm";
+import FormRenderer, {FormProps} from "./Forms";
 import ChangeURL from "./ChangeURL";
 
 const Main = styled.main`
@@ -14,7 +13,6 @@ const Main = styled.main`
     background-color: #3F4156;
 `
 
-
 function Login() {
 
     const [user] = useContext(UserContext)
@@ -24,9 +22,9 @@ function Login() {
     else {
         return (
             <Main>
-                <LoginForm url={url}>
+                <FormRenderer url={url}>
                     <ChangeURL setURL={setURL}/>
-                </LoginForm>
+                </FormRenderer>
             </Main>
         )
     }

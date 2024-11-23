@@ -33,14 +33,12 @@ def get_jwt(request):
 @permission_classes([IsAuthenticated])
 def get_user(request):
 
-	print(request.user)
-
 	try:
 		serializer = UserSerializer(request.user)
 		serializer = serializer.data
-		print(serializer)
 		serializer.pop("id")
 		if not request.user.groups.filter(name="Company").exists():
+			print("notCompany")
 			serializer.pop("company")
 
 		return Response(serializer)

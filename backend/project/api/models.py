@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import re
@@ -26,30 +26,31 @@ def validate_phone(value:str):
 
 class UserManager(BaseUserManager):
 	
-	def _create_user(self,email,full_name,password, is_staff, is_superuser, **extra_fields):
+	def _create_user(self,email, password, **extra_fields):
 
-		now = timezone.now()
 		email = self.normalize_email(email)
 
-		print(email)
-
-		user = self.model(full_name=full_name, email=email, is_staff=is_staff, is_superuser=is_superuser, last_login=now, **extra_fields)
+		user = self.model(email=email, **extra_fields)
 		user.set_password(password)
-		user.save(using=self._db)
+		user.save()
 		return user
 	
-	def create_user(self,email,full_name,password, **extra_fields):
+	def create_user(self, email, password, **extra_fields):
 
-		return self._create_user(email,full_name,password,False,False, **extra_fields)
+		return self._create_user(email, password, **extra_fields)
 	
-	def create_superuser(self,email,full_name,password, **extra_fields):
+	def create_superuser(self, email, password, **extra_fields):
 
-		return self._create_user(email,full_name,password,True,True, **extra_fields)
+		extra_fields.setdefault("is_staff", True)
+		extra_fields.setdefault("is_active", True)
+		extra_fields.setdefault("is_superuser", True)
+
+		return self._create_user(email, password, **extra_fields)
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractUser, PermissionsMixin):
 	
-	full_name = models.CharField(max_length=200, null=True, blank=True)
+	username = None
 	email = models.EmailField(max_length=254,unique=True,null=False)
 	money = models.FloatField(default=0)
 
@@ -58,15 +59,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 	USERNAME_FIELD = 'email'
 	EMAIL_FIELD = 'email'
 	
-	REQUIRED_FIELDS = ["email","password"]
+	REQUIRED_FIELDS = ["password"]
 
 	objects = UserManager()
 
 	def __str__(self):
-		username = None
+		username = ""
 
-		if self.company is None:
-			username = self.full_name.split()[0]
+		if not hasattr(self,"company"):
+			if self.first_name:
+				username = self.first_name
+			else:
+				username = self.email
 		else:
 			username = self.company.name
 
@@ -80,9 +84,9 @@ class Company(models.Model):
 		related_name="company",
 	)
 
-	name = models.CharField(max_length=100)
-	phone = models.CharField(unique=True, validators=[validate_phone], max_length=16)
-	CNPJ = models.CharField(unique=True, validators=[validate_cnpj], max_length=20)
+	name = models.CharField(max_length=100, null=False, blank=False)
+	phone = models.CharField(unique=True, validators=[validate_phone], max_length=16, null=True, blank=True)
+	CNPJ = models.CharField(unique=True, validators=[validate_cnpj], max_length=20, null=False, blank=False)
 
 	def __str__(self):
 		return self.name
