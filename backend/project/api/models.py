@@ -30,6 +30,9 @@ class UserManager(BaseUserManager):
 
 		email = self.normalize_email(email)
 
+		if not email:
+			raise ValidationError("Email will not blank")
+
 		user = self.model(email=email, **extra_fields)
 		user.set_password(password)
 		user.save()
@@ -51,7 +54,7 @@ class UserManager(BaseUserManager):
 class User(AbstractUser, PermissionsMixin):
 	
 	username = None
-	email = models.EmailField(max_length=254,unique=True,null=False)
+	email = models.EmailField(max_length=254, unique=True, null=False, blank=False)
 	money = models.FloatField(default=0)
 
 	date_joined = models.DateTimeField(auto_now=True)
