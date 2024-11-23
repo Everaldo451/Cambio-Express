@@ -40,17 +40,27 @@ def create_user(django_user_model, valid_login_data):
 
 @pytest.fixture
 def response(django_user_model, auth):
-    resp = Response({"ola": "oi"})
+    resp = Response({
+        "access": "oi",
+        "refresh": "ola"
+    })
+
+    resp.set_cookie("access_token", "oi")
+    resp.set_cookie("refresh_token", "ola")
     return resp
 
 
 @pytest.mark.django_db
-def test_login_route(create_user, login_form, auth, response):
+def test_login_form(create_user, login_form, auth, response):
 
     assert login_form
     user, isNoNone = auth
     assert isNoNone
     assert user == create_user
+
+@pytest.mark.django_db
+def test_login_response(response):
+    
     assert isinstance(response, Response)
     assert isinstance(response.data, dict)
     assert response.data.get("access")
