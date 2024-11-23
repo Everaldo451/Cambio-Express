@@ -38,6 +38,11 @@ def create_user(django_user_model, valid_login_data):
     return user
 
 
+@pytest.fixture
+def response(django_user_model):
+    pass
+
+
 @pytest.mark.django_db
 def test_login_route(create_user, login_form, auth, response):
 
