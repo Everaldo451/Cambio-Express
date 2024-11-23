@@ -18,20 +18,20 @@ def invalid_login_data():
     }
 
 @pytest.fixture
-def login_form(invalid_login_data):
-    return LoginForm(invalid_login_data).is_valid()
+def login_form(valid_login_data):
+    return LoginForm(valid_login_data).is_valid()
 
 
 @pytest.fixture
-def auth(invalid_login_data):
-    return authenticate(None, **invalid_login_data) is not None
+def auth(valid_login_data):
+    return authenticate(None, **valid_login_data) is not None
 
 
 @pytest.mark.django_db
 def test_login_form(login_form, auth):
 
-    assert login_form == False
-    assert auth == False
+    assert login_form == True
+    assert auth == True
 
 
 
