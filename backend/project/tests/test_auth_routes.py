@@ -3,7 +3,8 @@ from authe.form import LoginForm
 
 @pytest.fixture
 def login_form(valid_login_data):
-    pass
+    return LoginForm(valid_login_data).is_valid()
+
 
 @pytest.fixture
 def valid_login_data():
