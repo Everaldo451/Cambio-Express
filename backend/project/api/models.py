@@ -28,10 +28,12 @@ class UserManager(BaseUserManager):
 	
 	def _create_user(self,email, password, **extra_fields):
 
-		email = self.normalize_email(email)
-
 		if not email:
 			raise ValidationError("Email will not blank")
+		elif not password:
+			raise ValidationError("Password will not blank")
+
+		email = self.normalize_email(email)
 
 		user = self.model(email=email, **extra_fields)
 		user.set_password(password)
@@ -62,7 +64,7 @@ class User(AbstractUser, PermissionsMixin):
 	USERNAME_FIELD = 'email'
 	EMAIL_FIELD = 'email'
 	
-	REQUIRED_FIELDS = ["password"]
+	REQUIRED_FIELDS = []
 
 	objects = UserManager()
 
