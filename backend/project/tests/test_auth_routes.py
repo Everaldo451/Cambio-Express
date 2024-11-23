@@ -30,8 +30,8 @@ def auth(invalid_login_data):
 
 
 @pytest.fixture
-def create_user(django_user_model, invalid_login_data):
-    user = django_user_model.objects.create_user(**invalid_login_data)
+def create_user(django_user_model, valid_login_data):
+    user = django_user_model.objects.create_user(**valid_login_data)
     return user
 
 
