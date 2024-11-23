@@ -2,14 +2,24 @@ import pytest
 from authe.form import LoginForm
 
 @pytest.fixture
-def login_form():
+def login_form(userData):
     pass
 
-
-def test_login_form(login_form):
-
-    userData = {
+@pytest.fixture
+def valid_login_data():
+    return  {
         "email": "valid@email.com",
         "password": "validPassword"
     }
-    assert login_form(userData) == True
+
+
+@pytest.fixture
+def invalid_login_data():
+    return  {
+        "password": "validPassword"
+    }
+
+
+def test_login_form(valid_login_data, invalid_login_data, login_form):
+
+    assert login_form(valid_login_data) == True
