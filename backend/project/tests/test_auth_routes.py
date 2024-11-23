@@ -22,6 +22,11 @@ def login_form(invalid_login_data):
     return LoginForm(invalid_login_data).is_valid()
 
 
+@pytest.fixture
+def auth(invalid_login_data):
+    return authenticate(None, **invalid_login_data) is not None
+
+
 @pytest.mark.django_db
 def test_login_form(login_form, auth):
 
