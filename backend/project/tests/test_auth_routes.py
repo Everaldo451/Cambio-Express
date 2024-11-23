@@ -1,10 +1,6 @@
 import pytest
 from authe.form import LoginForm
-
-@pytest.fixture
-def login_form(invalid_login_data):
-    return LoginForm(invalid_login_data).is_valid()
-
+from django.contrib.auth import authenticate
 
 @pytest.fixture
 def valid_login_data():
@@ -21,7 +17,17 @@ def invalid_login_data():
         "password": "validPassword"
     }
 
+@pytest.fixture
+def login_form(invalid_login_data):
+    return LoginForm(invalid_login_data).is_valid()
 
-def test_login_form(login_form):
+
+@pytest.mark.django_db
+def test_login_form(login_form, auth):
 
     assert login_form == False
+    assert auth == False
+
+
+
+
