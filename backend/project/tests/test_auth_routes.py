@@ -2,7 +2,7 @@ import pytest
 from authe.form import LoginForm
 
 @pytest.fixture
-def login_form(userData):
+def login_form(valid_login_data):
     pass
 
 @pytest.fixture
@@ -20,6 +20,6 @@ def invalid_login_data():
     }
 
 
-def test_login_form(valid_login_data, invalid_login_data, login_form):
+def test_login_form(login_form):
 
-    assert login_form(valid_login_data) == True
+    assert login_form == True
