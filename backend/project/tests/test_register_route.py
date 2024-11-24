@@ -1,4 +1,6 @@
 from authe.form import RegisterFormForCompany, RegisterFormForUser
+from django.contrib.auth import authenticate
+from django.db.models import Q
 from api.models import Company
 import pytest
 
@@ -9,7 +11,7 @@ def company_model():
 @pytest.fixture
 def user_data():
     return {
-        "ema": "emailinvalido",
+        "email": "emaili@nvalido.com",
         "password": "senhaValida",
         "CNPJ": "0000000000",
         "name": "Alguma Empresa",
@@ -27,7 +29,14 @@ def person_form(user_data):
 @pytest.fixture
 def create_user(django_user_model, user_data):
 
-    try :
+    user = authenticate(None,
+        email = user_data.get("email"),
+        password = user_data.get("password")
+    )
+
+    if user: return "have user"
+
+    try:
 
         user = django_user_model.objects.create_user(
             email=user_data.get("email"),
@@ -37,8 +46,20 @@ def create_user(django_user_model, user_data):
     
     except: return None
 
+
+
 @pytest.fixture
-def create_company(create_user, company_model, user_data):
+def create_company(django_user_model, create_user, company_model, user_data):
+
+
+
+    company = company_model.objects.filter(
+        Q(name = user_data.get("name")) | Q(CNPJ = user_data.get("CNPJ"))
+    )
+
+    if company: return "have company"
+
+    if not isinstance(create_user, django_user_model): return "have user"
 
     try:
 
@@ -50,7 +71,8 @@ def create_company(create_user, company_model, user_data):
         company.save()
         return create_user, company
     
-    except: return None
+    except: 
+        pass
 
 
 @pytest.fixture
@@ -76,10 +98,12 @@ def create_same_company(create_same_user, company_model, user_data):
 
 
 @pytest.mark.django_db
-def testUserCompany(company_form, create_company):
+def testUserCompany(company_form, create_same_company, create_company):
 
-    assert not company_form
-    assert create_company is None
+    assert company_form
+    user, company = create_same_company
+    assert company
+    assert create_company == "have company"
 
 """
 
@@ -87,10 +111,11 @@ def testUserCompany(company_form, create_company):
 def firstNameLastName(user_data):
     full_name = user_data.get("full_name")
 
-    splited = full_name.split(maxsplit=1)
-    first_name  = splited[0]
-    last_name = splited[1]
-    return first_name, last_name
+    if full_name:
+        splited = full_name.split(maxsplit=1)
+        first_name  = splited[0]
+        last_name = splited[1]
+        return first_name, last_name
 
 @pytest.fixture
 def create_same_person(django_user_model, user_data, firstNameLastName):
@@ -110,6 +135,4 @@ def testUserPerson(person_form, create_same_person, create_person):
 #same_user, same_company = create_same_company
 
 #user, company = create_company
-
-
 """
