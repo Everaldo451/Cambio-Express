@@ -54,12 +54,12 @@ def response(auth):
     except: pass
 
     resp = Response({
-        "access": access,
-        "refresh": refresh
+        "access": str(access),
+        "refresh": str(refresh)
     })
 
-    resp.set_cookie("access_token", access)
-    resp.set_cookie("refresh_token", refresh)
+    resp.set_cookie("refresh_token", str(refresh))
+    resp.set_cookie("access_token", str(access))
     return resp
 
 
@@ -79,19 +79,22 @@ def test_login_response(create_user, response):
     assert isinstance(response.data, dict)
     assert response.data.get("refresh")
     assert response.data.get("access")
-    assert response.cookies.get("access_token")
-    assert response.cookies.get("refresh_token")
+    assert response.cookies.get("access_token").value
+    assert response.cookies.get("refresh_token").value
 
     try: 
 
         refresh = RefreshToken(response.data.get("refresh"))
         access = AccessToken(response.data.get("access"))
 
-        access_token = AccessToken(response.cookies.get("access_token"))
-        refresh_token = RefreshToken(response.cookies.get("refresh_token"))
+        refresh_cookie = response.cookies.get("refresh_token")
+        access_cookie = response.cookies.get("access_token")
 
-        assert access == access_token
-        assert refresh == refresh_token
+        refresh_token = RefreshToken(refresh_cookie.value)
+        access_token = AccessToken(access_cookie.value)
+
+        assert str(access.token) == str(access_token)
+        assert str(refresh) == str(refresh_token)
 
     except TokenError as excinfo:
         assert False
