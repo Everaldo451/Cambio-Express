@@ -34,7 +34,6 @@ def create_company(company_model, user_data):
     company = company_model(
         name = user_data.get("name"),
         CNPJ = user_data.get("CNPJ"),
-
     )
     return company
 
