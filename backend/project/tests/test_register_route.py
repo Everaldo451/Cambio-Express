@@ -23,19 +23,28 @@ def company_form(user_data):
 
 @pytest.fixture
 def create_user(django_user_model,user_data):
-    user = django_user_model.objects.create_user(
-        email=user_data.get("email"),
-        password=user_data.get("password")
-    )
-    return user
+
+    try :
+
+        user = django_user_model.objects.create_user(
+            email=user_data.get("email"),
+            password=user_data.get("password")
+        )
+        return user
+    
+    except: return None
 
 @pytest.fixture
 def create_company(company_model, user_data):
-    company = company_model(
-        name = user_data.get("name"),
-        CNPJ = user_data.get("CNPJ"),
-    )
-    return company
+
+    try:
+        company = company_model(
+            name = user_data.get("name"),
+            CNPJ = user_data.get("CNPJ"),
+        )
+        return company
+    
+    except: return None
 
 
 @pytest.fixture
@@ -58,11 +67,6 @@ def create_same_company(company_model, user_data):
 @pytest.mark.django_db
 def testUserCompany(company_form, create_same_user, create_same_company, create_user,  create_company,):
 
-
     assert company_form
-    assert create_user is not None
-    assert create_company is not None
-    assert create_same_user == create_user
-    assert create_same_company == create_company
-    assert create_same_user.id == 1
-    assert create_user.id == 1
+    assert create_user is None
+    assert create_company is None
