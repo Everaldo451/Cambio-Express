@@ -38,10 +38,12 @@ def create_user(django_user_model,user_data):
 def create_company(company_model, user_data):
 
     try:
+
         company = company_model(
             name = user_data.get("name"),
             CNPJ = user_data.get("CNPJ"),
         )
+        company.save()
         return company
     
     except: return None
@@ -56,16 +58,17 @@ def create_same_user(django_user_model,user_data):
     return user
 
 @pytest.fixture
-def create_same_company(company_model, user_data):
+def create_same_company(create_same_user, company_model, user_data):
     company = company_model(
         name = user_data.get("name"),
         CNPJ = user_data.get("CNPJ"),
     )
+    company.save()
     return company
 
 
 @pytest.mark.django_db
-def testUserCompany(company_form, create_same_user, create_same_company, create_user,  create_company,):
+def testUserCompany(company_form, create_same_company, create_user,  create_company,):
 
     assert company_form
     assert create_user is None
