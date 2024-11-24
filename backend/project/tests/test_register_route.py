@@ -51,6 +51,7 @@ def create_user(django_user_model, user_data):
 @pytest.fixture
 def create_company(django_user_model, create_user, company_model, user_data):
 
+    if not isinstance(create_user, django_user_model): return "have user"
 
 
     company = company_model.objects.filter(
@@ -58,8 +59,6 @@ def create_company(django_user_model, create_user, company_model, user_data):
     )
 
     if company: return "have company"
-
-    if not isinstance(create_user, django_user_model): return "have user"
 
     try:
 
@@ -103,7 +102,7 @@ def testUserCompany(company_form, create_same_company, create_company):
     assert company_form
     user, company = create_same_company
     assert company
-    assert create_company == "have company"
+    assert create_company == "have user"
 
 """
 
