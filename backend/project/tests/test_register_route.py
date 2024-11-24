@@ -9,7 +9,7 @@ def company_model():
 @pytest.fixture
 def user_data():
     return {
-        "email": "email@valido.com",
+        "email": "",
         "password": "senhaValida",
         "CNPJ": "0000000000",
         "name": "Alguma Empresa",
@@ -20,6 +20,9 @@ def user_data():
 def company_form(user_data):
     return RegisterFormForCompany(user_data).is_valid
 
+@pytest.fixture
+def person_form(user_data):
+    return RegisterFormForUser(user_data).is_valid
 
 @pytest.fixture
 def create_user(django_user_model,user_data):
@@ -52,12 +55,13 @@ def create_company(create_user, company_model, user_data):
 
 @pytest.fixture
 def create_same_user(django_user_model,user_data):
-    
+
     user = django_user_model.objects.create_user(
         email=user_data.get("email"),
         password=user_data.get("password")
     )
     return user
+
 
 @pytest.fixture
 def create_same_company(create_same_user, company_model, user_data):
@@ -76,8 +80,36 @@ def testUserCompany(company_form, create_same_company, create_company):
 
     assert company_form
     assert create_company is None
+
+"""
+
+@pytest.fixture
+def firstNameLastName(user_data):
+    full_name = user_data.get("full_name")
+
+    splited = full_name.split(maxsplit=1)
+    first_name  = splited[0]
+    last_name = splited[1]
+    return first_name, last_name
+
+@pytest.fixture
+def create_same_person(django_user_model, user_data, firstNameLastName):
+
+    user = django_user_model.objects.create_user(
+        email= user_data.get("email"),
+        password = user_data.get("password")
+    )
+
+@pytest.mark.django_db
+def testUserPerson(person_form, create_same_person, create_person):
+
+    assert person_form
+    assert create_person is None
     
 
 #same_user, same_company = create_same_company
 
 #user, company = create_company
+
+
+"""
