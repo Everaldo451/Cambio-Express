@@ -1,4 +1,8 @@
+from authe.form import RegisterFormForCompany, RegisterFormForUser
 import pytest
+
+def company_form(user_data):
+    return RegisterFormForCompany(user_data).is_valid
 
 
 @pytest.mark.django_db
