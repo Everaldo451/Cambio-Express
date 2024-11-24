@@ -9,7 +9,7 @@ def company_model():
 @pytest.fixture
 def user_data():
     return {
-        "email": "emailinvalido.com",
+        "email": "emailinvalidocom",
         "password": "senhaValida",
         "CNPJ": "0000000000",
         "name": "Alguma Empresa",
@@ -78,6 +78,8 @@ def create_same_company(create_same_user, company_model, user_data):
 @pytest.mark.django_db
 def testUserCompany(company_form, create_same_company, create_company):
 
+    user, company = create_same_company
+    assert user.email == "emailinvalidocom"
     assert company_form
     assert create_company is None
 
