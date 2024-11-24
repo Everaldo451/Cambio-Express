@@ -9,9 +9,9 @@ def main():
     Testing = True
 
     if Testing:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.configs.homologacao')
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.configs.development')
     else:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.configs.producao')
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.configs.production')
         
     try:
         from django.core.management import execute_from_command_line

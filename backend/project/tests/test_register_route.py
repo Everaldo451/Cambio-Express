@@ -38,10 +38,21 @@ def create_company(company_model, user_data):
     return company
 
 
+@pytest.fixture
+def create_same_user(create_company_user):
+    return create_company_user
+
+@pytest.fixture
+def create_same_company(create_company):
+    return create_company
+
+
 @pytest.mark.django_db
-def test_with_user_is_company(company_form, create_company_user,  create_company):
+def test_with_user_is_company(company_form, create_same_user, create_same_company, create_company_user,  create_company):
 
 
     assert company_form
     assert create_company_user is not None
     assert create_company is not None
+    assert create_same_user == create_company_user
+    assert create_same_company == create_company
