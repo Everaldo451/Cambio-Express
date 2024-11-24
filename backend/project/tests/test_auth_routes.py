@@ -41,14 +41,25 @@ def create_user(django_user_model, valid_login_data):
 
 
 @pytest.fixture
-def response(django_user_model, auth):
+def response(auth):
+    user, isNoNone = auth
+
+    refresh = ""
+    access = ""
+    try:
+
+        refresh = RefreshToken.for_user(user)
+        access = refresh.access_token
+
+    except: pass
+
     resp = Response({
-        "access": "oi",
-        "refresh": "ola"
+        "access": access,
+        "refresh": refresh
     })
 
-    resp.set_cookie("access_token", "oi")
-    resp.set_cookie("refresh_token", "ola")
+    resp.set_cookie("access_token", access)
+    resp.set_cookie("refresh_token", refresh)
     return resp
 
 
@@ -60,20 +71,21 @@ def test_login_form(create_user, login_form, auth):
     assert isNoNone
     assert user == create_user
 
+
 @pytest.mark.django_db
-def test_login_response(response):
+def test_login_response(create_user, response):
 
     assert isinstance(response, Response)
     assert isinstance(response.data, dict)
-    assert response.data.get("access")
     assert response.data.get("refresh")
+    assert response.data.get("access")
     assert response.cookies.get("access_token")
     assert response.cookies.get("refresh_token")
 
     try: 
 
-        access = AccessToken(response.data.get("access"))
         refresh = RefreshToken(response.data.get("refresh"))
+        access = AccessToken(response.data.get("access"))
 
         access_token = AccessToken(response.cookies.get("access_token"))
         refresh_token = RefreshToken(response.cookies.get("refresh_token"))
@@ -82,7 +94,6 @@ def test_login_response(response):
         assert refresh == refresh_token
 
     except TokenError as excinfo:
-
         assert False
 
 
