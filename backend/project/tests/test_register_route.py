@@ -1,4 +1,5 @@
 from authe.form import RegisterFormForCompany, RegisterFormForUser
+from django.forms import formset_factory
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from api.models import Company
@@ -21,7 +22,8 @@ def user_data():
 
 @pytest.fixture
 def company_form(user_data):
-    return RegisterFormForCompany(user_data).is_valid()
+    RegisterFormSet = formset_factory(RegisterFormForCompany)
+    return RegisterFormSet(user_data).is_valid()
 
 @pytest.fixture
 def create_user(django_user_model, user_data):
