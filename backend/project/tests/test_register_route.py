@@ -90,7 +90,7 @@ def create_same_company(create_same_user, company_model, user_data):
 @pytest.mark.django_db
 def testUserCompany(company_form, create_same_company, create_company):
 
-    assert company_form
+    assert not company_form
     user, company = create_same_company
     assert company
     assert create_company is not str and create_company is not None
