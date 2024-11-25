@@ -92,19 +92,19 @@ def register(request):
 		try:
 
 			company = Company(
+
 				name = user_data.get("name"),
 				CNPJ = user_data.get("CNPJ"),
-				
+
 				user = User.objects.create_user(
 					email=user_data.get("email"),
 					password=user_data.get("password")
 				)
 			)
 
-			return generate_tokens(request, nuser)
+			return generate_tokens(request, company.user)
 				
-		except IntegrityError as e:
-			error = str(e)
+		except:
 			return Response(None, status=status.HTTP_400_BAD_REQUEST)
 	
 	elif formForCompany.is_valid():

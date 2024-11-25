@@ -56,11 +56,12 @@ def verify_user(django_user_model, user_data):
 @pytest.fixture
 def create_company(django_user_model, company_model, user_data):
 
-    if company_model.objects.filter(CNPJ = user_data.get("CNPJ")): return None
+    #if company_model.objects.filter(CNPJ = user_data.get("CNPJ")): return None
 
     try:
 
         company = company_model(
+            
 			name = user_data.get("name"),
 			CNPJ = user_data.get("CNPJ"),
 				
