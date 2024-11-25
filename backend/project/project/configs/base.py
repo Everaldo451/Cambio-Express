@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-m-4_x9dapt1euk$p33xbvrt0&3$=b#xk_huok0qe2g%fp&)%6a
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'api.User'
+AUTH_USER_MODEL = 'authe.User'
 
 ##CORS AND CSRF
 CORS_ALLOW_ALL_ORIGINS = True

@@ -6,15 +6,6 @@ class CompanySerializer(serializers.ModelSerializer):
 		fields = ["name", "phone", "CNPJ"]
 
 
-class UserSerializer(serializers.ModelSerializer):
-	company = CompanySerializer()
-
-	class Meta:
-		model = models.User
-		fields = ["id","first_name","email","company","money"]
-		read_only_fields = ['__all__']
-
-
 
 class FeedBackSerializer(serializers.ModelSerializer):
 	first_name = serializers.CharField(source="user.first_name")

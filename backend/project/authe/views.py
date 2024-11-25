@@ -1,15 +1,50 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_protect
-from api.models import User, Company
+from api.models import Company
+from .models import User
 from .form import LoginForm, RegisterFormForCompany, RegisterFormForUser
-from .utils import generate_tokens
+from .utils import generate_tokens, generate_token_response
+from .serializers import UserSerializer
 from django.http import HttpRequest
+
+
+@api_view(["GET"])
+def get_jwt(request):
+
+	if request.COOKIES.get("access_token") and request.COOKIES.get("refresh_token"):
+		try:
+			refresh = RefreshToken(request.COOKIES.get("refresh_token"))
+			return generate_token_response(refresh)
+		
+		except: return Response(None)
+	return Response(None)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_user(request):
+
+	try:
+		serializer = UserSerializer(request.user)
+		serializer = serializer.data
+		serializer.pop("id")
+		if not request.user.groups.filter(name="Company").exists():
+			print("notCompany")
+			serializer.pop("company")
+
+		return Response(serializer)
+
+	except Exception as e: 
+		return Response(None)
 	
 
 @api_view(["POST"])
@@ -38,8 +73,6 @@ def login(request):
 	else: return Response(None, status=status.HTTP_401_UNAUTHORIZED)
 	
 
-	
-
 @api_view(["POST"])
 @csrf_protect
 def register(request):
@@ -48,25 +81,24 @@ def register(request):
 	formForCompany = RegisterFormForCompany(request.POST)
 
 
-	if formForUser.is_valid():
+	if formForCompany.is_valid():
+
+		user_data = formForCompany.cleaned_data
+
+		user = User.objects.filter(email=user_data.get("email"))
+
+		if user: return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
 		try:
 
-			first_name = ""
-			last_name = ""
-
-			full_name = formForUser.cleaned_data.get("full_name")
-			if type(full_name) == str:
-				splited_name = full_name.split(maxsplit=1)
-
-				first_name = splited_name[0]
-				last_name = splited_name[1]
-
-			nuser = User.objects.create_user(
-				email=formForUser.cleaned_data.get("email"),
-				password = formForUser.cleaned_data.get("password"),
-				first_name = first_name,
-				last_name = last_name
+			company = Company(
+				name = user_data.get("name"),
+				CNPJ = user_data.get("CNPJ"),
+				
+				user = User.objects.create_user(
+					email=user_data.get("email"),
+					password=user_data.get("password")
+				)
 			)
 
 			return generate_tokens(request, nuser)

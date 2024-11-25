@@ -10,6 +10,4 @@ urlpatterns = [
        path("set/",views.set_user_feedback)
    ])),
    path("getcsrf/",views.get_csrf),
-   path("getuser/",views.get_user),
-   path("getjwt/", views.get_jwt),
 ]

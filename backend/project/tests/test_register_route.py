@@ -13,7 +13,6 @@ def company_model():
 def user_data():
     return {
         "email": "email@invalido.com",
-        "full_name": "Algum Nome",
         "password": "senhaValida",
         "CNPJ": "0000000000",
         "name": "Alguma Empresa",
@@ -44,23 +43,21 @@ def create_user(django_user_model, user_data):
 
 
 @pytest.fixture
-def create_company(django_user_model, create_user, company_model, user_data):
-
-    if not isinstance(create_user, django_user_model): return create_user
-
-    company = company_model.objects.filter(CNPJ = user_data.get("CNPJ"))
-
-    if company: return "have company"
+def create_company(django_user_model, company_model, user_data):
 
     try:
 
         company = company_model(
-            name = user_data.get("name"),
-            CNPJ = user_data.get("CNPJ"),
-            user = create_user
-        )
-        company.save()
-        return create_user, company
+			name = user_data.get("name"),
+			CNPJ = user_data.get("CNPJ"),
+				
+			user = django_user_model.objects.create_user(
+				email=user_data.get("email"),
+				password=user_data.get("password")
+			)
+		)
+
+        return company
     
     except: 
         pass
@@ -70,7 +67,7 @@ def create_company(django_user_model, create_user, company_model, user_data):
 def create_same_user(django_user_model,user_data):
 
     user = django_user_model.objects.create_user(
-        email="otheremail@gmail.com",
+        email=user_data.get("email"),
         password=user_data.get("password")
     )
     return user
@@ -81,7 +78,7 @@ def create_same_company(create_same_user, company_model, user_data):
 
     company = company_model(
         name = user_data.get("name"),
-        CNPJ = "00000001",
+        CNPJ = user_data.get("CNPJ"),
         user = create_same_user
     )
     company.save()
@@ -92,9 +89,7 @@ def create_same_company(create_same_user, company_model, user_data):
 def testUserCompany(company_form, create_same_company, create_company):
 
     assert company_form
-    user, company = create_same_company
-    assert company
-    assert create_company is not str and create_company is not None
+    assert not create_company
 
 
 
