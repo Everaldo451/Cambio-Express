@@ -22,7 +22,9 @@ def user_data():
 
 @pytest.fixture
 def company_form(user_data):
-    return RegisterFormForCompany(user_data).is_valid()
+    form = RegisterFormForCompany(user_data)
+    form.is_valid()
+    return form.cleaned_data.get("full_name")
 
 @pytest.fixture
 def create_user(django_user_model, user_data):
