@@ -16,7 +16,7 @@ class Company(models.Model):
 	CNPJ = models.CharField(unique=True, validators=[validate_cnpj], max_length=20, null=False, blank=False)
 
 	def __str__(self):
-		return self.name
+		return f"{self.name}, CNPJ: {self.CNPJ}"
 	
 
 
