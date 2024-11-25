@@ -68,7 +68,7 @@ def create_company(django_user_model, create_user, company_model, user_data):
 def create_same_user(django_user_model,user_data):
 
     user = django_user_model.objects.create_user(
-        email=user_data.get("email"),
+        email="otheremail@gmail.com",
         password=user_data.get("password")
     )
     return user
@@ -92,7 +92,7 @@ def testUserCompany(company_form, create_same_company, create_company):
     assert company_form
     user, company = create_same_company
     assert company
-    assert create_company == "have user"
+    assert create_company == "have company"
 
 
 
