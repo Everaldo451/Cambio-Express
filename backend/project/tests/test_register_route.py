@@ -1,7 +1,5 @@
 from authe.form import RegisterFormForCompany, RegisterFormForUser
-from django.forms import formset_factory
-from django.contrib.auth import authenticate
-from django.db.models import Q
+from django.db import transaction, IntegrityError
 from api.models import Company
 import pytest
 
@@ -56,25 +54,32 @@ def verify_user(django_user_model, user_data):
 @pytest.fixture
 def create_company(django_user_model, company_model, user_data):
 
+    user = None
+    company = None
     try:
 
-        company = company_model(
-            
-			name = user_data.get("name"),
-			CNPJ = user_data.get("CNPJ"),
-				
-			user = django_user_model.objects.create_user(
+        with transaction.atomic():
+
+            user = django_user_model.objects.create_user(
+
 				email = user_data.get("email"),
 				password=user_data.get("password")
 			)
-		)
 
-        company.save()
+            company = company_model(
 
-        return company
+			    name = user_data.get("name"),
+			    CNPJ = user_data.get("CNPJ"),
+			    user = user
+		    )
+
+            company.save()
+
+        return user, company
     
-    except: 
-        pass
+    except IntegrityError as e: 
+
+        return None
 
 
 @pytest.fixture
@@ -98,13 +103,27 @@ def create_same_company(create_same_user, company_model, user_data):
     company.save()
     return create_same_user, company
 
+@pytest.fixture
+def verify_exists_userCompany(django_user_model, company_model, user_data):
+    user = None
+    
+    try:
+        user = django_user_model.objects.get(email=user_data.get("email"))
+    except:
+        pass
+
+    return user is None
+
+
+
 
 @pytest.mark.django_db
-def testUserCompany(company_form, create_same_company, verify_user, create_company):
+def testUserCompany(company_form, create_same_company, verify_user, create_company, verify_exists_userCompany):
 
     assert company_form
     assert verify_user is None
     assert not create_company
+    assert verify_exists_userCompany
 
 
 
