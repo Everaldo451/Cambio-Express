@@ -78,7 +78,7 @@ def create_same_user(django_user_model,user_data):
 def create_same_company(create_same_user, company_model, user_data):
 
     company = company_model(
-        name = user_data.get("name"),
+        name = "outro name",
         CNPJ = user_data.get("CNPJ"),
         user = create_same_user
     )
