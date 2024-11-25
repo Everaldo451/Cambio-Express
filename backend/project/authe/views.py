@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.views.decorators.csrf import csrf_protect
 from api.models import Company
 from .models import User
@@ -91,16 +91,11 @@ def register(request):
 
 		try:
 
-			company = Company(
-
-				name = user_data.get("name"),
-				CNPJ = user_data.get("CNPJ"),
+			with transaction.atomic():
 
 				user = User.objects.create_user(
-					email=user_data.get("email"),
-					password=user_data.get("password")
+					email=
 				)
-			)
 
 			return generate_tokens(request, company.user)
 				
