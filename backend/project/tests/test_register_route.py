@@ -12,8 +12,7 @@ def company_model():
 @pytest.fixture
 def user_data():
     return {
-        "email": "emaili@nvalido.com",
-        "full_name": "Minha Empresa",
+        "email": "emailinvalido.com",
         "password": "senhaValida",
         "CNPJ": "0000000000",
         "name": "Alguma Empresa",
