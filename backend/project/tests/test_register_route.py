@@ -134,10 +134,13 @@ def create_same_person(django_user_model, user_data, firstNameLastName):
 
 
 @pytest.mark.django_db
-def testUserPerson(person_form, create_same_person, create_person):
+def testUserPerson(person_form, create_same_person, create_person, firstNameLastName):
 
-    assert not person_form
-    assert create_same_person is None
+    assert person_form
+    first_name, last_name = firstNameLastName
+    assert first_name == "Algum"
+    assert last_name == "Nome"
+    assert create_same_person
     
 
 #same_user, same_company = create_same_company
