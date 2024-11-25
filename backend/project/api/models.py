@@ -11,7 +11,7 @@ class Company(models.Model):
 		related_name="company",
 	)
 
-	name = models.CharField(unique=True, max_length=100, null=False, blank=False)
+	name = models.CharField(max_length=100, null=False, blank=False)
 	phone = models.CharField(unique=True, validators=[validate_phone], max_length=16, null=True, blank=True)
 	CNPJ = models.CharField(unique=True, validators=[validate_cnpj], max_length=20, null=False, blank=False)
 

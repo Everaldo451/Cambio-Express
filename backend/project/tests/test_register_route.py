@@ -59,19 +59,25 @@ def create_company(django_user_model, company_model, user_data):
     data.is_valid()
 
     try:
+        user = None
+        company = None
 
         with transaction.atomic():
 
             user = django_user_model.objects.create_user(
-				email = data.cleaned_data.pop("email"),
-				password = data.cleaned_data.pop("password")
+				email = data.cleaned_data.get("email"),
+				password = data.cleaned_data.get("password")
 			)
 
-            company = company_model(**data.cleaned_data, user = user)
+            company = company_model(
+                name = data.cleaned_data.get("name"),
+                CNPJ = data.cleaned_data.get("CNPJ"), 
+                user = user
+            )
 
             company.save()
 
-        return user, company
+        return {user, company}
     
     except IntegrityError as e: 
 
