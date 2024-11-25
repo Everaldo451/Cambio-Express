@@ -40,6 +40,17 @@ def create_user(django_user_model, user_data):
     
     except: return None
 
+@pytest.fixture
+def verify_user(django_user_model, user_data):
+
+    user = django_user_model.objects.filter(email=user_data.get("email"))
+
+    if user: return "have user"
+
+    return None
+
+
+
 
 
 @pytest.fixture
@@ -86,9 +97,10 @@ def create_same_company(create_same_user, company_model, user_data):
 
 
 @pytest.mark.django_db
-def testUserCompany(company_form, create_same_company, create_company):
+def testUserCompany(company_form, create_same_company, verify_user, create_company):
 
     assert company_form
+    assert verify_user == "have user"
     assert not create_company
 
 
