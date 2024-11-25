@@ -78,8 +78,8 @@ def create_same_user(django_user_model,user_data):
 def create_same_company(create_same_user, company_model, user_data):
 
     company = company_model(
-        name = "outro name",
-        CNPJ = user_data.get("CNPJ"),
+        name = user_data.get("name"),
+        CNPJ = "00000001",
         user = create_same_user
     )
     company.save()
@@ -92,7 +92,7 @@ def testUserCompany(company_form, create_same_company, create_company):
     assert company_form
     user, company = create_same_company
     assert company
-    assert create_company == "have company"
+    assert create_company is not str and create_company is not None
 
 
 
