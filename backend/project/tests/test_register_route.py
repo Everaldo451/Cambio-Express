@@ -38,6 +38,7 @@ def create_user(django_user_model, user_data):
     
     except: return None
 
+
 @pytest.fixture
 def verify_user(django_user_model, user_data):
 
@@ -54,23 +55,19 @@ def verify_user(django_user_model, user_data):
 @pytest.fixture
 def create_company(django_user_model, company_model, user_data):
 
-    user = None
-    company = None
+    data = RegisterFormForCompany(user_data)
+    data.is_valid()
+
     try:
 
         with transaction.atomic():
 
             user = django_user_model.objects.create_user(
-				email = user_data.get("email"),
-				password=user_data.get("password")
+				email = data.cleaned_data.pop("email"),
+				password = data.cleaned_data.pop("password")
 			)
 
-            company = company_model(
-
-			    name = user_data.get("name"),
-			    CNPJ = user_data.get("CNPJ"),
-			    user = user
-		    )
+            company = company_model(**data.cleaned_data, user = user)
 
             company.save()
 
@@ -85,7 +82,7 @@ def create_company(django_user_model, company_model, user_data):
 def create_same_user(django_user_model,user_data):
 
     user = django_user_model.objects.create_user(
-        email=user_data.get("email"),
+        email="othervalid@gmail.com",
         password=user_data.get("password")
     )
     return user
@@ -96,7 +93,7 @@ def create_same_company(create_same_user, company_model, user_data):
 
     company = company_model(
         name = user_data.get("name"),
-        CNPJ = "0000001",
+        CNPJ = "00000001",
         user = create_same_user
     )
     company.save()
@@ -107,8 +104,8 @@ def create_same_company(create_same_user, company_model, user_data):
 def testUserCompany(company_form, create_same_company, verify_user, create_company):
 
     assert company_form
-    assert verify_user == "have user"
-    assert not create_company
+    assert not verify_user
+    assert create_company is not None
 
 
 

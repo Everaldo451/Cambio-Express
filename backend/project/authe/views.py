@@ -94,10 +94,14 @@ def register(request):
 			with transaction.atomic():
 
 				user = User.objects.create_user(
-					email=
+					email = user_data.pop("email"),
+					password= user_data.pop("password")
 				)
 
-			return generate_tokens(request, company.user)
+				company = Company(**user_data,user = user)
+				company.save()
+
+			return generate_tokens(request, user)
 				
 		except:
 			return Response(None, status=status.HTTP_400_BAD_REQUEST)
