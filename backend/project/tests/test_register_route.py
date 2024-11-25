@@ -12,6 +12,7 @@ def company_model():
 def user_data():
     return {
         "email": "emaili@nvalido.com",
+        "full_name": "Minha Empresa",
         "password": "senhaValida",
         "CNPJ": "0000000000",
         "name": "Alguma Empresa",
