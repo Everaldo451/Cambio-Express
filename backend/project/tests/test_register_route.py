@@ -12,9 +12,7 @@ def company_model():
 @pytest.fixture
 def user_data():
     return {
-        "form-TOTAL_FORMS": "1",
-        "form-INITIAL_FORMS": "0",
-        "email": "email@invalido.com",
+        "email": "emailinvalido.com",
         "password": "senhaValida",
         "CNPJ": "0000000000",
         "name": "Alguma Empresa",
@@ -23,8 +21,7 @@ def user_data():
 
 @pytest.fixture
 def company_form(user_data):
-    RegisterFormSet = formset_factory(RegisterFormForCompany)
-    return RegisterFormSet(user_data).is_valid()
+    return RegisterFormForCompany(user_data).is_valid()
 
 @pytest.fixture
 def create_user(django_user_model, user_data):
@@ -93,7 +90,7 @@ def create_same_company(create_same_user, company_model, user_data):
 @pytest.mark.django_db
 def testUserCompany(company_form, create_same_company, create_company):
 
-    assert company_form
+    assert not company_form
     user, company = create_same_company
     assert company
     assert create_company is not str and create_company is not None
