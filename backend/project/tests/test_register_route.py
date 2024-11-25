@@ -23,15 +23,11 @@ def company_form(user_data):
     return RegisterFormForCompany(user_data).is_valid()
 
 @pytest.fixture
-def person_form(user_data):
-    return RegisterFormForUser(user_data).is_valid()
-
-@pytest.fixture
 def create_user(django_user_model, user_data):
 
     user = authenticate(None,
         email = user_data.get("email"),
-        password = user_data.get("password")
+        password = "algumaOutraSenha"
     )
 
     if user: return "have user"
@@ -51,8 +47,7 @@ def create_user(django_user_model, user_data):
 @pytest.fixture
 def create_company(django_user_model, create_user, company_model, user_data):
 
-    if not isinstance(create_user, django_user_model): return "have user"
-
+    if not isinstance(create_user, django_user_model): return create_user
 
     company = company_model.objects.filter(
         Q(name = user_data.get("name")) | Q(CNPJ = user_data.get("CNPJ"))
@@ -104,7 +99,11 @@ def testUserCompany(company_form, create_same_company, create_company):
     assert company
     assert create_company == "have user"
 
-"""
+
+
+@pytest.fixture
+def person_form(user_data):
+    return RegisterFormForUser(user_data).is_valid()
 
 @pytest.fixture
 def firstNameLastName(user_data):
@@ -117,21 +116,33 @@ def firstNameLastName(user_data):
         return first_name, last_name
 
 @pytest.fixture
+def create_person(django_user_model, user_data, firstNameLastName):
+    pass
+
+@pytest.fixture
 def create_same_person(django_user_model, user_data, firstNameLastName):
+
+    if not firstNameLastName: return None
+
+    first_name, last_name = firstNameLastName
 
     user = django_user_model.objects.create_user(
         email= user_data.get("email"),
-        password = user_data.get("password")
+        password = user_data.get("password"),
+        first_name = first_name,
+        last_name = last_name
     )
+
+    return user
+
 
 @pytest.mark.django_db
 def testUserPerson(person_form, create_same_person, create_person):
 
     assert person_form
-    assert create_person is None
+    assert create_same_person is None
     
 
 #same_user, same_company = create_same_company
 
 #user, company = create_company
-"""
