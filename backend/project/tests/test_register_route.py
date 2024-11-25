@@ -25,10 +25,7 @@ def company_form(user_data):
 @pytest.fixture
 def create_user(django_user_model, user_data):
 
-    user = authenticate(None,
-        email = user_data.get("email"),
-        password = "algumaOutraSenha"
-    )
+    user = django_user_model.objects.filter(email=user_data.get("email"))
 
     if user: return "have user"
 
@@ -49,9 +46,7 @@ def create_company(django_user_model, create_user, company_model, user_data):
 
     if not isinstance(create_user, django_user_model): return create_user
 
-    company = company_model.objects.filter(
-        Q(name = user_data.get("name")) | Q(CNPJ = user_data.get("CNPJ"))
-    )
+    company = company_model.objects.filter(CNPJ = user_data.get("CNPJ"))
 
     if company: return "have company"
 
