@@ -46,7 +46,7 @@ export const GetCSRF = GenericAPIConsumer<CSRFType|null>({
 
 export const GetUser = GenericAPIConsumer<UserType|null>({
     instance: () => customAxios,
-}, "/api/getuser/")
+}, "/api/auth/getuser/")
 
 
 export const GetJWT = GenericAPIConsumer<JWT|null>({
@@ -54,4 +54,4 @@ export const GetJWT = GenericAPIConsumer<JWT|null>({
     configs: {
         withCredentials: true
     }
-}, "/api/getjwt/")
+}, "/api/auth/getjwt/")

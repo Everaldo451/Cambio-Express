@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+import asyncio
 import requests
 import pytest
 
@@ -13,13 +14,11 @@ def rqData():
         "$skip": "0",
         "$top": "100",
     }
-
-
     
 @pytest.fixture
 def toString(rqData):
     string = ""
-    cotVar = "("
+    cotVar = ""
 
     for key, value in rqData.items():
         if key.startswith("@"):
@@ -27,7 +26,7 @@ def toString(rqData):
         string += f"{key}={value}&"
 
     if len(cotVar)>1:
-        cotVar = cotVar[:-1] 
+        cotVar = "(" + cotVar[:-1] 
         cotVar += ")"
     
     string = f"?{string}"
@@ -41,8 +40,11 @@ def url(toString):
 
 
 @pytest.fixture
-def rq(url):
-    response = requests.get(url)
+async def rq(url):
+    rsptask = asyncio.create_task(requests.get(url))
+
+    response = await asyncio.gather(rsptask)
+    await response
     yield response
 
 

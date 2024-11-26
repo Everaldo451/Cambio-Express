@@ -105,16 +105,30 @@ def register(request):
 	
 	elif formForUser.is_valid():
 
+		user_data = formForUser.cleaned_data
+
 		try:
 
+			full_name = user_data.get("full_name")
+
+			splited = full_name.split(maxsplit=1)
+			first_name  = splited[0]
+			last_name = splited[1]
+
 			user = User.objects.create_user(
+
 				email=formForCompany.cleaned_data.get("email"),
-				password = formForCompany.cleaned_data.get("password")
+				password = formForCompany.cleaned_data.get("password"),
+				first_name = first_name,
+				last_name = last_name
 			)
 
 			return generate_tokens(request, user)
 		
-		except: pass
+		except IndexError as e:
+			return Response({"Insira um nome completo"}, status=status.HTTP_400_BAD_REQUEST)
+		except IntegrityError as e:
+			return Response(None, status=status.HTTP_400_BAD_REQUEST)
 	else: 
 		print("not valid")
 		return Response(None, status=status.HTTP_400_BAD_REQUEST)

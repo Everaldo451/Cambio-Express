@@ -7,6 +7,7 @@ import numpy as np
 import io
 import base64
 from datetime import datetime
+from decimal import Decimal
 
 matplotlib.use("Agg")
 
@@ -34,7 +35,7 @@ def generate_data(coin):
 
 def generate_url(data):
     string = ""
-    cotVar = "("
+    cotVar = ""
 
     for key, value in data.items():
         if key.startswith("@"):
@@ -42,7 +43,7 @@ def generate_url(data):
         string += f"{key}={value}&"
 
     if len(cotVar)>1:
-        cotVar = cotVar[:-1] 
+        cotVar = "(" + cotVar[:-1] 
         cotVar += ")"
     
     string = f"?{string}"
@@ -71,8 +72,8 @@ def get(request,coin):
 
         data = data.get("value")
 
-        lows = []
-        highs = []
+        cotacaoCompra = []
+        cotacaoVenda = []
 
         xpoints = []
 
@@ -90,15 +91,15 @@ def get(request,coin):
                 continue
                 
             xpoints.append(timestr)
-            lows.append(float(dt.get("cotacaoCompra")))
-            highs.append(float(dt.get("cotacaoVenda")))
+            cotacaoCompra.append(Decimal(dt.get("cotacaoCompra")))
+            cotacaoVenda.append(Decimal(dt.get("cotacaoVenda")))
 
         xpoints= np.array(xpoints)
 
         fig, ax = plt.subplots()
 
-        ax.plot(xpoints,np.array(lows), marker = "o", color="orange", label="Compra")
-        ax.plot(xpoints,np.array(highs), marker = "o", color="green", label="Venda")
+        ax.plot(xpoints,np.array(cotacaoCompra), marker = "o", color="orange", label="Compra")
+        ax.plot(xpoints,np.array(cotacaoVenda), marker = "o", color="green", label="Venda")
 
         
         ax.set_ylabel(f"{coin}/BRL")

@@ -18,6 +18,9 @@ def user_data():
         "is_company": "on"
     }
 
+
+########TEST COMPANY USER
+
 @pytest.fixture
 def company_form(user_data):
     return RegisterFormForCompany(user_data).is_valid()
@@ -48,9 +51,6 @@ def verify_user(django_user_model, user_data):
     if user: return "have user"
 
     return None
-
-
-
 
 
 @pytest.fixture
@@ -114,6 +114,7 @@ def testUserCompany(company_form, create_same_company, verify_user, create_compa
     assert company.name == user_data.get("name")
 
 
+########TEST PERSON USER
 
 @pytest.fixture
 def person_form(user_data):
@@ -124,13 +125,14 @@ def firstNameLastName(user_data):
     full_name = user_data.get("full_name")
 
     try:
-        if full_name:
-            splited = full_name.split(maxsplit=1)
-            first_name  = splited[0]
-            last_name = splited[1]
-            return first_name, last_name
+        
+        splited = full_name.split(maxsplit=1)
+        first_name  = splited[0]
+        last_name = splited[1]
+        return first_name, last_name
+        
     except IndexError as e:
-        return None
+        return e
 
 @pytest.fixture
 def create_person(django_user_model, user_data, firstNameLastName):
@@ -139,7 +141,7 @@ def create_person(django_user_model, user_data, firstNameLastName):
 @pytest.fixture
 def create_same_person(django_user_model, user_data, firstNameLastName):
 
-    if not firstNameLastName: return None
+    if firstNameLastName: return None
 
     first_name, last_name = firstNameLastName
 
@@ -164,8 +166,4 @@ def testUserPerson(person_form, create_same_person, create_person, firstNameLast
     assert last_name == "Nome"
     """
     assert not create_same_person
-    
 
-#same_user, same_company = create_same_company
-
-#user, company = create_company
