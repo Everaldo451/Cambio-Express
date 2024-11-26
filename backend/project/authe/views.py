@@ -85,10 +85,6 @@ def register(request):
 
 		user_data = formForCompany.cleaned_data
 
-		user = User.objects.filter(email=user_data.get("email"))
-
-		if user: return Response(None, status=status.HTTP_400_BAD_REQUEST)
-
 		try:
 
 			with transaction.atomic():
@@ -104,25 +100,19 @@ def register(request):
 			return generate_tokens(request, user)
 				
 		except:
+
 			return Response(None, status=status.HTTP_400_BAD_REQUEST)
 	
-	elif formForCompany.is_valid():
+	elif formForUser.is_valid():
 
 		try:
 
-			nuser = User.objects.create_user(
+			user = User.objects.create_user(
 				email=formForCompany.cleaned_data.get("email"),
 				password = formForCompany.cleaned_data.get("password")
 			)
-			
-			ncompany = Company(
-				user = nuser,
-				name = formForCompany.cleaned_data.get("name"),
-				CNPJ = formForCompany.cleaned_data.get("CNPJ")
-			)
-			ncompany.save()
 
-			return generate_tokens(request, nuser)
+			return generate_tokens(request, user)
 		
 		except: pass
 	else: 
