@@ -3,6 +3,8 @@ import React, { useContext, useMemo, useState} from "react";
 import { UserContext } from "../../main";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png"
+import { JWTContext } from "../../main";
+import { GetJWT } from "../../load";
 
 const HeaderElement = styled.header`
     position: fixed;
@@ -119,18 +121,20 @@ function Header() {
 
     const [user,setUser] = useContext(UserContext)
     const navigate = useNavigate()
+    const [_, setJWT] = useContext(JWTContext)
 
     async function logoutFunc(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault()
 
         try {
 
-            const response = await fetch("/api/auth/logout/",{
+            await fetch("/api/auth/logout/",{
                 method:"GET",
                 credentials:"include"
             })
 
-            if (response.redirected) {navigate("/")}
+            GetJWT(setJWT)
+            {navigate("/")}
         }
         catch(e) {navigate("/")}
     }

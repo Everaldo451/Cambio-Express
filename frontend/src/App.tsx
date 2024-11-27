@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ThemeProvider } from 'styled-components'
+import { commonTheme } from './Theme'
 import Header from './components/Head'
 import Home from './routes/Home'
 import Login from './routes/Login'
@@ -9,7 +11,7 @@ import './App.css'
 function App() {
 
   return (
-    <>
+    <ThemeProvider theme={commonTheme}>
       <BrowserRouter>
         <Header/>
         <Routes>
@@ -18,7 +20,7 @@ function App() {
           <Route path='/configurations' element={<ConfigurationPage/>}/>
         </Routes>
       </BrowserRouter>
-    </>
+    </ThemeProvider>
   )
 }
 

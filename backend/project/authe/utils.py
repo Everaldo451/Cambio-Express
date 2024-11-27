@@ -10,7 +10,6 @@ def generate_token_cookie(response:Response, token:Token, cookiename:str):
 def generate_token_cookies(response:Response, refresh_token:Token):
 
     generate_token_cookie(response, refresh_token, "refresh_token")
-    generate_token_cookie(response, refresh_token.access_token, "access_token")
     
 
 def generate_token_response(refresh_token:Token):
@@ -18,8 +17,7 @@ def generate_token_response(refresh_token:Token):
 	print(refresh_token.access_token)
       
 	return Response({
-		"refresh": str(refresh_token),
-		"access": str(refresh_token.access_token)
+		"access_token": str(refresh_token.access_token)
 	})
 
 

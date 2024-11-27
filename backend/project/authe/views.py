@@ -20,8 +20,9 @@ from django.http import HttpRequest
 @api_view(["GET"])
 def get_jwt(request):
 
-	if request.COOKIES.get("access_token") and request.COOKIES.get("refresh_token"):
+	if request.COOKIES.get("refresh_token"):
 		try:
+			
 			refresh = RefreshToken(request.COOKIES.get("refresh_token"))
 			return generate_token_response(refresh)
 		
@@ -138,7 +139,6 @@ def register(request):
 def logout(request):
 
 	response = redirect("http://localhost:3000")
-	response.delete_cookie("access_token")
 	response.delete_cookie("refresh_token")
 
 	return response

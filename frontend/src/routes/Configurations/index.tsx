@@ -14,16 +14,18 @@ interface ButtonProps {
 const Main = styled.main`
     display: flex;
     align-items: center;
+    background-color: ${props => props.theme.bgColor};
 `
 
 const ConfigSection = styled.section`
+    background-color: ${props => props.theme.divColor};
     width: 80%;
     max-height: 80%;
     padding: 20px;
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: 1fr;
-    box-shadow: 0 6px 10px rgb(200,200,200);
+    box-shadow: 0 6px 10px ${props => props.theme.boxShadowColor};
     border-radius: 15px;
     margin: auto;
 `

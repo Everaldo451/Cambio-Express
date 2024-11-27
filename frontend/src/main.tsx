@@ -25,6 +25,7 @@ function Main() {
     setLoaded(false)
   },[])
 
+
   useMemo(() => {
     UpdateAxios(jwt)
     GetUser(setUser)

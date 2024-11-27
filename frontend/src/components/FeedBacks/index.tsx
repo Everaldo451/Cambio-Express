@@ -5,13 +5,13 @@ import Triangle from "./assets/Triangle.png"
 import {customAxios} from "../../load";
 
 const Section = styled.section`
-    background-color: #3F4156;
+    background-color: ${props => props.theme.bgColor};
     padding: 60px 40px;
 
     & > h2 {
         color:white;
         margin:0;
-        font-family: InstrumentSans;
+        font-family: ${props => props.theme.fontFamily};
     }
 `
 
@@ -35,8 +35,8 @@ const FeedBackDIV = styled.div`
     border-radius: 20px 0;
     background-color: #BEC1C1;
     padding:20px;
-    font-family: InstrumentSans;
-    box-shadow: 7px 10px 10px #2D2F3F;
+    font-family: ${props => props.theme.fontFamily};
+    box-shadow: 7px 10px 10px ${props => props.theme.boxShadowColor};
 
     & h5 {
         font-size: 15px;
@@ -144,20 +144,19 @@ function FeedBacks() {
                 setFeedBacks(feedbacks)
             }
 
+            setFeedBacks(prev => [...prev, 
+                {first_name:"João", date: new Date(), comment: "asadasd"},
+                {first_name:"Maria", date: new Date(), comment: "asadasd"},
+                {first_name:"Rafaela", date: new Date(), comment: "asadasd"},
+                {first_name:"José", date: new Date(), comment: "asadasd"},
+            ])
+
         } catch(e) {}
 
     }
 
     useEffect(() => {
         GetFeedBacks()
-        console.log(feedbacks)
-
-        setFeedBacks(prev => [...prev, 
-            {first_name:"João", date: new Date(), comment: "asadasd"},
-            {first_name:"Maria", date: new Date(), comment: "asadasd"},
-            {first_name:"Rafaela", date: new Date(), comment: "asadasd"},
-            {first_name:"José", date: new Date(), comment: "asadasd"},
-        ])
     },[])
 
     return (

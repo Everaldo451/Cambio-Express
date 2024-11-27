@@ -12,14 +12,14 @@ export let customAxios = axios.create()
 export async function UpdateAxios (jwt:JWT|null) {
     customAxios = axios.create({
       headers: jwt?{
-        'Authorization': `Bearer ${jwt.access}`
+        'Authorization': `Bearer ${jwt.access_token}`
       }:{}
     })
 }
 
 function GenericAPIConsumer<T>(a:AxiosConfigs, url:string) {
 
-    async function NewFunction(setState:React.Dispatch<SetStateAction<T>>) {
+    async function NewFunction(setState:React.Dispatch<SetStateAction<T|null>>) {
 
         try {
             const response = await a.instance().get(url,a.configs)
@@ -28,6 +28,7 @@ function GenericAPIConsumer<T>(a:AxiosConfigs, url:string) {
             setState(data?data:null)
         }
         catch (error) {
+            setState(null)
             console.log(error)
         }
     }
@@ -36,7 +37,7 @@ function GenericAPIConsumer<T>(a:AxiosConfigs, url:string) {
 }
 
 
-export const GetCSRF = GenericAPIConsumer<CSRFType|null>({
+export const GetCSRF = GenericAPIConsumer<CSRFType>({
     instance: () => axios,
     configs: {
         withCredentials: true
@@ -44,12 +45,12 @@ export const GetCSRF = GenericAPIConsumer<CSRFType|null>({
 }, "/api/getcsrf/")
 
 
-export const GetUser = GenericAPIConsumer<UserType|null>({
+export const GetUser = GenericAPIConsumer<UserType>({
     instance: () => customAxios,
 }, "/api/auth/getuser/")
 
 
-export const GetJWT = GenericAPIConsumer<JWT|null>({
+export const GetJWT = GenericAPIConsumer<JWT>({
     instance: () => customAxios,
     configs: {
         withCredentials: true

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Navigate } from "react-router-dom";
-import { SetStateAction, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../../main";
 import FormRenderer, {FormProps} from "./Forms";
 import ChangeURL from "./ChangeURL";
@@ -10,7 +10,7 @@ const Main = styled.main`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #3F4156;
+    background-color: ${props => props.theme.bgColor};
 `
 
 function Login() {
