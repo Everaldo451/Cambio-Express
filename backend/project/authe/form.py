@@ -22,4 +22,5 @@ class RegisterFormForCompany(RegisterForm):
 
     CNPJ = forms.CharField(label="CNPJ", max_length=14)
     name = forms.CharField(label="name", max_length=254)
+    is_company = forms.CharField(label="is_company", widget=forms.RadioSelect)
 

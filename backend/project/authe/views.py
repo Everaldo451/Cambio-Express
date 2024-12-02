@@ -10,11 +10,11 @@ from django.contrib.auth import authenticate
 from django.shortcuts import redirect
 from django.db import DatabaseError, transaction
 from django.views.decorators.csrf import csrf_protect
-from api.models import Company
 from .models import User
 from .form import LoginForm, RegisterFormForCompany, RegisterFormForUser
 from .utils import generate_tokens, generate_token_response
 from .serializers import UserSerializer
+from extras import register_company, register_user
 
 
 @api_view(["GET"])
@@ -45,6 +45,13 @@ def get_user(request):
 
 	return Response(data)
 
+
+@api_view(["POST"])
+@csrf_protect
+def oauthLogin(request):
+	pass
+
+
 	
 @api_view(["POST"])
 @csrf_protect
@@ -70,6 +77,7 @@ def login(request):
 	
 	return Response(None, status=status.HTTP_401_UNAUTHORIZED)	
 
+
 @api_view(["POST"])
 @csrf_protect
 def register(request):
@@ -77,55 +85,11 @@ def register(request):
 	user_form = RegisterFormForUser(request.POST)
 	company_form = RegisterFormForCompany(request.POST)
 
-
 	if company_form.is_valid():
-
-		user_data = company_form.cleaned_data
-
-		try:
-
-			with transaction.atomic():
-
-				user = User.objects.create_user(
-					email = user_data.pop("email"),
-					password= user_data.pop("password")
-				)
-
-				company = Company(**user_data,user = user)
-				company.save()
-
-			return generate_tokens(request, user)
-				
-		except DatabaseError:
-			return Response(None, status=status.HTTP_400_BAD_REQUEST)
+		return register_company.func(request, company_form)
 	
 	elif user_form.is_valid():
-
-		user_data = user_form.cleaned_data
-		try:
-
-			full_name = user_data.get("full_name")
-
-			splited = full_name.split(maxsplit=1)
-			first_name  = splited[0]
-			last_name = splited[1]
-
-			user = User.objects.create_user(
-
-				email=user_data.get("email"),
-				password = user_data.get("password"),
-				first_name = first_name,
-				last_name = last_name
-			)
-
-			return generate_tokens(request, user)
-		
-		except IndexError as err:
-			print(err.args)
-			return Response({"Insira um nome completo"}, status=status.HTTP_400_BAD_REQUEST)
-		except DatabaseError as err:
-			print(err.args)
-			return Response(None, status=status.HTTP_400_BAD_REQUEST)
+		return register_user.func(request, user_form)
 	else: 
 		print("not valid")
 		return Response(None, status=status.HTTP_400_BAD_REQUEST)
