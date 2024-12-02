@@ -40,6 +40,13 @@ class User(AbstractUser, PermissionsMixin):
 	money = models.FloatField(default=0)
 
 	date_joined = models.DateTimeField(auto_now=True)
+
+	AUTHENTICATION_CHOICES = {
+
+	}
+
+	authentication_type = models.CharField(max_length=50, null=False, blank=False, choices=AUTHENTICATION_CHOICES)
+
 	
 	USERNAME_FIELD = 'email'
 	EMAIL_FIELD = 'email'
