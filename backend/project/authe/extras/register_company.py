@@ -1,28 +1,13 @@
 from django.http import HttpRequest, HttpResponse
 from django.db import transaction, DatabaseError
-from django.contrib.auth import authenticate
 from api.models import Company
-from authe.form import RegisterFormForCompany
 from authe.utils import generate_tokens
 from authe.models import User
 from rest_framework.response import Response
 from rest_framework import status
-from .verify_duplicate_model import verify_duplicate_model
 
-def func(request:HttpRequest, company_form:RegisterFormForCompany) -> HttpResponse | Response:
+def register_company(request:HttpRequest, user_data:dict) -> HttpResponse | Response:
 
-    user_data = company_form.cleaned_data
-
-    duplicated_user = verify_duplicate_model(request, authenticate, email = user_data.get("email"), password = user_data.get("password"))
-
-    if duplicated_user:
-        return Response({"message":"User already exists"}, status=status.HTTP_401_UNAUTHORIZED)
-
-    duplicated_company = verify_duplicate_model(request, Company.objects.filter, CNPJ = user_data.get("CNPJ"), name = user_data.get("name"))
-
-    if duplicated_company:
-        return Response({"message":"Company already exists"}, status=status.HTTP_401_UNAUTHORIZED)
-    
     try:
         with transaction.atomic:
 

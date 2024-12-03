@@ -1,6 +1,6 @@
 from django.contrib import admin
 from api.models import Company, FeedBacks, User
-from transactions.models import Transaction, Offert
+from marketplace.models import Transaction, Offert
 
 
 admin.site.register(User)

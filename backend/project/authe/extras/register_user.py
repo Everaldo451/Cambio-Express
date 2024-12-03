@@ -1,21 +1,11 @@
 from django.http import HttpRequest, HttpResponse
 from django.db import DatabaseError
-from django.contrib.auth import authenticate
-from authe.form import RegisterFormForUser
 from authe.utils import generate_tokens
 from authe.models import User
 from rest_framework.response import Response
 from rest_framework import status
-from .verify_duplicate_model import verify_duplicate_model
 
-def func(request:HttpRequest, user_form:RegisterFormForUser) -> HttpResponse | Response:
-
-    user_data = user_form.cleaned_data
-
-    duplicated_user = verify_duplicate_model(request, authenticate, email = user_data.get("email"), password = user_data.get("password"))
-
-    if duplicated_user:
-        return Response({"message":"User already exists"}, status=status.HTTP_401_UNAUTHORIZED)
+def register_user(request:HttpRequest, user_data:dict) -> HttpResponse | Response:
     
     try:
         full_name = user_data.get("full_name")

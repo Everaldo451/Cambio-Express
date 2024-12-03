@@ -2,7 +2,6 @@ from django.db import models
 from authe.models import User
 from .model_validators import validate_cnpj, validate_phone
 
-
 class Company(models.Model):
 
 	user = models.OneToOneField(

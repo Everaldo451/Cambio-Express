@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'authe.apps.AutheConfig',
-    'transactions.apps.TransactionsConfig'
+    'marketplace.apps.MarketplaceConfig'
 ]
 
 MIDDLEWARE = [
