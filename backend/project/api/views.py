@@ -11,7 +11,7 @@ from .serializers import FeedBackSerializer
 
 @api_view(["GET"])
 def get_csrf(request):
-	return Response(get_token(request))
+	return Response({"data":get_token(request)})
 
 
 @api_view(["GET"])

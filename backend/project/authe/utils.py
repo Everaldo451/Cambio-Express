@@ -13,11 +13,11 @@ def generate_token_cookies(response:Response, refresh_token:Token):
     
 
 def generate_token_response(refresh_token:Token):
-       
-	print(refresh_token.access_token)
       
 	return Response({
-		"access_token": str(refresh_token.access_token)
+        "data":{
+            "access_token": str(refresh_token.access_token)
+		}
 	})
 
 

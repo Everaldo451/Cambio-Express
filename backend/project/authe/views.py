@@ -10,6 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
 from django.http import HttpRequest
+from django.urls import reverse
 from django.contrib.auth import authenticate
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
@@ -24,6 +25,7 @@ from .serializers import UserSerializer
 from extras.register_company import register_company
 from extras.register_user import register_user
 from extras.verify_exists_model import verify_exists_model
+from extras.generate_oauth_config import generate_oauth_config
 
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
@@ -48,52 +50,6 @@ def get_jwt(request):
 
 
 @api_view(["GET"])
-def oauth_client_url(request):
-
-	client_id = os.getenv("OAUTH_CLIENT_ID")
-	client_secret = os.getenv("OAUTH_CLIENT_SECRET")
-
-	redirect_uri = 'http://localhost/auth/oauth2callback'
-
-	client_config = {
-		"web": {
-			"client_id": client_id,
-			"client_secret": client_secret,
-			"redirect_uris": [redirect_uri],
-    		"auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    		"token_uri": "https://accounts.google.com/o/oauth2/token"
-		}
-	}
-
-	scopes = ['https://www.googleapis.com/auth/userinfo.email',
-		'https://www.googleapis.com/auth/userinfo.profile',
-		'OpenID'
-	]
-
-	flow = google_auth_oauthlib.flow.Flow.from_client_config(client_config, scopes)
-
-	flow.redirect_uri = redirect_uri
-	
-	client_id = os.getenv("OAUTH_CLIENT_ID")
-
-	if client_id is not None:
-		return Response({"data":client_id}, status=status.HTTP_200_OK)
-	
-	return Response({"message":"Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view(["GET"])
-def oauth_login(request):
-
-	oauth_form = OAuthForm(request.GET)
-
-	if oauth_form.is_valid():
-
-		return
-	pass
-
-
-@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_user(request):
 	
@@ -109,7 +65,61 @@ def get_user(request):
 
 	data.pop("id")
 
-	return Response(data)
+	return Response({"data":data})
+
+@api_view(["GET"])
+def oauth_client_url(request):
+
+	redirect_uri = reverse('oauth2callback')
+
+	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request))
+
+	flow.redirect_uri = redirect_uri
+	
+	authorization_url, state = flow.authorization_url(access_type = 'offline',prompt="consent")
+
+	request.session['state'] = state
+
+	if authorization_url:
+		return Response({"url":authorization_url})
+	
+	return Response({"message":"Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(["GET"])
+def oauth_callback(request):
+
+	oauth_form = OAuthForm(request.GET)
+
+	if not oauth_form.is_valid():
+		return Response({"message":"OAuth response is invalid"}, status=status.HTTP_400_BAD_REQUEST)
+	
+
+	redirect_uri = reverse('oauth2callback')
+
+	rq = HttpRequest()
+
+	state = request.session.get('state')
+	if state is None: 
+		return
+
+	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request), state=state)
+
+	flow.redirect_uri = redirect_uri
+
+	authorization_response = request.build_absolute_uri()
+	flow.fetch_token(authorization_response=authorization_response)
+
+	credentials = flow.credentials
+
+	request.session["credentials"] = {
+		'token': credentials.token,
+		'refresh_token': credentials.refresh_token,
+		'token_uri': credentials.token_uri,
+		'client_id': credentials.client_id,
+		'client_secret': credentials.client_secret,
+		'granted_scopes': credentials.granted_scopes
+	}
 
 	
 @api_view(["POST"])

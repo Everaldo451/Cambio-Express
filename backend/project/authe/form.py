@@ -27,6 +27,7 @@ class CompanyRegisterExtras(forms.Form):
 
 class OAuthForm(forms.Form):
 
-    code = forms.CharField(label="code", max_length=200)
+    code = forms.CharField(label="code", max_length=200, required=False)
     state = forms.CharField(label="state", max_length=50, required=False)
+    error = forms.CharField(label="error", max_length=100, required=False)
 
