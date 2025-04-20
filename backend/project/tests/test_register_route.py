@@ -1,4 +1,4 @@
-from authe.form import RegisterFormForCompany, RegisterFormForUser
+from authe.form import RegisterForm, CompanyRegisterExtras, UserRegisterExtras
 from django.db import transaction, IntegrityError
 from api.models import Company
 import pytest
@@ -23,15 +23,13 @@ def user_data():
 
 @pytest.fixture
 def company_form(user_data):
-    return RegisterFormForCompany(user_data).is_valid()
+    return CompanyRegisterExtras(user_data).is_valid() and RegisterForm(user_data).is_valid()
 
 @pytest.fixture
 def create_user(django_user_model, user_data):
 
     user = django_user_model.objects.filter(email=user_data.get("email"))
-
     if user: return "have user"
-
     try:
 
         user = django_user_model.objects.create_user(
@@ -56,7 +54,7 @@ def verify_user(django_user_model, user_data):
 @pytest.fixture
 def create_company(django_user_model, company_model, user_data):
 
-    data = RegisterFormForCompany(user_data)
+    data = CompanyRegisterExtras(user_data)
     data.is_valid()
 
     try:
@@ -118,7 +116,7 @@ def testUserCompany(company_form, create_same_company, verify_user, create_compa
 
 @pytest.fixture
 def person_form(user_data):
-    return RegisterFormForUser(user_data).is_valid()
+    return UserRegisterExtras(user_data).is_valid() and RegisterForm(user_data).is_valid()
 
 @pytest.fixture
 def firstNameLastName(user_data):

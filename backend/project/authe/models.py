@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 
 class UserManager(BaseUserManager):
 	
-	def _create_user(self,email, password, auth_type, **extra_fields):
+	def _create_user(self,email, password, **extra_fields):
 
 		if not email:
 			raise ValidationError("Email will not blank")
@@ -46,7 +46,7 @@ class User(AbstractUser, PermissionsMixin):
 		('oauth', 'OAuth')
 	]
 
-	authentication_type = models.CharField(max_length=50, null=False, blank=False, choices=AUTHENTICATION_CHOICES)
+	authentication_type = models.CharField(max_length=50, null=False, blank=False, choices=AUTHENTICATION_CHOICES, default="password")
 	
 	USERNAME_FIELD = 'email'
 	EMAIL_FIELD = 'email'

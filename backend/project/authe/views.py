@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-import os
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -22,10 +21,10 @@ from .form import LoginForm, UserRegisterExtras, CompanyRegisterExtras, Register
 from .utils import generate_tokens, generate_token_response
 from .serializers import UserSerializer
 
-from extras.register_company import register_company
-from extras.register_user import register_user
-from extras.verify_exists_model import verify_exists_model
-from extras.generate_oauth_config import generate_oauth_config
+from .extras.register_company import register_company
+from .extras.register_user import register_user
+from .extras.verify_exists_model import verify_exists_model
+from .extras.generate_oauth_config import generate_oauth_config
 
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
@@ -71,13 +70,9 @@ def get_user(request):
 def oauth_client_url(request):
 
 	redirect_uri = reverse('oauth2callback')
-
 	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request))
-
 	flow.redirect_uri = redirect_uri
-	
 	authorization_url, state = flow.authorization_url(access_type = 'offline',prompt="consent")
-
 	request.session['state'] = state
 
 	if authorization_url:
@@ -94,22 +89,16 @@ def oauth_callback(request):
 	if not oauth_form.is_valid():
 		return Response({"message":"OAuth response is invalid"}, status=status.HTTP_400_BAD_REQUEST)
 	
-
 	redirect_uri = reverse('oauth2callback')
-
 	rq = HttpRequest()
-
 	state = request.session.get('state')
 	if state is None: 
 		return
 
 	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request), state=state)
-
 	flow.redirect_uri = redirect_uri
-
 	authorization_response = request.build_absolute_uri()
 	flow.fetch_token(authorization_response=authorization_response)
-
 	credentials = flow.credentials
 
 	request.session["credentials"] = {
@@ -130,7 +119,6 @@ def login(request):
 	if form.is_valid():
 
 		_, user = verify_exists_model(request, authenticate, **form.cleaned_data)
-
 		if not isinstance(user, AbstractUser) or not user.is_active:
 			return Response({"message":"User don't exists"}, status=status.HTTP_401_UNAUTHORIZED)
 
