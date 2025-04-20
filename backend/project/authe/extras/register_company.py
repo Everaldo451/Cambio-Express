@@ -10,13 +10,9 @@ def register_company(request:HttpRequest, user_data:dict) -> HttpResponse | Resp
 
     try:
         with transaction.atomic:
-
             user = User.objects.create_user(email= user_data.pop("email"), password = user_data.pop("password"))
-
             company = Company(user = user, **user_data)
-
             company.save()
-
         return generate_tokens(request, user)
 
     except DatabaseError as err:

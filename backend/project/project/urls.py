@@ -25,6 +25,6 @@ urlpatterns = [
     path(os.environ.get("DJANGO_ADMIN_URL"), admin.site.urls),
     path("", include("api.urls")),
     path("auth/", include("authe.urls")),
-    path("tran/", include("transactions.urls"))
+    path("tran/", include("marketplace.urls"))
 
 ]

@@ -20,18 +20,15 @@ def get_feedbacks(request):
 	try:
 		last_feedbacks = FeedBacks.objects.order_by("-id")[:5]
 		results = FeedBackSerializer(last_feedbacks, many=True)
-
 	except Exception as e: 
 		pass
 		
 	try:
-		
 		if request.user is not AnonymousUser:
 			feedback = FeedBacks.objects.get(user=request.user)
 			serialized = FeedBackSerializer(feedback)
 
 			if results: results.data.append(serialized.data) 
-	
 	except: pass
 
 	return Response(results.data if results else [serialized] if serialized else None)
@@ -45,14 +42,11 @@ def set_user_feedback(request):
 	form = SetFeedbackForm(request.POST)
 
 	if form.is_valid():
-
 		print("ola")
-
 		try:
 
 			newFeedback = FeedBacks(user=request.user, **form.cleaned_data)
 			newFeedback.save()
-		
 		except Exception as e: print(e)
 
 	return redirect("http://localhost:3000")
