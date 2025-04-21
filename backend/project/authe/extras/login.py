@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from ..form import LoginForm
 from rest_framework.response import Response
 from rest_framework import status
-from ..utils import generate_tokens
+from .generate_jwt_response import generate_full_jwt_response
 
 def login(request):
 
@@ -21,7 +21,7 @@ def login(request):
 			print("No user")
 			return Response("No user", status=status.HTTP_401_UNAUTHORIZED)
 
-		return generate_tokens(request, user)
+		return generate_full_jwt_response(request, user)
 		
 	
 	return Response(None, status=status.HTTP_401_UNAUTHORIZED)	

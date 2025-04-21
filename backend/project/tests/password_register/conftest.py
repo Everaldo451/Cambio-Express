@@ -10,20 +10,21 @@ def company_model():
 @pytest.fixture
 def user_data():
     return {
-        "email": "email@invalido.com",
-        "full_name": "Amora",
-        "password": "senhaValida",
+        "email": "valid@gmail.com",
+        "full_name": "Any Name",
+        "password": "validPassword"
+    }
+
+@pytest.fixture
+def company_data():
+    return {
         "CNPJ": "0000000000",
-        "name": "Alguma Empresa",
-        "is_company": "on"
+        "name": "Any Company",
+        "is_company": "on",
     }
 
 
 ########TEST COMPANY USER
-
-@pytest.fixture
-def company_form(user_data):
-    return CompanyRegisterExtras(user_data).is_valid() and RegisterForm(user_data).is_valid()
 
 @pytest.fixture
 def create_user(django_user_model, user_data):
@@ -42,43 +43,6 @@ def create_user(django_user_model, user_data):
 
 
 @pytest.fixture
-def verify_user(django_user_model, user_data):
-
-    user = django_user_model.objects.filter(email=user_data.get("email"))
-
-    if user: return "have user"
-    return None
-
-
-@pytest.fixture
-def create_company(django_user_model, company_model, user_data):
-
-    company_form = CompanyRegisterExtras(user_data)
-    register_form = RegisterForm(user_data)
-    register_form.is_valid()
-    is_valid = register_form.is_valid() and company_form.is_valid()
-
-    try:
-        user = None
-        company = None
-
-        with transaction.atomic():
-            user = django_user_model.objects.create_user(
-				email = register_form.cleaned_data.get("email"),
-				password = register_form.cleaned_data.get("password")
-			)
-            company_form.cleaned_data.pop("is_company")
-            company = company_model(**company_form.cleaned_data, user = user)
-            company.save()
-
-        return user, company
-    
-    except IntegrityError as e: 
-
-        return None
-
-
-@pytest.fixture
 def create_same_user(django_user_model,user_data):
 
     user = django_user_model.objects.create_user(
@@ -86,6 +50,26 @@ def create_same_user(django_user_model,user_data):
         password=user_data.get("password")
     )
     return user
+
+
+@pytest.fixture
+def create_company(django_user_model, company_model, user_data, company_data):
+
+    try:
+        user = None
+        company = None
+        with transaction.atomic():
+            user = django_user_model.objects.create_user(
+				email = user_data.get("email"),
+				password = user_data.get("password")
+			)
+            company_data.pop("is_company")
+            company = company_model(**company_data, user = user)
+            company.save()
+
+        return user, company
+    except IntegrityError as e:
+        return None
 
 
 @pytest.fixture
