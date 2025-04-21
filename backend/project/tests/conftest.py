@@ -9,7 +9,7 @@ def client():
 
 
 @pytest.fixture
-def delete_user(user:User):
+def delete_user(django_user_model ,user:User):
     user.delete()
 
     

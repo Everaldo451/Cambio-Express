@@ -13,14 +13,13 @@ from django.urls import reverse
 from django.contrib.auth import authenticate
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth.models import AbstractUser
 
 from api.models import Company
 
 from .form import LoginForm, UserRegisterExtras, CompanyRegisterExtras, RegisterForm, OAuthForm
-from .utils import generate_tokens, generate_token_response
 from .serializers import UserSerializer
 
+from .extras.generate_jwt_response import generate_full_jwt_response, generate_jwt_response_instance
 from .extras.register_company import register_company
 from .extras.register_user import register_user
 from .extras.verify_exists_model import verify_exists_model
@@ -33,14 +32,13 @@ load_dotenv()
 
 
 @api_view(["GET"])
-def get_jwt(request):
+def get_jwt(request:HttpRequest):
 
 	token_string = request.COOKIES.get("refresh_token")
-
 	if token_string is not None:
 		try:
 			refresh_token = RefreshToken(token_string)
-			return generate_token_response(refresh_token)
+			return generate_jwt_response_instance(refresh_token)
 		except TokenError as err: 
 			print(err.args)
 			return Response({"message":"Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
@@ -50,24 +48,22 @@ def get_jwt(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def get_user(request):
+def get_user(request:HttpRequest):
 	
 	serializer = UserSerializer(request.user)
 	if not serializer.is_valid():
 		return Response({"message":"Internal server error"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 	
 	data = serializer.data
-	
+	data.pop("id")
 	if not request.user.groups.filter(name="Company").exists():
 		print("notCompany")
 		data.pop("company")
 
-	data.pop("id")
-
 	return Response({"data":data})
 
 @api_view(["GET"])
-def oauth_client_url(request):
+def oauth_client_url(request:HttpRequest):
 
 	redirect_uri = reverse('oauth2callback')
 	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request))
@@ -82,7 +78,7 @@ def oauth_client_url(request):
 
 
 @api_view(["GET"])
-def oauth_callback(request):
+def oauth_callback(request:HttpRequest):
 
 	oauth_form = OAuthForm(request.GET)
 
@@ -90,7 +86,6 @@ def oauth_callback(request):
 		return Response({"message":"OAuth response is invalid"}, status=status.HTTP_400_BAD_REQUEST)
 	
 	redirect_uri = reverse('oauth2callback')
-	rq = HttpRequest()
 	state = request.session.get('state')
 	if state is None: 
 		return
@@ -113,25 +108,24 @@ def oauth_callback(request):
 	
 @api_view(["POST"])
 @csrf_protect
-def login(request):
+def password_login(request:HttpRequest):
 
 	form = LoginForm(request.POST)
 	if form.is_valid():
 
 		_, user = verify_exists_model(request, authenticate, **form.cleaned_data)
-		if not isinstance(user, AbstractUser) or not user.is_active:
+		if user is None or not user.is_active:
 			return Response({"message":"User don't exists"}, status=status.HTTP_401_UNAUTHORIZED)
 
-		return generate_tokens(request, user)	
+		return generate_full_jwt_response(request, user)	
 	
 	print(form.errors)
-	return Response({"messages":"Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)	
-
+	return Response({"message":"Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)	
 
 
 @api_view(["POST"])
 @csrf_protect
-def register(request):
+def password_register(request):
 
 	register_form = RegisterForm(request.POST)
 	user_form = UserRegisterExtras(request.POST)
@@ -161,16 +155,14 @@ def register(request):
 	elif user_form.is_valid():
 		return register_user(request, {**user_form.cleaned_data, **register_data})
 	
-	
 	print(register_form.errors)
 	return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 @api_view(["GET"])
-def logout(request):
+def logout(request:HttpRequest):
 
 	response = redirect("http://localhost:3000")
 	response.delete_cookie("refresh_token")
-
 	return response

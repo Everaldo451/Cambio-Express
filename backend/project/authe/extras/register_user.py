@@ -1,6 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from django.db import DatabaseError
-from authe.utils import generate_tokens
+from .generate_jwt_response import generate_full_jwt_response
 from authe.models import User
 from rest_framework.response import Response
 from rest_framework import status
@@ -21,7 +21,7 @@ def register_user(request:HttpRequest, user_data:dict) -> HttpResponse | Respons
 			last_name = last_name
 		)
         
-        return generate_tokens(request, user)
+        return generate_full_jwt_response(request, user)
     
     except IndexError as err:
         print(err.args)

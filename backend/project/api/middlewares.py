@@ -12,7 +12,8 @@ def LogRequest(get_response):
 
         endpoint:str = request.get_full_path()
 
-        if endpoint.startswith("/"+os.environ.get("DJANGO_ADMIN_URL")):
+        admin_url = os.environ.get("DJANGO_ADMIN_URL")
+        if admin_url and endpoint.startswith("/"+admin_url):
             return get_response(request)
         
         method = request.method

@@ -1,5 +1,4 @@
 from django.test import TestCase, Client
-import asyncio
 import requests
 import pytest
 
@@ -40,26 +39,16 @@ def url(toString):
 
 
 @pytest.fixture
-async def rq(url):
-    rsptask = asyncio.create_task(requests.get(url))
-
-    response = await asyncio.gather(rsptask)
-    await response
+def rq(url):
+    response = requests.get(url)
     yield response
 
 
 def test_api(rq):
 
-    
-
-    with pytest.raises(Exception) as excinfo:
-
-        assert rq.status_code == 200
-        assert rq.content == {}
-        rq.raise_for_status()
-
-    
-    assert excinfo.value == ""
+    assert rq.status_code == 200 and rq.ok
+    json = rq.json()
+    assert json is not None
 
 
 

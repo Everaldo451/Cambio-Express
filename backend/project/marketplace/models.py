@@ -1,7 +1,6 @@
 from django.db import models
 from api.models import Company
 from authe.models import User
-from datetime import datetime, timedelta
 
 class Offert(models.Model):
 

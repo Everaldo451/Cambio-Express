@@ -26,5 +26,4 @@ urlpatterns = [
     path("", include("api.urls")),
     path("auth/", include("authe.urls")),
     path("tran/", include("marketplace.urls"))
-
 ]
