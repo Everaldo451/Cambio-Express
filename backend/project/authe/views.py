@@ -125,8 +125,8 @@ def password_login(request:HttpRequest):
 		logging.debug("Verifying if user exists.")
 		_, user = verify_exists_model(request, authenticate, **form.cleaned_data)
 		if user is None or not user.is_active:
-			logging.debug("Response status 401. User don't exists.")
-			return Response({"message":"User don't exists"}, status=status.HTTP_401_UNAUTHORIZED)
+			logging.debug("Response status 404. User not founded.")
+			return Response({"message":"User don't exists"}, status=status.HTTP_404_NOT_FOUND)
 
 		logging.debug("Response status 200. User logged successful.")
 		return generate_full_jwt_response(request, user)	
@@ -142,7 +142,7 @@ def password_register(request):
 	logging.debug("Starting password register route.")
 	register_form = RegisterForm(request.POST)
 
-	logging.debug("Verifying if email and password are valids.")
+	logging.debug(f"Verifying if email and password are valids. Data: {register_form.data}")
 	if not register_form.is_valid():
 		logging.debug(f"Response 400. Invalid credentials. Errors: {register_form.errors}")
 		return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
@@ -151,13 +151,17 @@ def password_register(request):
 	exists_user, _ = verify_exists_model(request, authenticate, **register_form.cleaned_data)
 	if exists_user:
 		logging.debug("Response 401. User already exists.")
-		return Response({"message":"User already exists"}, status=status.HTTP_401_UNAUTHORIZED)
+		return Response({"message":"User already exists."}, status=status.HTTP_401_UNAUTHORIZED)
 	
 	user_form = UserRegisterExtras(request.POST)
 	company_form = CompanyRegisterExtras(request.POST)
 
-	logging.debug("Verifying sended company data is valid.")
-	if company_form.is_valid():
+	logging.debug("Verifying if the user desire register a company.")
+	if company_form.data.get("is_company")=="on":
+		if not company_form.is_valid():
+			logging.debug(f"Response status 400. Invalid company credentials.  Errors: {company_form.errors}")
+			return Response({"message":"Invalid company credentials."}, status=status.HTTP_400_BAD_REQUEST)
+		
 		company_data = company_form.cleaned_data
 		company_data.pop("is_company")
 		
@@ -170,14 +174,16 @@ def password_register(request):
 		exists_company, _ = verify_exists_model(request, company_query.first)
 		if exists_company:
 			logging.debug("Response 401. Company already exists.")
-			return Response({"message":"Company already exists"}, status=status.HTTP_401_UNAUTHORIZED)
+			return Response({"message":"Company already exists."}, status=status.HTTP_401_UNAUTHORIZED)
 		
 		return register_company(request, {**company_data, **register_form.cleaned_data})
-	elif user_form.is_valid():
+	
+	logging.debug("Verifying if the user desire register a common user.")
+	if user_form.is_valid():
 		return register_user(request, {**user_form.cleaned_data, **register_form.cleaned_data})
 	
-	logging.debug(f"Response 400. Invalid credentials. Errors: {user_form.errors}, {company_form.errors}")
-	return Response({"message": "Invalid credentials."}, status=status.HTTP_400_BAD_REQUEST)
+	logging.debug(f"Response 400. Invalid credentials user credentials. Errors: {user_form.errors}")
+	return Response({"message": "Invalid user credentials."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])
