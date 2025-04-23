@@ -11,7 +11,7 @@ def test_invalid_user(client, endpoint, csrf_token, invalid_user_data, create_us
         }
     )
 
-    assert response.status_code==401
+    assert response.status_code==404
     json = response.json()
     assert isinstance(json, dict)
     message = json.get("message")

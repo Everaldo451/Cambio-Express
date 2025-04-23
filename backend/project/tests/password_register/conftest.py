@@ -28,7 +28,7 @@ def endpoint():
     return "/auth/register/"
 
 
-########TEST COMPANY USER
+########USER CREATION
 
 @pytest.fixture
 def create_user(django_user_model, user_data):
@@ -36,7 +36,6 @@ def create_user(django_user_model, user_data):
     user = django_user_model.objects.filter(email=user_data.get("email"))
     if user: return "have user"
     try:
-
         user = django_user_model.objects.create_user(
             email=user_data.get("email"),
             password=user_data.get("password")
@@ -63,7 +62,7 @@ def create_company(django_user_model, company_model, user_data, company_data):
 
         return user, company
     except IntegrityError as e:
-        return None
+        return None, None
 
 
 @pytest.fixture
