@@ -3,9 +3,11 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, Token
 from api.models import User
+import logging
 
 def generate_token_cookie(response:Response, token:Token, cookiename:str):
-      response.set_cookie(cookiename, str(token), expires=token.lifetime, httponly=True)
+    logging.debug(f"JWT cookie {cookiename}: {str(token)}")
+    response.set_cookie(cookiename, str(token), expires=token.lifetime, httponly=True)
 
 
 def generate_token_cookies(response:Response, refresh_token:RefreshToken):
@@ -14,7 +16,8 @@ def generate_token_cookies(response:Response, refresh_token:RefreshToken):
     
 
 def generate_jwt_response_instance(refresh_token:RefreshToken):
-	return Response({
+    logging.debug("Generating JWT Response")
+    return Response({
         "data":{
             "access_token": str(refresh_token.access_token),
             "refresh_token": str(refresh_token)
@@ -23,7 +26,8 @@ def generate_jwt_response_instance(refresh_token:RefreshToken):
 
 
 def generate_full_jwt_response(request:HttpRequest|Request, user:User):
-	refresh = RefreshToken.for_user(user)
-	response = generate_jwt_response_instance(refresh)
-	generate_token_cookies(response, refresh)
-	return response
+    logging.debug("Generating the token")
+    refresh = RefreshToken.for_user(user)
+    response = generate_jwt_response_instance(refresh)
+    generate_token_cookies(response, refresh)
+    return response

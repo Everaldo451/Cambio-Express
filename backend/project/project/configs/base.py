@@ -154,10 +154,12 @@ LOGGING = {
 
     "handlers": {
         "request": {
-            "level": "INFO",
             "class": "logging.FileHandler",
             "filename": "requests.log",
             "formatter": "request",
+        },
+        "console": {
+            "class": "logging.StreamHandler"
         }
     },
 

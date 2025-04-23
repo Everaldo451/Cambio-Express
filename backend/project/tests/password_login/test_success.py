@@ -3,11 +3,11 @@ from rest_framework.response import Response
 
 
 @pytest.mark.django_db
-def test_success(client, endpoint, csrf_token, valid_login_data, create_user):
+def test_success(client, endpoint, csrf_token, user_data, create_user):
     assert csrf_token is not None
     response:Response = client.post(endpoint,
         data={
-            **valid_login_data,
+            **user_data,
             "csrfmiddlewaretoken": csrf_token
         }
     )
