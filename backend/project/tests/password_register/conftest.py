@@ -1,4 +1,4 @@
-from authe.form import RegisterForm, CompanyRegisterExtras, UserRegisterExtras
+from authe.form import RegisterForm, UserRegisterExtras
 from django.db import transaction, IntegrityError
 from api.models import Company
 import pytest
@@ -18,10 +18,14 @@ def user_data():
 @pytest.fixture
 def company_data():
     return {
-        "CNPJ": "0000000000",
-        "name": "Any Company",
+        "CNPJ": "0200000001",
+        "name": "Any C",
         "is_company": "on",
     }
+
+@pytest.fixture
+def endpoint():
+    return "/auth/register/"
 
 
 ########TEST COMPANY USER
@@ -40,16 +44,6 @@ def create_user(django_user_model, user_data):
         return user
     
     except: return None
-
-
-@pytest.fixture
-def create_same_user(django_user_model,user_data):
-
-    user = django_user_model.objects.create_user(
-        email="othervalid@gmail.com",
-        password=user_data.get("password")
-    )
-    return user
 
 
 @pytest.fixture
@@ -73,35 +67,6 @@ def create_company(django_user_model, company_model, user_data, company_data):
 
 
 @pytest.fixture
-def create_same_company(create_same_user, company_model, user_data):
-
-    company = company_model(
-        name = user_data.get("name"),
-        CNPJ = "00000001",
-        user = create_same_user
-    )
-    company.save()
-    return create_same_user, company
-
-
-@pytest.mark.django_db
-def test_user_company(company_form, create_same_company, verify_user, create_company, user_data):
-
-    assert company_form
-    assert verify_user is None
-    assert create_company is not None
-    user, company = create_company
-    assert company.CNPJ == user_data.get("CNPJ")
-    assert company.name == user_data.get("name")
-
-
-########TEST PERSON USER
-
-@pytest.fixture
-def person_form(user_data):
-    return UserRegisterExtras(user_data).is_valid() and RegisterForm(user_data).is_valid()
-
-@pytest.fixture
 def splited_name(user_data):
     full_name = user_data.get("full_name")
 
@@ -112,35 +77,4 @@ def splited_name(user_data):
         return first_name, last_name
     except IndexError:
         return None
-
-@pytest.fixture
-def create_person(django_user_model, user_data, splited_name):
-    pass
-
-@pytest.fixture
-def create_same_person(django_user_model, user_data, splited_name):
-
-    if not splited_name: return None
-    first_name, last_name = splited_name
-
-    user = django_user_model.objects.create_user(
-        email= user_data.get("email"),
-        password = user_data.get("password"),
-        first_name = first_name,
-        last_name = last_name
-    )
-    return user
-
-
-@pytest.mark.django_db
-def test_user_person(person_form, create_same_person, create_person, splited_name):
-
-    assert person_form
-    assert not splited_name
-    """
-    first_name, last_name = firstNameLastName
-    assert first_name == "Algum"
-    assert last_name == "Nome"
-    """
-    assert not create_same_person
 

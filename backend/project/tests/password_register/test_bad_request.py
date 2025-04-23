@@ -5,8 +5,9 @@ from api.models import Company
 import pytest
 
 @pytest.mark.django_db
-def test_company_success(client, endpoint, csrf_token, user_data, company_data):
+def test_company_bad_request(client, endpoint, csrf_token, user_data, company_data):
     assert csrf_token is not None
+    company_data.pop("name")
     response:Response = client.post(endpoint,
         data={
             **user_data,
@@ -15,19 +16,17 @@ def test_company_success(client, endpoint, csrf_token, user_data, company_data):
         }
     )
 
-    assert response.status_code==200
+    assert response.status_code==400
     json = response.json()
     assert isinstance(json, dict)
-    data = json.get("data")
-    assert isinstance(data, dict)
-    access_token = data.get("access_token")
-    refresh_token = data.get("refresh_token")
-    assert access_token is not None and refresh_token is not None
+    message = json.get("message")
+    assert message=="Invalid credentials."
 
 
 @pytest.mark.django_db
-def test_user_success(client, endpoint, csrf_token, user_data):
+def test_user_bad_request(client, endpoint, csrf_token, user_data):
     assert csrf_token is not None
+    user_data.pop("full_name")
     response:Response = client.post(endpoint,
         data={
             **user_data,
@@ -35,11 +34,8 @@ def test_user_success(client, endpoint, csrf_token, user_data):
         }
     )
 
-    assert response.status_code==200
+    assert response.status_code==400
     json = response.json()
     assert isinstance(json, dict)
-    data = json.get("data")
-    assert isinstance(data, dict)
-    access_token = data.get("access_token")
-    refresh_token = data.get("refresh_token")
-    assert access_token is not None and refresh_token is not None
+    message = json.get("message")
+    assert message=="Invalid credentials."
