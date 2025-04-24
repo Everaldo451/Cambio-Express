@@ -7,3 +7,6 @@ LOGGING["root"] = {
     "handlers": ["console"],
     "level": "DEBUG"
 }
+LOGGING["handlers"]["request"] = {
+    "class": "logging.StreamHandler"
+}

@@ -89,14 +89,13 @@ def oauth_client_url(request:HttpRequest):
 def oauth_callback(request:HttpRequest):
 
 	oauth_form = OAuthForm(request.GET)
-
 	if not oauth_form.is_valid():
 		return Response({"message":"OAuth response is invalid"}, status=status.HTTP_400_BAD_REQUEST)
 	
 	redirect_uri = reverse('oauth2callback')
 	state = request.session.get('state')
 	if state is None: 
-		return
+		return Response({"message": "You don't accessed the oauth url."}, status=status.HTTP_401_UNAUTHORIZED)
 
 	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request), state=state)
 	flow.redirect_uri = redirect_uri
@@ -112,6 +111,8 @@ def oauth_callback(request:HttpRequest):
 		'client_secret': credentials.client_secret,
 		'granted_scopes': credentials.granted_scopes
 	}
+
+	return Response({"message":"You was successful authenticated."}, status=status.HTTP_200_OK)
 
 	
 @api_view(["POST"])

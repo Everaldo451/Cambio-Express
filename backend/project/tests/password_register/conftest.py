@@ -32,9 +32,6 @@ def endpoint():
 
 @pytest.fixture
 def create_user(django_user_model, user_data):
-
-    user = django_user_model.objects.filter(email=user_data.get("email"))
-    if user: return "have user"
     try:
         user = django_user_model.objects.create_user(
             email=user_data.get("email"),
