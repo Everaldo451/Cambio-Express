@@ -15,7 +15,7 @@ def csrf_token(client):
     return json.get("data")
 
 @pytest.fixture
-def delete_user(django_user_model ,user:User):
+def delete_user(django_user_model, user:User):
     user.delete()
 
     

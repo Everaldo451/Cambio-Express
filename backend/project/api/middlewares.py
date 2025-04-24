@@ -1,4 +1,3 @@
-from django.http import HttpResponse, HttpRequest
 import logging
 import os
 
@@ -11,17 +10,15 @@ def LogRequest(get_response):
     def middleware(request):
 
         endpoint:str = request.get_full_path()
-
         admin_url = os.environ.get("DJANGO_ADMIN_URL")
+
         if admin_url and endpoint.startswith("/"+admin_url):
             return get_response(request)
         
         method = request.method
         endpoint = request.get_full_path()
 
-
         user = request.user
-        print(user)
         username = "anonymous"
 
         if user.is_authenticated:
@@ -40,7 +37,6 @@ def LogRequest(get_response):
         }
 
         logger.info("Request:", extra=extra)
-
         return response
 
     return middleware

@@ -6,5 +6,7 @@ urlpatterns = [
     path("register/",views.password_register,name="register"),
     path("logout/",views.logout,name="logout"),
     path("getuser/",views.get_user),
-    path("getjwt/", views.get_jwt)
+    path("getjwt/", views.get_jwt),
+    path("oauth/", views.oauth_client_url),
+    path("oauthcall/", views.oauth_callback, name="oauth2callback")
 ]
