@@ -5,12 +5,9 @@ import os
 
 load_dotenv()
 
-def generate_oauth_config(request:HttpRequest):
+def generate_oauth_config(request:HttpRequest, redirect_uri:str):
     client_id = os.getenv("OAUTH_CLIENT_ID")
     client_secret = os.getenv("OAUTH_CLIENT_SECRET")
-    
-    redirect_uri = reverse('oauth2callback')
-
     client_config = {
 		"web": {
 			"client_id": client_id,
@@ -20,10 +17,6 @@ def generate_oauth_config(request:HttpRequest):
     		"token_uri": "https://accounts.google.com/o/oauth2/token"
 		}
 	}
-    
-    scopes = ['https://www.googleapis.com/auth/userinfo.email',
-		'https://www.googleapis.com/auth/userinfo.profile',
-		'OpenID'
-	]
+    scopes = ['openid','https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile']
 
     return {"client_config": client_config, "scopes": scopes}

@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
+from django.conf import locale, settings
 
 from api.models import Company
 
@@ -72,15 +73,16 @@ def get_user(request:HttpRequest):
 
 @api_view(["GET"])
 def oauth_client_url(request:HttpRequest):
-
-	redirect_uri = reverse('oauth2callback')
-	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request))
+	redirect_uri = f"http://{request.get_host()}:{request.get_port()}{reverse('oauth2callback')}"
+	logging.debug(f"Redirect uri: {redirect_uri}")
+	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request, redirect_uri))
 	flow.redirect_uri = redirect_uri
 	authorization_url, state = flow.authorization_url(access_type = 'offline',prompt="consent")
 	request.session['state'] = state
 
 	if authorization_url:
-		return Response({"url":authorization_url})
+		logging.debug(f"Authorization url: {authorization_url}")
+		return redirect(authorization_url)
 	
 	return Response({"message":"Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -92,12 +94,12 @@ def oauth_callback(request:HttpRequest):
 	if not oauth_form.is_valid():
 		return Response({"message":"OAuth response is invalid"}, status=status.HTTP_400_BAD_REQUEST)
 	
-	redirect_uri = reverse('oauth2callback')
+	redirect_uri = f"http://{request.get_host()}:{request.get_port()}{reverse('oauth2callback')}"
 	state = request.session.get('state')
 	if state is None: 
 		return Response({"message": "You don't accessed the oauth url."}, status=status.HTTP_401_UNAUTHORIZED)
 
-	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request), state=state)
+	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request, redirect_uri), state=state)
 	flow.redirect_uri = redirect_uri
 	authorization_response = request.build_absolute_uri()
 	flow.fetch_token(authorization_response=authorization_response)
