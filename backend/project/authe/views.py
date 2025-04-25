@@ -11,9 +11,9 @@ from django.urls import reverse
 from django.contrib.auth import authenticate
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
-from django.conf import locale, settings
 
 from api.models import Company
+from authe.models import User
 
 from .form import LoginForm, UserRegisterExtras, CompanyRegisterExtras, RegisterForm, OAuthForm
 from .serializers import UserSerializer
@@ -23,8 +23,9 @@ from .extras.register_company import register_company
 from .extras.register_user import register_user
 from .extras.verify_exists_model import verify_exists_model
 from .extras.generate_oauth_config import generate_oauth_config
+from .extras.oauth_utils import check_granted_scopes, credentials_to_dict
 
-import google.oauth2.credentials
+from googleapiclient.discovery import build
 import google_auth_oauthlib.flow
 
 import logging
@@ -72,8 +73,8 @@ def get_user(request:HttpRequest):
 	return Response({"data":data})
 
 @api_view(["GET"])
-def oauth_client_url(request:HttpRequest):
-	redirect_uri = f"http://{request.get_host()}:{request.get_port()}{reverse('oauth2callback')}"
+def oauth_client_url(request:HttpRequest):	
+	redirect_uri = f"http://{request.get_host()}{reverse('oauth2callback')}"
 	logging.debug(f"Redirect uri: {redirect_uri}")
 	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request, redirect_uri))
 	flow.redirect_uri = redirect_uri
@@ -89,12 +90,11 @@ def oauth_client_url(request:HttpRequest):
 
 @api_view(["GET"])
 def oauth_callback(request:HttpRequest):
-
 	oauth_form = OAuthForm(request.GET)
 	if not oauth_form.is_valid():
-		return Response({"message":"OAuth response is invalid"}, status=status.HTTP_400_BAD_REQUEST)
+		return redirect("http://localhost:3000/oauth/fail")
 	
-	redirect_uri = f"http://{request.get_host()}:{request.get_port()}{reverse('oauth2callback')}"
+	redirect_uri = f"http://{request.get_host()}{reverse('oauth2callback')}"
 	state = request.session.get('state')
 	if state is None: 
 		return Response({"message": "You don't accessed the oauth url."}, status=status.HTTP_401_UNAUTHORIZED)
@@ -103,18 +103,38 @@ def oauth_callback(request:HttpRequest):
 	flow.redirect_uri = redirect_uri
 	authorization_response = request.build_absolute_uri()
 	flow.fetch_token(authorization_response=authorization_response)
+
 	credentials = flow.credentials
+	features = check_granted_scopes(credentials)
 
-	request.session["credentials"] = {
-		'token': credentials.token,
-		'refresh_token': credentials.refresh_token,
-		'token_uri': credentials.token_uri,
-		'client_id': credentials.client_id,
-		'client_secret': credentials.client_secret,
-		'granted_scopes': credentials.granted_scopes
-	}
+	request.session["credentials"] = credentials_to_dict(credentials)
+	request.session["features"] = features
 
-	return Response({"message":"You was successful authenticated."}, status=status.HTTP_200_OK)
+	service = build('oauth2', "v2", credentials=credentials)
+
+	if 'email' in features:
+		userinfo = service.userinfo().get().execute()
+		email = userinfo["email"]
+
+		_, user_query = verify_exists_model(request, User.objects.filter, email=email)
+		if user_query is None:
+			return Response({"message":"Internal server error"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+		
+		exists_user, user = verify_exists_model(request, user_query.first)
+		if exists_user:
+			return generate_full_jwt_response(request, user)
+		
+		register_data = register_user(request, {"email": email, "authentication_type": "oauth"})
+		if register_data["error"] == True:
+			stat = register_data["status"]
+			error = register_data["content"]
+			logging.debug(f"Response with status {stat}. Error: {error}")
+			return Response({"message": error}, status=stat)
+		
+		logging.debug(f"Response with status 200. User registed sucessful.")
+		return generate_full_jwt_response(request, register_data["content"])
+
+	return Response({"message":"You didn't accepted the escopes."}, status=status.HTTP_400_BAD_REQUEST)
 
 	
 @api_view(["POST"])
@@ -183,9 +203,17 @@ def password_register(request):
 	
 	logging.debug("Verifying if the user desire register a common user.")
 	if user_form.is_valid():
-		return register_user(request, {**user_form.cleaned_data, **register_form.cleaned_data})
+		register_data = register_user(request, {**user_form.cleaned_data, **register_form.cleaned_data})
+		if register_data["error"] == True:
+			stat = register_data["status"]
+			error = register_data["content"]
+			logging.debug(f"Response with status {stat}. Error: {error}")
+			return Response({"message": error}, status=stat)
+		
+		logging.debug(f"Response with status 200. User registed sucessful.")
+		return generate_full_jwt_response(request, register_data["content"])
 	
-	logging.debug(f"Response 400. Invalid credentials user credentials. Errors: {user_form.errors}")
+	logging.debug(f"Response 400. Invalid user credentials. Errors: {user_form.errors}")
 	return Response({"message": "Invalid user credentials."}, status=status.HTTP_400_BAD_REQUEST)
 
 
