@@ -3,8 +3,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.exceptions import TokenError
 
 from django.http import HttpRequest
 from django.urls import reverse
@@ -18,12 +16,12 @@ from authe.models import User
 from .form import LoginForm, UserRegisterExtras, CompanyRegisterExtras, RegisterForm, OAuthForm
 from .serializers import UserSerializer
 
-from .extras.generate_jwt_response import generate_full_jwt_response, generate_jwt_response_instance
+from .extras.generate_jwt_response import generate_full_jwt_response, generate_token_cookies
 from .extras.register_company import register_company
 from .extras.register_user import register_user
 from .extras.verify_exists_model import verify_exists_model
 from .extras.generate_oauth_config import generate_oauth_config
-from .extras.oauth_utils import check_granted_scopes, credentials_to_dict
+from .extras.oauth_utils import check_granted_scopes
 
 from googleapiclient.discovery import build
 import google_auth_oauthlib.flow
@@ -32,25 +30,6 @@ import logging
 from dotenv import load_dotenv
 
 load_dotenv()
-
-
-@api_view(["GET"])
-def get_jwt(request:HttpRequest):
-
-	logging.debug(f"Get jwt string.")
-	token_string = request.COOKIES.get("refresh_token")
-	if token_string is not None:
-		try:
-			refresh_token = RefreshToken(token_string)
-			logging.debug(f"Generating tokens.")
-			return generate_jwt_response_instance(refresh_token)
-		except TokenError as err: 
-			logging.debug(f"Response status 400. Error: {err.args}")
-			return Response({"message":"Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
-		
-	logging.debug("Response status 400. Token not provided")
-	return Response({"message":"Token not provided"}, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -71,6 +50,7 @@ def get_user(request:HttpRequest):
 
 	logging.debug(f"Response status 200. User data: {data}")
 	return Response({"data":data})
+
 
 @api_view(["GET"])
 def oauth_client_url(request:HttpRequest):	
@@ -97,7 +77,7 @@ def oauth_callback(request:HttpRequest):
 	redirect_uri = f"http://{request.get_host()}{reverse('oauth2callback')}"
 	state = request.session.get('state')
 	if state is None: 
-		return Response({"message": "You don't accessed the oauth url."}, status=status.HTTP_401_UNAUTHORIZED)
+		return redirect("http://localhost:3000/oauth/fail?e='You don't accessed the oauth url.'")
 
 	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request, redirect_uri), state=state)
 	flow.redirect_uri = redirect_uri
@@ -106,10 +86,6 @@ def oauth_callback(request:HttpRequest):
 
 	credentials = flow.credentials
 	features = check_granted_scopes(credentials)
-
-	request.session["credentials"] = credentials_to_dict(credentials)
-	request.session["features"] = features
-
 	service = build('oauth2', "v2", credentials=credentials)
 
 	if 'email' in features:
@@ -118,10 +94,12 @@ def oauth_callback(request:HttpRequest):
 
 		_, user_query = verify_exists_model(request, User.objects.filter, email=email)
 		if user_query is None:
-			return Response({"message":"Internal server error"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+			return redirect("http://localhost:3000/oauth/fail?e='Internal server error.'")
 		
 		exists_user, user = verify_exists_model(request, user_query.first)
-		if exists_user:
+		if exists_user and user.is_active:
+			if user.authentication_type!="oauth":
+				return redirect("http://localhost:3000/oauth/fail?e='You must authenticate with your password.'")
 			return generate_full_jwt_response(request, user)
 		
 		register_data = register_user(request, {"email": email, "authentication_type": "oauth"})
@@ -129,7 +107,7 @@ def oauth_callback(request:HttpRequest):
 			stat = register_data["status"]
 			error = register_data["content"]
 			logging.debug(f"Response with status {stat}. Error: {error}")
-			return Response({"message": error}, status=stat)
+			return redirect(f"http://localhost:3000/oauth/fail?e='{error}'")
 		
 		logging.debug(f"Response with status 200. User registed sucessful.")
 		return generate_full_jwt_response(request, register_data["content"])

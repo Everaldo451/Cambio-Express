@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { SetStateAction, ReactNode } from "react";
-import { FormProps } from "../Forms/LoginForm";
+import { FormProps } from "../Forms";
 
 const StyledButton = styled.button`
     position: relative;
