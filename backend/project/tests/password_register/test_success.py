@@ -18,10 +18,10 @@ def test_company_success(client, endpoint, csrf_token, user_data, company_data):
     assert response.status_code==200
     json = response.json()
     assert isinstance(json, dict)
-    data = json.get("data")
-    assert isinstance(data, dict)
-    access_token = data.get("access_token")
-    refresh_token = data.get("refresh_token")
+    csrf_token = json.get("csrf_token")
+    assert csrf_token is not None
+    access_token = response.cookies.get("access_token")
+    refresh_token = response.cookies.get("refresh_token")
     assert access_token is not None and refresh_token is not None
 
 
@@ -38,8 +38,8 @@ def test_user_success(client, endpoint, csrf_token, user_data):
     assert response.status_code==200
     json = response.json()
     assert isinstance(json, dict)
-    data = json.get("data")
-    assert isinstance(data, dict)
-    access_token = data.get("access_token")
-    refresh_token = data.get("refresh_token")
+    csrf_token = json.get("csrf_token")
+    assert csrf_token is not None
+    access_token = response.cookies.get("access_token")
+    refresh_token = response.cookies.get("refresh_token")
     assert access_token is not None and refresh_token is not None

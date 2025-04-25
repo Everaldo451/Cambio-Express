@@ -1,6 +1,7 @@
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpRequest
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from .extras.generate_jwt_response import generate_token_cookies
 
 
 def JWTAuthenticationMiddleware(get_response):
@@ -19,16 +20,15 @@ def JWTAuthenticationMiddleware(get_response):
 
 def RefreshJWT(get_response):
 
-    def middleware(request):
-        if request.COOKIES.get("refresh") and not request.COOKIES.get("access"):
+    def middleware(request:HttpRequest):
+        refresh_cookie = request.COOKIES.get("refresh_token")
+        access_cookie = request.COOKIES.get("access_token")
+
+        if refresh_cookie and not access_cookie:
             try:
-                refresh = RefreshToken(request.COOKIES.get("refresh"))
+                refresh_token = RefreshToken(refresh_cookie)
                 response = get_response(request)
-                response.set_cookie("access",
-                    refresh.access_token,
-                    httponly=True,
-                    max_age=refresh.access_token.lifetime
-                )
+                generate_token_cookies(response, refresh_token)
                 return response
             except:
                 response = get_response(request)

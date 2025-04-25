@@ -1,14 +1,14 @@
 from google.oauth2.credentials import Credentials
 
-def credentials_to_dict(credentials:Credentials):
-    return {
-		'token': credentials.token,
-		'refresh_token': credentials.refresh_token,
-		'token_uri': credentials.token_uri,
-		'client_id': credentials.client_id,
-		'client_secret': credentials.client_secret,
-		'granted_scopes': credentials.granted_scopes
-	}
+##OAuth credentials:
+##{
+##	'token': credentials.token,
+##	'refresh_token': credentials.refresh_token,
+##	'token_uri': credentials.token_uri,
+##	'client_id': credentials.client_id,
+##	'client_secret': credentials.client_secret,
+##	'granted_scopes': credentials.granted_scopes
+##}
 
 def check_granted_scopes(credentials:Credentials):
     features = {}
