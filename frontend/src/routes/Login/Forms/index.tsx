@@ -2,21 +2,18 @@ import React, { ReactNode,  useContext} from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { JWTContext } from '../../../main'
+import { CSRFContext } from '../../../main'
 import CommonStyleProps, { StyledInput } from '../../../components/CommonButton'
 import { Label, Input } from '../../../components/StyledInputLabel'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 
-
 export type FormThemeType = {
-
     theme: {
         inputStyle: React.CSSProperties,
         submitProps: CommonStyleProps
     }
 }
-
 
 export const NLabel = styled(Label)`
     font-family: ${props => props.theme.fontFamily};
@@ -67,7 +64,7 @@ export interface onSubmitType {
 
 export default function FormRenderer({url, children}:FormProps) {
 
-    const [_, setJwt] = useContext(JWTContext)
+    const [_, setCSRFToken] = useContext(CSRFContext)
     const navigate = useNavigate()
 
     const theme:FormThemeType["theme"] = {
@@ -95,8 +92,10 @@ export default function FormRenderer({url, children}:FormProps) {
                 data: new FormData(e.currentTarget),
                 withCredentials: true,
             })
-
-            setJwt(response.data)
+            const data = response.data
+            if ("csrf_token" in data) {
+                setCSRFToken(data.csrf_token)
+            }
             navigate("/")
         } catch (error) {
             console.log(error)

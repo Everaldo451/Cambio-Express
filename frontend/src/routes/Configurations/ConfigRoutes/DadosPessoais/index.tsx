@@ -3,10 +3,6 @@ import { ConfigRoute } from "../..";
 import { useContext } from "react";
 import { UserContext } from "../../../../main";
 
-
-
-
-
 function DadosPessoais() {
 
     const [user] = useContext(UserContext)

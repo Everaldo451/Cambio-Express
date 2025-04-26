@@ -76,7 +76,7 @@ interface Feed {
     elNum: number,
 }
 
-function FeedBack({first_name,date,comment}:FeedBack) {
+function FeedBack({first_name, date, comment}:FeedBack) {
 
     return (
         
@@ -135,15 +135,12 @@ function FeedBacks() {
     async function GetFeedBacks() {
 
         try{
-
             const response = await customAxios.get("/api/feedbacks/get/")
-
             const feedbacks = response.data
 
             if (feedbacks instanceof Array) {
                 setFeedBacks(feedbacks)
             }
-
             setFeedBacks(prev => [...prev, 
                 {first_name:"João", date: new Date(), comment: "asadasd"},
                 {first_name:"Maria", date: new Date(), comment: "asadasd"},
@@ -165,7 +162,7 @@ function FeedBacks() {
             <Div>
                 <Seta 
                     src={Triangle} 
-                    onClick={(e) => {setElement(prev => prev-1>=0?prev-1:prev)}}
+                    onClick={(_) => {setElement(prev => prev-1>=0?prev-1:prev)}}
                 />
                 <FeedComponent elNum={element}>
                     {
@@ -181,7 +178,7 @@ function FeedBacks() {
                 </FeedComponent>
                 <Seta2 
                     src={Triangle} 
-                    onClick={(e) => {setElement(prev => prev+1<=feedbacks.length?prev+1:prev)}}
+                    onClick={(_) => {setElement(prev => prev+1<=feedbacks.length?prev+1:prev)}}
                 />
             </Div>
         </Section>

@@ -2,13 +2,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import HttpRequest
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .extras.generate_jwt_response import generate_token_cookies
+from .extras.jwt import cookie_authenticate
 
 
 def JWTAuthenticationMiddleware(get_response):
 
-    def middleware(request):
-        jwt_auth = JWTAuthentication()
-        obj = jwt_auth.authenticate(request)
+    def middleware(request:HttpRequest):
+        obj = cookie_authenticate(request)
         if obj is not None:
             user, token = obj
             request.user = user

@@ -1,10 +1,8 @@
 import styled from "styled-components";
-import React, { useContext, useMemo, useState} from "react";
-import { UserContext } from "../../main";
+import React, { useContext } from "react";
+import { UserContext, CSRFContext } from "../../main";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png"
-import { JWTContext } from "../../main";
-import { GetJWT } from "../../load";
 
 const HeaderElement = styled.header`
     position: fixed;
@@ -119,24 +117,23 @@ const IMG = styled.img`
 
 function Header() {
 
-    const [user,setUser] = useContext(UserContext)
+    const [user,_] = useContext(UserContext)
+    const [__, setCSRFToken] = useContext(CSRFContext)
     const navigate = useNavigate()
-    const [_, setJWT] = useContext(JWTContext)
-
+    
     async function logoutFunc(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault()
 
         try {
-
             await fetch("/api/auth/logout/",{
                 method:"GET",
                 credentials:"include"
             })
-
-            GetJWT(setJWT)
-            {navigate("/")}
+            setCSRFToken(null)
+            navigate("/")
+        } catch(e) {
+            navigate("/")
         }
-        catch(e) {navigate("/")}
     }
     
     return (

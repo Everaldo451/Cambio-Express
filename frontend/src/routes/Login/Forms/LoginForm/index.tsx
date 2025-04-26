@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { CSRFContext} from '../../../../main'
 import { FormThemeType } from '..'
 import { InputContainer} from '../../../../components/StyledInputLabel'

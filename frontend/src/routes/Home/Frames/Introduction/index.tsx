@@ -75,8 +75,7 @@ export default function Introduction() {
                 <H1>Câmbio Express</H1>
                 <P>A maior agência de câmbio do país.</P>
             </IntroductText>
-            <ImageContainer>
-            </ImageContainer>
+            <ImageContainer/>
 
         </IntroducSection>
     )
