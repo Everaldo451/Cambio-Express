@@ -1,8 +1,6 @@
-import styled, {ThemeProvider} from "styled-components";
-import { ReactNode, useContext, useState } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../main";
 import FeedBacks from "../../components/FeedBacks";
-import APIConsumer from "./ApiConsume";
 import Introduction from "./Frames/Introduction";
 import WeOffer from "./Frames/PositivePoints";
 

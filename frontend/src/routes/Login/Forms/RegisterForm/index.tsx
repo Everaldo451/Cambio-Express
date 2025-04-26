@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import { useState, useContext } from 'react'
 import { CSRFContext } from '../../../../main'
 
 
@@ -59,7 +59,7 @@ function RegisterForm ({children,url,onSubmit, theme}:FormProps & onSubmitType &
             />
                 
             <CheckBoxDiv>
-                <input type='checkbox' name="is_company" id="is_company" onClick={(e) => {setIsCompany(!isCompany)}}/>
+                <input type='checkbox' name="is_company" id="is_company" onClick={(_) => {setIsCompany(!isCompany)}}/>
                 <label htmlFor='is_company'>Is Company?</label>
             </CheckBoxDiv>
                 
