@@ -48,7 +48,7 @@ SIMPLE_JWT = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'authe.auth.JWTAuthentication'
     ]
 }
 
@@ -78,7 +78,6 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'authe.middlewares.RefreshJWT',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'authe.middlewares.JWTAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'api.middlewares.LogRequest',
