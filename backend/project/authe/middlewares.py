@@ -1,22 +1,6 @@
-from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import HttpRequest
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 from .extras.generate_jwt_response import generate_token_cookies
-from .extras.jwt import cookie_authenticate
-
-
-def JWTAuthenticationMiddleware(get_response):
-
-    def middleware(request:HttpRequest):
-        obj = cookie_authenticate(request)
-        if obj is not None:
-            user, token = obj
-            request.user = user
-
-        return get_response(request)
-    
-    return middleware
-
 
 def RefreshJWT(get_response):
 

@@ -16,7 +16,7 @@ from authe.models import User
 from .form import LoginForm, UserRegisterExtras, CompanyRegisterExtras, RegisterForm, OAuthForm
 from .serializers import UserSerializer
 
-from .extras.generate_jwt_response import generate_full_jwt_response, generate_token_cookies
+from .extras.generate_jwt_response import generate_full_jwt_response
 from .extras.register_company import register_company
 from .extras.register_user import register_user
 from .extras.verify_exists_model import verify_exists_model
@@ -34,15 +34,11 @@ load_dotenv()
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_user(request:HttpRequest):
-	
-	logging.debug("Getting the user data")
+	logging.debug(f"Getting the user data.")
 	serializer = UserSerializer(request.user)
-	if not serializer.is_valid():
-		logging.debug("Response status 500. Invalid serializer.")
-		return Response({"message":"Internal server error"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-	
 	data = serializer.data
 	data.pop("id")
+
 	if not request.user.groups.filter(name="Company").exists():
 		logging.debug("User isn't a company.")
 		print("notCompany")
