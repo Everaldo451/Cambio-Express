@@ -21,8 +21,9 @@ def path():
 def url(client:Client, path):
     response = client.get(path)
 
-    assert response.status_code==302
-    redirect_uri = response["Location"]
+    assert response.status_code==200
+    json = response.json()
+    redirect_uri = json.get("authorization_url")
     authorization_url = redirect_uri
 
     if 'testserver' in redirect_uri:

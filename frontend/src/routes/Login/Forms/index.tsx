@@ -7,6 +7,7 @@ import CommonStyleProps, { StyledInput } from '../../../components/CommonButton'
 import { Label, Input } from '../../../components/StyledInputLabel'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
+import GoogleButton from '../OAuth/GoogleButton'
 
 export type FormThemeType = {
     theme: {
@@ -114,6 +115,7 @@ export default function FormRenderer({url, children}:FormProps) {
                 {children}
             </LoginForm>
         }
+        <GoogleButton/>
         </>
     )
 }

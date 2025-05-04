@@ -59,7 +59,10 @@ def oauth_client_url(request:HttpRequest):
 
 	if authorization_url:
 		logging.debug(f"Authorization url: {authorization_url}")
-		return redirect(authorization_url)
+		return Response(
+			{"message":"Authorization url generated successful.","authorization_url":authorization_url},
+			status=status.HTTP_200_OK
+		)
 	
 	return Response({"message":"Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
