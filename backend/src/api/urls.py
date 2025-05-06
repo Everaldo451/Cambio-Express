@@ -6,8 +6,8 @@ urlpatterns = [
        path("get/<coin>",graphs.get)
    ])),
    path("feedbacks/",include([
-       path("get/", views.get_feedbacks),
-       path("set/",views.set_user_feedback)
+       path("",views.FeedbackList.as_view()),
+       path("search/", views.search_feedbacks),
    ])),
    path("getcsrf/",views.get_csrf),
 ]
