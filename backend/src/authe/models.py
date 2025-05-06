@@ -37,15 +37,12 @@ class User(AbstractUser, PermissionsMixin):
 	
 	username = None
 	email = models.EmailField(max_length=254, unique=True, null=False, blank=False)
-	money = models.FloatField(default=0)
-
 	date_joined = models.DateTimeField(auto_now=True)
 
 	AUTHENTICATION_CHOICES = [
 		('password', "Password"),
 		('oauth', 'OAuth')
 	]
-
 	authentication_type = models.CharField(max_length=50, null=False, blank=False, choices=AUTHENTICATION_CHOICES, default="password")
 	
 	USERNAME_FIELD = 'email'

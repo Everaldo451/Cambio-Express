@@ -1,10 +1,7 @@
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest
 from django.db import DatabaseError
 from authe.models import User
-from rest_framework.response import Response
 from rest_framework import status
-
-from .generate_jwt_response import generate_full_jwt_response
 import logging
 
 def register_for_oauth(request:HttpRequest, user_data:dict) -> User:

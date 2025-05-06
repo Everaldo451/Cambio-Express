@@ -1,4 +1,24 @@
 import axios, { AxiosError } from "axios"
+import styled from "styled-components"
+
+const StyledGoogleButton = styled.button`
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    background-color: white;
+    outline: none;
+    border: 2px solid gray;
+    border-radius: 5px;
+
+    &:hover {
+        cursor: pointer;
+    }
+`
+const Img = styled.img`
+    width: 20px;
+    margin-right: 10px;
+`
 
 export default function GoogleButton() {
 
@@ -17,6 +37,11 @@ export default function GoogleButton() {
             console.log(error)
         }
     }
-
-    return <button onClick={onClick}>Sign with Google</button>
+    
+    return (
+        <StyledGoogleButton onClick={onClick}>
+            <Img src="https://developers.google.com/identity/images/g-logo.png" alt="Google"/>
+            <span>Entrar com Google</span>
+        </StyledGoogleButton>
+    )
 }

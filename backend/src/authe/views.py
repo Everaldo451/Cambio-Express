@@ -19,7 +19,6 @@ from .serializers import UserSerializer
 from .extras.generate_jwt_response import generate_full_jwt_response
 from .extras.register_company import register_company
 from .extras.register_user import register_user
-from .extras.verify_exists_model import verify_exists_model
 from .extras.generate_oauth_config import generate_oauth_config
 from .extras.oauth_utils import check_granted_scopes
 
@@ -91,12 +90,8 @@ def oauth_callback(request:HttpRequest):
 		userinfo = service.userinfo().get().execute()
 		email = userinfo["email"]
 
-		_, user_query = verify_exists_model(request, User.objects.filter, email=email)
-		if user_query is None:
-			return redirect("http://localhost:3000/oauth/fail?e='Internal server error.'")
-		
-		exists_user, user = verify_exists_model(request, user_query.first)
-		if exists_user and user.is_active:
+		user = User.objects.filter(email=email).first()
+		if user.is_active:
 			if user.authentication_type!="oauth":
 				return redirect("http://localhost:3000/oauth/fail?e='You must authenticate with your password.'")
 			return generate_full_jwt_response(request, user)
@@ -120,24 +115,24 @@ def password_login(request:HttpRequest):
 
 	logging.debug("Starting password login route.")
 	form = LoginForm(request.POST)
-	if form.is_valid():
+	if not form.is_valid():
+		logging.debug(f"Response status 400. Invalid credentials. Errors: {form.errors}")
+		return Response({"message":"Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)	
 
-		logging.debug("Verifying if user exists.")
-		_, user = verify_exists_model(request, authenticate, **form.cleaned_data)
-		if user is None or not user.is_active:
-			logging.debug("Response status 404. User not founded.")
-			return Response({"message":"User don't exists"}, status=status.HTTP_404_NOT_FOUND)
+	logging.debug("Verifying if user exists.")
+	user = authenticate(**form.cleaned_data)
+	if user is None or not user.is_active:
+		logging.debug("Response status 404. User not founded.")
+		return Response({"message":"User don't exists"}, status=status.HTTP_404_NOT_FOUND)
 
-		logging.debug("Response status 200. User logged successful.")
-		return generate_full_jwt_response(request, user)	
+	logging.debug("Response status 200. User logged successful.")
+	return generate_full_jwt_response(request, user)	
 	
-	logging.debug(f"Response status 400. Invalid credentials. Errors: {form.errors}")
-	return Response({"message":"Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)	
 
 
 @api_view(["POST"])
 @csrf_protect
-def password_register(request):
+def password_register(request:HttpRequest):
 
 	logging.debug("Starting password register route.")
 	register_form = RegisterForm(request.POST)
@@ -148,8 +143,8 @@ def password_register(request):
 		return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 	logging.debug("Verifying if user already exists.")
-	exists_user, _ = verify_exists_model(request, authenticate, **register_form.cleaned_data)
-	if exists_user:
+	user = authenticate(**register_form.cleaned_data)
+	if user:
 		logging.debug("Response 401. User already exists.")
 		return Response({"message":"User already exists."}, status=status.HTTP_401_UNAUTHORIZED)
 	
@@ -166,13 +161,8 @@ def password_register(request):
 		company_data.pop("is_company")
 		
 		logging.debug("Verifying if company already exists.")
-		_, company_query = verify_exists_model(request, Company.objects.filter, **company_data)
-		if company_query is None:
-			logging.debug("Response status 500. Internal server error.")
-			return Response({"message": "Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-		
-		exists_company, _ = verify_exists_model(request, company_query.first)
-		if exists_company:
+		company = Company.objects.filter(**company_data).first()
+		if company is not None:
 			logging.debug("Response 401. Company already exists.")
 			return Response({"message":"Company already exists."}, status=status.HTTP_401_UNAUTHORIZED)
 		

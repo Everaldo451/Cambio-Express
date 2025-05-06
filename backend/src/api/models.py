@@ -9,9 +9,7 @@ class Company(models.Model):
 		on_delete=models.CASCADE,
 		related_name="company",
 	)
-
 	name = models.CharField(max_length=100, null=False, blank=False)
-	phone = models.CharField(unique=True, validators=[validate_phone], max_length=16, null=True, blank=True)
 	CNPJ = models.CharField(unique=True, validators=[validate_cnpj], max_length=20, null=False, blank=False)
 
 	def __str__(self):
@@ -19,7 +17,7 @@ class Company(models.Model):
 	
 
 
-class FeedBacks(models.Model):
+class FeedBack(models.Model):
 
 	user = models.OneToOneField(
 		User,

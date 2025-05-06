@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Offert
+from .models import Offert, Account
 
 class OffertSerializer(serializers.ModelSerializer):
 
@@ -8,5 +8,15 @@ class OffertSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Offert
-        fields = ["company_name","company_phone","coin","value","index_variable","fees"]
+        fields = ["company_name","company_phone","code","min_value","index_variable","percent"]
+        read_only_fields = ['__all__']
+
+
+class AccountSerializer(serializers.ModelSerializer):
+
+    email = serializers.CharField(source="user.email")
+
+    class Meta:
+        model = Account
+        fields = ["email","code","balance"]
         read_only_fields = ['__all__']
