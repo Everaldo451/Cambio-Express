@@ -3,9 +3,9 @@ from django.http import HttpRequest
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
 
 def generate_oauth_config(request:HttpRequest, redirect_uri:str):
+    load_dotenv()
     client_id = os.getenv("OAUTH_CLIENT_ID")
     client_secret = os.getenv("OAUTH_CLIENT_SECRET")
     client_config = {

@@ -55,6 +55,7 @@ def oauth_client_url(request:HttpRequest):
 	flow.redirect_uri = redirect_uri
 	authorization_url, state = flow.authorization_url(access_type = 'offline',prompt="consent")
 	request.session['state'] = state
+	request.session.save()
 
 	if authorization_url:
 		logging.debug(f"Authorization url: {authorization_url}")
