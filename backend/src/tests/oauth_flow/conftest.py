@@ -1,9 +1,10 @@
-from selenium import webdriver
 from django.test.client import Client
 from urllib.parse import quote
 from dotenv import load_dotenv
+import logging
 import pytest
 import os
+os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
 @pytest.fixture
 def email():
@@ -33,9 +34,3 @@ def url(client:Client, path):
 
     return authorization_url
 
-
-@pytest.fixture
-def browser():
-    drive = webdriver.Chrome()
-    yield drive
-    drive.quit()

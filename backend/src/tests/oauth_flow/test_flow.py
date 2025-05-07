@@ -1,16 +1,25 @@
-from selenium.webdriver.common.by import By
 from time import sleep
+from playwright.sync_api import Page, expect
 import pytest
+import logging
 
 @pytest.mark.django_db
-def test_flow(url, browser, email):
-    browser.get(url)
+def test_flow(email, url, page:Page):
+    logging.debug("Starting")
+    page.goto(url)
 
-    email_input = browser.find_element(By.XPATH, "//*[@id='identifierId']")
-    sleep(1)
-    email_input.click()
-    email_input.send_keys(email)
+    logging.debug("Get email input")
+    email_input = page.locator('xpath=//*[@id="identifierId"]')
+    assert email_input.is_enabled() and email_input.is_editable()
+    email_input.fill(email, timeout=1000)
+    expect(email_input).to_have_text(email)
+    logging.debug("Email inserted")
 
-    next_button = browser.find_element(By.XPATH, "//*[@id='identifierNext']/div/button")
+    logging.debug("Get next button")
+    next_button = page.locator('xpath=//*[@id="identifierNext"]/div/button')
+    logging.debug("Click on the button")
     next_button.click()
+    logging.debug("Wait login")
     sleep(10)
+
+    expect(page.locator('xpath=//*[@id="password"]/div[1]/div/div[1]/input')).to_be_empty()
