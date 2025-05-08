@@ -1,7 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.db import transaction, DatabaseError
 from api.models import Company
-from authe.models import User
+from api.models import User
 from rest_framework.response import Response
 from rest_framework import status
 

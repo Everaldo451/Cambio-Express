@@ -1,18 +1,10 @@
 from django.http import HttpRequest
 from django.db import DatabaseError
-from authe.models import User
+from api.models import User
 from rest_framework import status
 import logging
 
-def register_for_oauth(request:HttpRequest, user_data:dict) -> User:
-    user = User.objects.create(
-        email=user_data.get("email"),
-        authentication_type=user_data.get("authentication_type")
-    )
-
-    return user
-
-def register_for_password(request:HttpRequest, user_data:dict) -> User:
+def create_user(request:HttpRequest, user_data:dict) -> User:
     full_name:str = user_data.get("full_name")
     splited = full_name.split(maxsplit=1)
     first_name  = splited[0]
@@ -30,8 +22,7 @@ def register_for_password(request:HttpRequest, user_data:dict) -> User:
 def register_user(request:HttpRequest, user_data:dict):
     logging.debug("Creating the company")
     try:
-        authentication_type = user_data.get("authentication_type")
-        user = register_for_oauth(request, user_data) if authentication_type=="oauth" else register_for_password(request, user_data)
+        user = create_user(request, user_data)
         return {
             "error": False,
             "content": user,

@@ -1,8 +1,9 @@
+from django.test import Client
 from rest_framework.response import Response
 import pytest
 
 @pytest.mark.django_db
-def test_company_bad_request(client, endpoint, csrf_token, user_data, company_data):
+def test_company_bad_request(client:Client, endpoint, csrf_token, user_data, company_data):
     assert csrf_token is not None
     company_data.pop("name")
     response:Response = client.post(endpoint,
@@ -21,7 +22,7 @@ def test_company_bad_request(client, endpoint, csrf_token, user_data, company_da
 
 
 @pytest.mark.django_db
-def test_user_bad_request(client, endpoint, csrf_token, user_data):
+def test_user_bad_request(client:Client, endpoint, csrf_token, user_data):
     assert csrf_token is not None
     user_data.pop("full_name")
     response:Response = client.post(endpoint,

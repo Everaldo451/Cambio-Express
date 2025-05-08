@@ -1,19 +1,15 @@
 from django.http import HttpRequest
-from django.middleware.csrf import get_token
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
-from .models import FeedBack
-from .form import SetFeedbackForm
-from .serializers import FeedBackSerializer
+import logging
 
-@api_view(["GET"])
-def get_csrf(request):
-	return Response({"data":get_token(request)})
-
+from api.models import FeedBack
+from api.form import SetFeedbackForm
+from api.serializers import FeedBackSerializer
 
 
 class FeedbackList(APIView):

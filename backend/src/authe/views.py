@@ -1,8 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
 
 from django.http import HttpRequest
 from django.urls import reverse
@@ -10,14 +8,11 @@ from django.contrib.auth import authenticate
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
 
-from api.models import Company
-from authe.models import User
+from api.models import User
 
-from .form import LoginForm, UserRegisterExtras, CompanyRegisterExtras, RegisterForm, OAuthForm
-from .serializers import UserSerializer
+from .form import LoginForm, OAuthForm
 
 from .extras.generate_jwt_response import generate_full_jwt_response
-from .extras.register_company import register_company
 from .extras.register_user import register_user
 from .extras.generate_oauth_config import generate_oauth_config
 from .extras.oauth_utils import check_granted_scopes
@@ -26,26 +21,6 @@ from googleapiclient.discovery import build
 import google_auth_oauthlib.flow
 
 import logging
-from dotenv import load_dotenv
-
-load_dotenv()
-
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def get_user(request:HttpRequest):
-	logging.debug(f"Getting the user data.")
-	serializer = UserSerializer(request.user)
-	data = serializer.data
-	data.pop("id")
-
-	if not request.user.groups.filter(name="Company").exists():
-		logging.debug("User isn't a company.")
-		print("notCompany")
-		data.pop("company")
-
-	logging.debug(f"Response status 200. User data: {data}")
-	return Response({"data":data})
-
 
 @api_view(["GET"])
 def oauth_client_url(request:HttpRequest):	
@@ -123,66 +98,11 @@ def password_login(request:HttpRequest):
 	logging.debug("Verifying if user exists.")
 	user = authenticate(**form.cleaned_data)
 	if user is None or not user.is_active:
-		logging.debug("Response status 404. User not founded.")
+		logging.debug(f"Response status 404. User not founded. user: {user}")
 		return Response({"message":"User don't exists"}, status=status.HTTP_404_NOT_FOUND)
 
 	logging.debug("Response status 200. User logged successful.")
 	return generate_full_jwt_response(request, user)	
-	
-
-
-@api_view(["POST"])
-@csrf_protect
-def password_register(request:HttpRequest):
-
-	logging.debug("Starting password register route.")
-	register_form = RegisterForm(request.POST)
-
-	logging.debug(f"Verifying if email and password are valids. Data: {register_form.data}")
-	if not register_form.is_valid():
-		logging.debug(f"Response 400. Invalid credentials. Errors: {register_form.errors}")
-		return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
-
-	logging.debug("Verifying if user already exists.")
-	user = authenticate(**register_form.cleaned_data)
-	if user:
-		logging.debug("Response 401. User already exists.")
-		return Response({"message":"User already exists."}, status=status.HTTP_401_UNAUTHORIZED)
-	
-	user_form = UserRegisterExtras(request.POST)
-	company_form = CompanyRegisterExtras(request.POST)
-
-	logging.debug("Verifying if the user desire register a company.")
-	if company_form.data.get("is_company")=="on":
-		if not company_form.is_valid():
-			logging.debug(f"Response status 400. Invalid company credentials.  Errors: {company_form.errors}")
-			return Response({"message":"Invalid company credentials."}, status=status.HTTP_400_BAD_REQUEST)
-		
-		company_data = company_form.cleaned_data
-		company_data.pop("is_company")
-		
-		logging.debug("Verifying if company already exists.")
-		company = Company.objects.filter(**company_data).first()
-		if company is not None:
-			logging.debug("Response 401. Company already exists.")
-			return Response({"message":"Company already exists."}, status=status.HTTP_401_UNAUTHORIZED)
-		
-		return register_company(request, {**company_data, **register_form.cleaned_data})
-	
-	logging.debug("Verifying if the user desire register a common user.")
-	if user_form.is_valid():
-		register_data = register_user(request, {**user_form.cleaned_data, **register_form.cleaned_data})
-		if register_data["error"] == True:
-			stat = register_data["status"]
-			error = register_data["content"]
-			logging.debug(f"Response with status {stat}. Error: {error}")
-			return Response({"message": error}, status=stat)
-		
-		logging.debug(f"Response with status 200. User registed sucessful.")
-		return generate_full_jwt_response(request, register_data["content"])
-	
-	logging.debug(f"Response 400. Invalid user credentials. Errors: {user_form.errors}")
-	return Response({"message": "Invalid user credentials."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])

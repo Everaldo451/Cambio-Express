@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'authe.User'
+AUTH_USER_MODEL = 'api.User'
 
 ##CORS AND CSRF
 CORS_ALLOW_ALL_ORIGINS = True

@@ -21,6 +21,6 @@ def test_success(client, endpoint, csrf_token, user_data, create_user):
     refresh_token = response.cookies.get("refresh_token")
     assert access_token is not None and refresh_token is not None
 
-    user_response:Response = client.get("/auth/getuser/")
+    user_response:Response = client.get("/me/")
 
     assert user_response.status_code==200
