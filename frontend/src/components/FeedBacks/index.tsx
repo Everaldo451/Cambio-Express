@@ -135,7 +135,7 @@ function FeedBacks() {
     async function GetFeedBacks() {
 
         try{
-            const response = await customAxios.get("/api/feedbacks/get/")
+            const response = await customAxios.get("/api/feedbacks/search/")
             const feedbacks = response.data
 
             if (feedbacks instanceof Array) {

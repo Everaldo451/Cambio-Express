@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components'
 import { commonTheme } from './Theme'
 import Header from './components/Head'
 import Home from './routes/Home'
-import Login from './routes/Login'
+import Auth from './routes/Auth'
 import ConfigurationPage from './routes/Configurations'
 import './App.css'
 
@@ -16,7 +16,7 @@ function App() {
         <Header/>
         <Routes>
           <Route path='/' element={<Home/>}/>
-          <Route path='/login' element={<Login/>}/>
+          <Route path='/auth' element={<Auth/>}/>
           <Route path='/configurations' element={<ConfigurationPage/>}/>
         </Routes>
       </BrowserRouter>

@@ -47,4 +47,4 @@ export const getCSRF = genericAPIConsumer<CSRFType>({
 
 export const getUser = genericAPIConsumer<UserType>({
     instance: () => customAxios,
-}, "/api/auth/getuser/")
+}, "/api/me/")

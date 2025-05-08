@@ -5,12 +5,12 @@ import { InputContainer} from '../../../../components/StyledInputLabel'
 import { NLabel, NInput, SubmitInput, StyledForm, FormProps, onSubmitType } from '..'
 
 
-function LoginForm ({children,url,onSubmit,theme}:FormProps & onSubmitType & FormThemeType) {
+function LoginForm ({children,onSubmit,theme}:Pick<FormProps,"children"> & onSubmitType & FormThemeType) {
 
     const [csrf] = useContext(CSRFContext)
 
     return (
-        <StyledForm action={`api/auth/${url}/`} method='POST' onSubmit={onSubmit}>
+        <StyledForm action={`api/auth/login/`} method='POST' onSubmit={onSubmit}>
             {children}
             <InputContainer 
                 inputStyle={theme.inputStyle} 
