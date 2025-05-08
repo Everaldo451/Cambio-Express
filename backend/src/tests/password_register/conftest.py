@@ -25,7 +25,7 @@ def company_data():
 
 @pytest.fixture
 def endpoint():
-    return "/auth/register/"
+    return "/users/"
 
 
 ########USER CREATION

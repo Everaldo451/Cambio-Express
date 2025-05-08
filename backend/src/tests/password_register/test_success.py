@@ -1,7 +1,4 @@
-from authe.form import RegisterForm, CompanyRegisterExtras, UserRegisterExtras
-from django.db import transaction, IntegrityError
 from rest_framework.response import Response
-from api.models import Company
 import pytest
 
 @pytest.mark.django_db
