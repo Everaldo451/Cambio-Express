@@ -107,11 +107,11 @@ export default function FormRenderer({url, children}:FormProps) {
     return (
         <>
         {url=="register"?
-            <RegisterForm url={url} onSubmit={onSubmit} theme={theme}>
+            <RegisterForm onSubmit={onSubmit} theme={theme}>
                 {children}
             </RegisterForm>
             :
-            <LoginForm url={url} onSubmit={onSubmit} theme={theme}>
+            <LoginForm onSubmit={onSubmit} theme={theme}>
                 {children}
             </LoginForm>
         }

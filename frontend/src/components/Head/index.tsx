@@ -166,7 +166,7 @@ function Header() {
                         </DropdownContainer>
                     :
                         <NavLi>
-                            <NavLink to={"/login"}>Login</NavLink>
+                            <NavLink to={"/auth"}>Login</NavLink>
                         </NavLi>
                     }   
                 </HeaderUL>

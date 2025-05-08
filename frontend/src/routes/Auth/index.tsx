@@ -13,7 +13,7 @@ const Main = styled.main`
     background-color: ${props => props.theme.bgColor};
 `
 
-function Login() {
+export default function Auth() {
 
     const [user] = useContext(UserContext)
     const [url, setURL] = useState<FormProps['url']>("login")
@@ -29,5 +29,3 @@ function Login() {
         )
     }
 }
-
-export default Login

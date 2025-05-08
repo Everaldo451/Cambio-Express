@@ -7,13 +7,13 @@ import { InputContainer } from '../../../../components/StyledInputLabel'
 import { NLabel, NInput, SubmitInput, StyledForm, CheckBoxDiv, FormProps, onSubmitType } from '..'
 
 
-function RegisterForm ({children,url,onSubmit, theme}:FormProps & onSubmitType & FormThemeType) {
+function RegisterForm ({children,onSubmit, theme}:Pick<FormProps,"children"> & onSubmitType & FormThemeType) {
 
     const [csrf] = useContext(CSRFContext)
     const [isCompany, setIsCompany] = useState<boolean>(false)
 
     return (
-        <StyledForm action={`api/auth/${url}/`} method='POST' onSubmit={onSubmit}>
+        <StyledForm action={`api/users/`} method='POST' onSubmit={onSubmit}>
             {children}
                 {
                     isCompany?

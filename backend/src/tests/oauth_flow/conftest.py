@@ -31,6 +31,8 @@ def url(client:Client, path):
         enconded_test_server = quote("http://testserver",safe='')
         encoded_desired_server = quote("http://localhost:8000",safe='')
         authorization_url = redirect_uri.replace(enconded_test_server, encoded_desired_server)
+    
+    logging.debug(f"Modified Authorization url:{authorization_url}")
 
     return authorization_url
 
