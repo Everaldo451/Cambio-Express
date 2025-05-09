@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from api.models import Offert
-from api.serializers import OffertSerializer
+from api.serializers.models import OffertSerializer
 
 
 @api_view(["GET"])

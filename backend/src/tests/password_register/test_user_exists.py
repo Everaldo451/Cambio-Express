@@ -7,16 +7,16 @@ def test_company_exists(client, endpoint, csrf_token, create_company, user_data,
     assert user is not None and company is not None
     assert csrf_token is not None
     user_data["email"] = "other@gmail.com"
-    company_data["is_company"] = "on"
     response:Response = client.post(endpoint,
         data={
             **user_data,
             **company_data,
+            "is_company": True,
             "csrfmiddlewaretoken": csrf_token
-        }
+        },
     )
 
-    assert response.status_code==401
+    assert response.status_code==409
     json = response.json()
     assert isinstance(json, dict)
     message = json.get("message")
@@ -30,11 +30,12 @@ def test_user_exists(client, endpoint, csrf_token, create_user, user_data):
     response:Response = client.post(endpoint,
         data={
             **user_data,
+            "is_company": False,
             "csrfmiddlewaretoken": csrf_token
-        }
+        },
     )
 
-    assert response.status_code==401
+    assert response.status_code==409
     json = response.json()
     assert isinstance(json, dict)
     message = json.get("message")

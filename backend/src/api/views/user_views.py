@@ -1,26 +1,28 @@
 from django.http import HttpRequest
-from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
 
 from rest_framework.views import APIView
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from rest_framework import status
 import logging
 
-from authe.form import RegisterForm, CompanyRegisterExtras, UserRegisterExtras
+from authe.serializers import RegisterSerializer
 from authe.extras.register_company import register_company
 from authe.extras.register_user import register_user
 from authe.extras.generate_jwt_response import generate_full_jwt_response
 
 from api.models import User, Company
-from api.serializers import UserSerializer
+from api.serializers.models import UserSerializer
 
 class UserList(APIView):
 
 	def get_permissions(self,):
 		if self.request.method == "POST":
 			return []
-		return [IsAdminUser]
+		return [IsAdminUser()]
 
 	def get(self, request:HttpRequest, format=None):
 		users = None
@@ -33,63 +35,50 @@ class UserList(APIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 	
 
-	def create_company(self, request:HttpRequest, register_form:RegisterForm, company_form:CompanyRegisterExtras):
-		company_data = company_form.cleaned_data
-		company_data.pop("is_company")
+	def create_company(self, request:HttpRequest, data:dict):
+		data.pop("is_company")
 		
 		logging.debug("Verifying if company already exists.")
-		company = Company.objects.filter(**company_data).first()
-		if company is not None:
-			logging.debug("Response 401. Company already exists.")
-			return Response({"message":"Company already exists."}, status=status.HTTP_401_UNAUTHORIZED)
+		if Company.objects.filter(CNPJ=data.get("CNPJ")).exists():
+			logging.debug("Response 409. Company already exists.")
+			return Response({"message":"Company already exists."}, status=status.HTTP_409_CONFLICT)
 		
-		return register_company(request, {**company_data, **register_form.cleaned_data})
+		return register_company(request, {**data})
 	
 
-	def create_user(self, request:HttpRequest, register_form:RegisterForm, user_form:UserRegisterExtras):
-		register_data = register_user(request, {**user_form.cleaned_data, **register_form.cleaned_data})
+	def create_user(self, request:HttpRequest, data:dict):
+		register_data = register_user(request, {**data})
 		if register_data["error"] == True:
 			stat = register_data["status"]
 			error = register_data["content"]
 			logging.debug(f"Response with status {stat}. Error: {error}")
 			return Response({"message": error}, status=stat)
 		
-		logging.debug(f"Response with status 200. User registed sucessful.")
-		return generate_full_jwt_response(request, register_data["content"])
+		logging.debug(f"Response with status 201. User registed sucessful.")
+		return generate_full_jwt_response(request, register_data["content"], status.HTTP_201_CREATED)
 	
 
-	def post(self, request:HttpRequest, format=None):
+	@method_decorator(csrf_protect)
+	def post(self, request:Request, format=None):
 		logging.debug("Starting password register route.")
-		register_form = RegisterForm(request.POST)
+		serializer = RegisterSerializer(data=request.data)
 
-		logging.debug(f"Verifying if email and password are valids. Data: {register_form.data}")
-		if not register_form.is_valid():
-			logging.debug(f"Response 400. Invalid credentials. Errors: {register_form.errors}")
-			return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+		logging.debug(f"Verifying if email and password are valids.")
+		if not serializer.is_valid():
+			logging.debug(f"Response 400. Invalid credentials. Errors: {serializer.errors}")
+			return Response({"message": "Invalid credentials.", "errors":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+		validated_data = serializer.validated_data
 		logging.debug("Verifying if user already exists.")
-		user = authenticate(**register_form.cleaned_data)
-		if user:
-			logging.debug("Response 401. User already exists.")
-			return Response({"message":"User already exists."}, status=status.HTTP_401_UNAUTHORIZED)
-	
-		user_form = UserRegisterExtras(request.POST)
-		company_form = CompanyRegisterExtras(request.POST)
+		if User.objects.filter(email=validated_data.get("email")).exists():
+			logging.debug("Response 409. User already exists. Conflict")
+			return Response({"message":"User already exists."}, status=status.HTTP_409_CONFLICT)
 
 		logging.debug("Verifying if the user desire register a company.")
-		if company_form.data.get("is_company")=="on":
-			if not company_form.is_valid():
-				logging.debug(f"Response status 400. Invalid company credentials.  Errors: {company_form.errors}")
-				return Response({"message":"Invalid company credentials."}, status=status.HTTP_400_BAD_REQUEST)
+		if validated_data["is_company"]:
+			return self.create_company(request, validated_data)
 		
-			return self.create_company(request, register_form, company_form)
-	
-		logging.debug("Verifying if the user desire register a common user.")
-		if not user_form.is_valid():
-			logging.debug(f"Response 400. Invalid user credentials. Errors: {user_form.errors}")
-			return Response({"message": "Invalid user credentials."}, status=status.HTTP_400_BAD_REQUEST)
-		
-		return self.create_user(request, register_form, user_form)
+		return self.create_user(request, validated_data)
 	
 
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from . import models
+from api import models
 
 class CompanySerializer(serializers.ModelSerializer):
 	class Meta:
@@ -11,8 +11,16 @@ class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = models.User
-		fields = ["id","first_name","email","company"]
+		fields = ["id", "first_name", "last_name", "email", "company"]
 		read_only_fields = ['__all__']
+
+	def create(self, validated_data:dict):
+
+		company_data = validated_data.get("company")
+		if company_data:
+			validated_data.pop("company")
+		user = models.User.objects.create(**validated_data)
+		return user
 
 
 class FeedBackSerializer(serializers.ModelSerializer):

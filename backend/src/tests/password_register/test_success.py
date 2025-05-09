@@ -8,11 +8,12 @@ def test_company_success(client, endpoint, csrf_token, user_data, company_data):
         data={
             **user_data,
             **company_data,
+            "is_company": True,
             "csrfmiddlewaretoken": csrf_token
-        }
+        },
     )
 
-    assert response.status_code==200
+    assert response.status_code==201
     json = response.json()
     assert isinstance(json, dict)
     csrf_token = json.get("csrf_token")
@@ -28,11 +29,12 @@ def test_user_success(client, endpoint, csrf_token, user_data):
     response:Response = client.post(endpoint,
         data={
             **user_data,
+            "is_company": False,
             "csrfmiddlewaretoken": csrf_token
-        }
+        },
     )
 
-    assert response.status_code==200
+    assert response.status_code==201
     json = response.json()
     assert isinstance(json, dict)
     csrf_token = json.get("csrf_token")

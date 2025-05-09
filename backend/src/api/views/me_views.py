@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 import logging
 
-from api.serializers import UserSerializer
+from api.serializers.models import UserSerializer
 
 class MeDetails(APIView):
 
@@ -19,7 +19,6 @@ class MeDetails(APIView):
 		
 		if not request.user.groups.filter(name="Company").exists():
 			logging.debug("User isn't a company.")
-			print("notCompany")
 			data.pop("company")
 			
 		logging.debug(f"Response status 200. User data: {data}")
