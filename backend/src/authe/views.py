@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -10,7 +11,7 @@ from django.views.decorators.csrf import csrf_protect
 
 from api.models import User
 
-from .form import LoginForm, OAuthForm
+from .serializers import LoginSerializer, OAuthSerializer
 
 from .extras.generate_jwt_response import generate_full_jwt_response
 from .extras.register_user import register_user
@@ -23,7 +24,7 @@ import google_auth_oauthlib.flow
 import logging
 
 @api_view(["GET"])
-def oauth_client_url(request:HttpRequest):	
+def oauth_client_url(request:HttpRequest|Request):	
 	redirect_uri = f"http://{request.get_host()}{reverse('oauth2callback')}"
 	logging.debug(f"Redirect uri: {redirect_uri}")
 	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request, redirect_uri))
@@ -43,9 +44,9 @@ def oauth_client_url(request:HttpRequest):
 
 
 @api_view(["GET"])
-def oauth_callback(request:HttpRequest):
-	oauth_form = OAuthForm(request.GET)
-	if not oauth_form.is_valid():
+def oauth_callback(request:HttpRequest|Request):
+	serializer = OAuthSerializer(request.data)
+	if not serializer.is_valid():
 		return redirect("http://localhost:3000/oauth/fail")
 	
 	redirect_uri = f"http://{request.get_host()}{reverse('oauth2callback')}"
@@ -87,22 +88,25 @@ def oauth_callback(request:HttpRequest):
 	
 @api_view(["POST"])
 @csrf_protect
-def password_login(request:HttpRequest):
+def password_login(request:HttpRequest|Request):
 
 	logging.debug("Starting password login route.")
-	form = LoginForm(request.POST)
-	if not form.is_valid():
-		logging.debug(f"Response status 400. Invalid credentials. Errors: {form.errors}")
-		return Response({"message":"Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)	
+	serializer = LoginSerializer(data=request.data)
+	if not serializer.is_valid():
+		logging.debug(f"Response status 400. Invalid credentials. Errors: {serializer.errors}")
+		return Response({"message":"Invalid credentials", "errors":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)	
 
 	logging.debug("Verifying if user exists.")
-	user = authenticate(**form.cleaned_data)
-	if user is None or not user.is_active:
-		logging.debug(f"Response status 404. User not founded. user: {user}")
+	user = authenticate(**serializer.validated_data)
+	if user is None:
+		logging.debug(f"Response status 404. User not founded.")
 		return Response({"message":"User don't exists"}, status=status.HTTP_404_NOT_FOUND)
+	elif not user.is_active:
+		logging.debug(f"Response status 403. Forbidden")
+		return Response({"message":"The user isn't active"}, status=status.HTTP_403_FORBIDDEN)
 
 	logging.debug("Response status 200. User logged successful.")
-	return generate_full_jwt_response(request, user)	
+	return generate_full_jwt_response(request, user, status.HTTP_200_OK)	
 
 
 @api_view(["GET"])

@@ -16,7 +16,7 @@ def register_company(request:HttpRequest, user_data:dict) -> HttpResponse | Resp
             user = User.objects.create_user(email= user_data.pop("email"), password = user_data.pop("password"))
             company = Company(user = user, **user_data)
             company.save()
-        return generate_full_jwt_response(request, user)
+        return generate_full_jwt_response(request, user, status.HTTP_201_CREATED)
     except DatabaseError as err:
         logging.debug("Internal server error. Database error.")
         return Response({"message":"An internal error ocurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

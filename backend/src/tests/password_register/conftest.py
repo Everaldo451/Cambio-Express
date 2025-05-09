@@ -1,4 +1,3 @@
-from authe.form import RegisterForm, UserRegisterExtras
 from django.db import transaction, IntegrityError
 from api.models import Company
 import pytest
@@ -20,7 +19,6 @@ def company_data():
     return {
         "CNPJ": "0200000001",
         "name": "Any C",
-        "is_company": "on",
     }
 
 @pytest.fixture
@@ -53,7 +51,6 @@ def create_company(django_user_model, company_model, user_data, company_data):
 				email = user_data.get("email"),
 				password = user_data.get("password")
 			)
-            company_data.pop("is_company")
             company = company_model(**company_data, user = user)
             company.save()
 
