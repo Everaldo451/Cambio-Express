@@ -9,10 +9,10 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework import status
 import logging
 
-from authe.serializers import RegisterSerializer
-from authe.extras.register_company import register_company
-from authe.extras.register_user import register_user
-from authe.extras.generate_jwt_response import generate_full_jwt_response
+from authentication.serializers import RegisterSerializer
+from authentication.extras.register_company import register_company
+from authentication.extras.register_user import register_user
+from authentication.extras.generate_jwt_response import generate_full_jwt_response
 
 from api.models import User, Company
 from api.serializers.models import UserSerializer
