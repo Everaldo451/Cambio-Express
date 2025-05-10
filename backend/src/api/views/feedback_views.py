@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
 
 from api.models import FeedBack
-from api.serializers.common import PostFeedbackSerializer
+from api.serializers.common import CreateFeedbackSerializer
 from api.serializers.models import FeedBackSerializer
 
 import logging
@@ -36,7 +36,7 @@ class FeedbackList(APIView):
 		
 	@method_decorator(csrf_protect)
 	def post(self, request:HttpRequest|Request, format=None):
-		serializer = PostFeedbackSerializer(data=request.data)
+		serializer = CreateFeedbackSerializer(data=request.data)
 		if not serializer.is_valid():
 			return Response({"message": "Invalid data. Bad request", "errors":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 	

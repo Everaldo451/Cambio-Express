@@ -48,7 +48,7 @@ SIMPLE_JWT = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'authe.auth.JWTAuthentication'
+        'authentication.auth.JWTAuthentication'
     ]
 }
 
@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
-    'authe.apps.AutheConfig',
+    'authentication.apps.AuthenticationConfig',
     'marketplace.apps.MarketplaceConfig'
 ]
 
@@ -76,7 +76,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'authe.middlewares.RefreshJWT',
+    'authentication.middlewares.RefreshJWT',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

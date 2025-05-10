@@ -24,6 +24,6 @@ os.environ.setdefault("DJANGO_ADMIN_URL",'admin/')
 urlpatterns = [
     path(os.environ.get("DJANGO_ADMIN_URL"), admin.site.urls),
     path("", include("api.urls")),
-    path("auth/", include("authe.urls")),
+    path("auth/", include("authentication.urls")),
     path("tran/", include("marketplace.urls"))
 ]
