@@ -24,7 +24,7 @@ import google_auth_oauthlib.flow
 import logging
 
 @api_view(["GET"])
-def oauth_client_url(request:HttpRequest|Request):	
+def google_auth_redirect(request:HttpRequest|Request):	
 	redirect_uri = f"http://{request.get_host()}{reverse('oauth2callback')}"
 	logging.debug(f"Redirect uri: {redirect_uri}")
 	flow = google_auth_oauthlib.flow.Flow.from_client_config(**generate_oauth_config(request, redirect_uri))
@@ -35,17 +35,14 @@ def oauth_client_url(request:HttpRequest|Request):
 
 	if authorization_url:
 		logging.debug(f"Authorization url: {authorization_url}")
-		return Response(
-			{"message":"Authorization url generated successful.","authorization_url":authorization_url},
-			status=status.HTTP_200_OK
-		)
+		return redirect(authorization_url)
 	
 	return Response({"message":"Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(["GET"])
-def oauth_callback(request:HttpRequest|Request):
-	serializer = OAuthSerializer(request.data)
+def google_auth_callback(request:HttpRequest|Request):
+	serializer = OAuthSerializer(data=request.data)
 	if not serializer.is_valid():
 		return redirect("http://localhost:3000/oauth/fail")
 	

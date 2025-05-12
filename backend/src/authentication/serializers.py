@@ -44,4 +44,4 @@ class OAuthSerializer(serializers.Serializer):
     error = serializers.CharField(max_length=100, required=False)
 
     def validate(self, data):
-        return super().validate(attrs)
+        return super().validate(data)
