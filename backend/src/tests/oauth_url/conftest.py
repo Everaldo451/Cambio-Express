@@ -1,5 +1,5 @@
 import pytest
 
 @pytest.fixture
-def endpoint():
+def endpoint(main_endpoint):
     return "/auth/google/redirect/"
