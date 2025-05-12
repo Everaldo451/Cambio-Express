@@ -22,8 +22,8 @@ def company_data():
     }
 
 @pytest.fixture
-def endpoint():
-    return "/users/"
+def endpoint(main_endpoint):
+    return main_endpoint+"/users/"
 
 
 ########USER CREATION

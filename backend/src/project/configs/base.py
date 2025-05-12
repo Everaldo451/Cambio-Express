@@ -52,13 +52,20 @@ REST_FRAMEWORK = {
     ]
 }
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'cookies'
+        }
+    },
+    'USE_SESSION_AUTH': False,
+}
 
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders',
-    'rest_framework_simplejwt',
-    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -67,7 +74,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'authentication.apps.AuthenticationConfig',
-    'marketplace.apps.MarketplaceConfig'
+    'marketplace.apps.MarketplaceConfig',
+    'corsheaders',
+    'rest_framework_simplejwt',
+    'rest_framework',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [

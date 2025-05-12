@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import user_views, feedback_views, me_views, account_views, common, graphs
+from .views import user_views, feedback_views, me_views, account_views, common, graphs, swagger
 
 urlpatterns = [
     path("users/", include([
@@ -18,4 +18,7 @@ urlpatterns = [
         path("get/<coin>",graphs.get)
     ])),
     path("getcsrf/", common.get_csrf),
+    path("auth/", include("authentication.urls")),
+    path("transactions/", include("marketplace.urls")),
+    path("swagger-ui/", swagger.schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui")
 ]

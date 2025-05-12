@@ -21,8 +21,8 @@ class FeedbackList(APIView):
 
 	def get_permissions(self):
 		if self.request.method == "POST":
-			return [IsAuthenticated]
-		return [IsAdminUser]
+			return [IsAuthenticated()]
+		return [IsAdminUser()]
 
 
 	def get(self, request:HttpRequest|Request, format=None):
