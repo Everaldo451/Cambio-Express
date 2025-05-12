@@ -15,7 +15,7 @@ def email():
 
 @pytest.fixture
 def path():
-    return "/auth/oauth/"
+    return "/auth/google/redirect/"
 
 
 @pytest.fixture
