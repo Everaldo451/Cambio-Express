@@ -1,0 +1,23 @@
+import styled from "styled-components";
+import { ConfigRoute } from "../page";
+import { useContext } from "react";
+import { UserContext } from "../../../../main";
+
+function DadosPessoais() {
+
+    const [user] = useContext(UserContext)
+
+    return (
+        <ConfigRoute>
+            <p>Username: <span>{user?.first_name}</span></p>
+            <p>Email: <span>{user?.email}</span></p>
+
+            <p>Conta Empresarial:</p>
+            <ul>
+            </ul>
+        </ConfigRoute>
+    )
+
+}
+
+export default DadosPessoais
