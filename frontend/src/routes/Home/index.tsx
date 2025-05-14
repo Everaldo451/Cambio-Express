@@ -6,7 +6,6 @@ import WeOffer from "./Frames/PositivePoints";
 
 
 function Home() {
-
     const [user,_] = useContext(UserContext)
 
     return (
