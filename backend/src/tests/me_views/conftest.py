@@ -1,5 +1,5 @@
 from django.test import Client
-from api.models import Company
+from companies.models import Company
 
 from rest_framework_simplejwt.tokens import RefreshToken
 import pytest

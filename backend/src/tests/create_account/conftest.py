@@ -17,12 +17,12 @@ def invalid_user_data():
     }
 
 @pytest.fixture
-def endpoint(main_endpoint):
-    return main_endpoint+"/accounts/"
+def endpoint():
+    return "/accounts/"
 
 @pytest.fixture
-def register_user(client:Client, main_endpoint, csrf_token, user_data):
-    response = client.post(f"{main_endpoint}/users/",       
+def register_user(client:Client, csrf_token, user_data):
+    response = client.post("/auth/register/",       
         data={
             **user_data,
             "csrfmiddlewaretoken": csrf_token

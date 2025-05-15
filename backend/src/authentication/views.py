@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,8 +9,15 @@ from django.urls import reverse
 from django.contrib.auth import authenticate
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
 
-from api.models import User
+from authentication.serializers import RegisterSerializer
+from authentication.extras.register_company import register_company
+from authentication.extras.register_user import register_user
+from authentication.extras.generate_jwt_response import generate_full_jwt_response
+
+from users.models import User
+from companies.models import Company
 
 from .serializers import LoginSerializer, OAuthSerializer
 
@@ -82,7 +90,56 @@ def google_auth_callback(request:HttpRequest|Request):
 
 	return Response({"message":"You didn't accepted the escopes."}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+class PasswordRegister(APIView):
 	
+	def create_company(self, request:HttpRequest, data:dict):
+		data.pop("is_company")
+		logging.debug("Verifying if company already exists.")
+		if Company.objects.filter(CNPJ=data.get("CNPJ")).exists():
+			logging.debug("Response 409. Company already exists.")
+			return Response({"message":"Company already exists."}, status=status.HTTP_409_CONFLICT)
+		
+		return register_company(request, {**data})
+	
+
+	def create_user(self, request:HttpRequest, data:dict):
+		register_data = register_user(request, {**data})
+		if register_data["error"] == True:
+			stat = register_data["status"]
+			error = register_data["content"]
+			logging.debug(f"Response with status {stat}. Error: {error}")
+			return Response({"message": error}, status=stat)
+		
+		logging.debug(f"Response with status 201. User registed sucessful.")
+		return generate_full_jwt_response(request, register_data["content"], status.HTTP_201_CREATED)
+	
+
+	@method_decorator(csrf_protect)
+	def post(self, request:Request, format=None):
+		logging.debug("Starting password register route.")
+		serializer = RegisterSerializer(data=request.data)
+
+		logging.debug(f"Verifying if email and password are valids.")
+		if not serializer.is_valid():
+			logging.debug(f"Response 400. Invalid credentials. Errors: {serializer.errors}")
+			return Response({"message": "Invalid credentials.", "errors":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+		validated_data = serializer.validated_data
+		logging.debug("Verifying if user already exists.")
+		if User.objects.filter(email=validated_data.get("email")).exists():
+			logging.debug("Response 409. User already exists. Conflict")
+			return Response({"message":"User already exists."}, status=status.HTTP_409_CONFLICT)
+
+		logging.debug("Verifying if the user desire register a company.")
+		if validated_data["is_company"]:
+			return self.create_company(request, validated_data)
+		
+		return self.create_user(request, validated_data)
+
+
+
 @api_view(["POST"])
 @csrf_protect
 def password_login(request:HttpRequest|Request):

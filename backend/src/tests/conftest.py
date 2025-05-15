@@ -1,5 +1,5 @@
 from django.test import Client
-from api.models import User
+from users.models import User
 import pytest
 
 @pytest.fixture
