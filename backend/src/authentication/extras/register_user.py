@@ -1,6 +1,6 @@
 from django.http import HttpRequest
 from django.db import DatabaseError
-from api.models import User
+from users.models import User
 from rest_framework import status
 import logging
 

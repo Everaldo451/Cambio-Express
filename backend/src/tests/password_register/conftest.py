@@ -1,5 +1,5 @@
 from django.db import transaction, IntegrityError
-from api.models import Company
+from companies.models import Company
 import pytest
 
 @pytest.fixture
@@ -22,8 +22,8 @@ def company_data():
     }
 
 @pytest.fixture
-def endpoint(main_endpoint):
-    return main_endpoint+"/users/"
+def endpoint():
+    return "/auth/register/"
 
 
 ########USER CREATION

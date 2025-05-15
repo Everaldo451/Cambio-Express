@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'api.User'
+AUTH_USER_MODEL = 'users.User'
 
 ##CORS AND CSRF
 CORS_ALLOW_ALL_ORIGINS = True
@@ -75,6 +75,13 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'authentication.apps.AuthenticationConfig',
     'marketplace.apps.MarketplaceConfig',
+    'users.apps.UsersConfig',
+    'companies.apps.CompaniesConfig',
+    'me.apps.MeConfig',
+    'feedbacks.apps.FeedbacksConfig',
+    'accounts.apps.AccountsConfig',
+    'offerts.apps.OffertsConfig',
+    'transactions.apps.TransactionsConfig',
     'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework',

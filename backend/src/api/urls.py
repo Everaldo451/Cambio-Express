@@ -1,24 +1,16 @@
 from django.urls import path, include
-from .views import user_views, feedback_views, me_views, account_views, common, graphs, swagger
+from .views import common, graphs, swagger
 
 urlpatterns = [
-    path("users/", include([
-        path("", user_views.UserList.as_view()),
-        path("<int:id>/", user_views.UserDetails.as_view())
-    ])),
-    path("feedbacks/",include([
-       path("", feedback_views.FeedbackList.as_view()),
-       path("search/", feedback_views.search_feedbacks),
-    ])),
-    path("accounts/", include([
-        path("", account_views.AccountList.as_view())
-    ])),
-    path("me/", me_views.MeDetails.as_view()),
+    path("users/", include("users.urls")),
+    path("feedbacks/",include("feedbacks.urls")),
+    path("accounts/", include("accounts.urls")),
+    path("me/", include("me.urls")),
+    path("offerts/", include("offerts.urls")),
+    path("auth/", include("authentication.urls")),
     path("graphs/",include([
         path("get/<coin>",graphs.get)
     ])),
     path("getcsrf/", common.get_csrf),
-    path("auth/", include("authentication.urls")),
-    path("transactions/", include("marketplace.urls")),
     path("swagger-ui/", swagger.schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui")
 ]
