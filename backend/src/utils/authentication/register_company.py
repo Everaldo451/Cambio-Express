@@ -8,7 +8,7 @@ from rest_framework import status
 from .generate_jwt_response import generate_full_jwt_response
 import logging
 
-def register_company(request:HttpRequest, user_data:dict) -> HttpResponse | Response:
+def register_company_user(request:HttpRequest, user_data:dict) -> HttpResponse | Response:
 
     logging.debug("Creating the company")
     try:

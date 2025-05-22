@@ -12,19 +12,15 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 
 from authentication.serializers import RegisterSerializer
-from authentication.extras.register_company import register_company
-from authentication.extras.register_user import register_user
-from authentication.extras.generate_jwt_response import generate_full_jwt_response
 
 from users.models import User
 from companies.models import Company
 
 from .serializers import LoginSerializer, OAuthSerializer
 
-from .extras.generate_jwt_response import generate_full_jwt_response
-from .extras.register_user import register_user
-from .extras.generate_oauth_config import generate_oauth_config
-from .extras.oauth_utils import check_granted_scopes
+from src.utils.authentication import register_common_user, register_company_user
+from src.utils.authentication import generate_full_jwt_response
+from src.utils.authentication import generate_oauth_config, check_granted_scopes
 
 from googleapiclient.discovery import build
 import google_auth_oauthlib.flow
@@ -78,7 +74,7 @@ def google_auth_callback(request:HttpRequest|Request):
 				return redirect("http://localhost:3000/oauth/fail?e='You must authenticate with your password.'")
 			return generate_full_jwt_response(request, user)
 		
-		register_data = register_user(request, {"email": email, "authentication_type": "oauth"})
+		register_data = register_common_user(request, {"email": email, "authentication_type": "oauth"})
 		if register_data["error"] == True:
 			stat = register_data["status"]
 			error = register_data["content"]
@@ -101,11 +97,11 @@ class PasswordRegister(APIView):
 			logging.debug("Response 409. Company already exists.")
 			return Response({"message":"Company already exists."}, status=status.HTTP_409_CONFLICT)
 		
-		return register_company(request, {**data})
+		return register_company_user(request, {**data})
 	
 
 	def create_user(self, request:HttpRequest, data:dict):
-		register_data = register_user(request, {**data})
+		register_data = register_common_user(request, {**data})
 		if register_data["error"] == True:
 			stat = register_data["status"]
 			error = register_data["content"]

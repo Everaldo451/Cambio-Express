@@ -19,7 +19,7 @@ def create_user(request:HttpRequest, user_data:dict) -> User:
 
     return user
 
-def register_user(request:HttpRequest, user_data:dict):
+def register_common_user(request:HttpRequest, user_data:dict):
     logging.debug("Creating the company")
     try:
         user = create_user(request, user_data)
