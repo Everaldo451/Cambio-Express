@@ -1,53 +1,46 @@
-import styled from "styled-components";
-import React, { useState } from "react"
+import React, { InputHTMLAttributes, useState } from "react"
 
-const InputDiv = styled.div`
-    position: relative;
-    margin-top: 40px;
-    display:flex;
-    flex-direction:column;
-`
-type inputPropsType = {Style:React.CSSProperties}
-type labelPropsType = {Style:React.CSSProperties, focused:boolean}
+function InputDiv(props:React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div {...props} className="flex flex-col relative mt-[40px]">{props.children}</div>
+    )
+}
+type InputPropsType = {style:React.CSSProperties}
+type LabelPropsType = {style:React.CSSProperties, focused:boolean}
+
+export function Label(props:LabelPropsType & React.HTMLAttributes<HTMLLabelElement>) {
+    return (
+        <label 
+            {...props}
+            className={`absolute transition-all duration-[0.5s] hover:cursor-pointer` + 
+                props.focused?
+                ` text-[${(props.style.fontSize as number) -3}px] top-[${-((props.style.fontSize as number) + 4)}px] left-[0px] text-[${props.style.color}] transform-none`
+                :` text-[${(props.style.fontSize as number)}px] top-[50%] left-[${props.style.left}px] text-white transform-[translate(0,_-50%)]`}
+        >
+            {props.children}
+        </label>
+    )
+
+}
 
 
-export const Label = styled.label<labelPropsType>`
-
-    position: absolute;
-    font-size: ${(props) => 
-        props.Style.fontSize && typeof props.Style.fontSize == "number"?
-            props.focused?
-                props.Style.fontSize - 3:props.Style.fontSize
-            :15}px;
-    top: ${(props) => 
-        props.Style.fontSize && typeof props.Style.fontSize == "number" && props.focused?
-        `${- (props.Style.fontSize + 4)}px`
-        :'50%'};
-    left: ${
-        (props) => props.Style && !props.focused?props.Style.left:0
-    }px;
-    transform: ${(props) => props.focused?"none":"translate(0, -50%)"};
-    color: ${(props) => props.focused?props.Style.color:"white"};
-    transition: all 0.5s;
-
-    &:hover {cursor:text;}
-`
-
-export const Input = styled.input<inputPropsType>`
-    font-size: ${(props) => props.Style?props.Style.fontSize:0}px;
-    padding: ${(props)=> props.Style?`${props.Style.paddingTop}px ${props.Style.paddingLeft}px`:0};
-
-    &:focus {
-        outline: none;
-    }
-`
+export function Input(props:InputPropsType & React.HTMLAttributes<HTMLInputElement>) {
+    return (
+        <input 
+            {...props}
+            className={`text-[${props.style.fontSize as number}px] p-[${props.style.paddingTop as number}px_${props.style.paddingLeft as number}px] focus:outline-none`}
+        >
+            {props.children}
+        </input>
+    )
+}
 
 
 interface ContainerProps {
     inputStyle:React.CSSProperties,
     inputAttrs: React.HTMLProps<HTMLInputElement>,
-    InputObject: (props:inputPropsType & {[key:string]: any}) => JSX.Element,
-    LabelObject: (props:labelPropsType & {[key:string]: any}) => JSX.Element,
+    InputObject: (props:InputPropsType & {[key:string]: any}) => React.JSX.Element,
+    LabelObject: (props:LabelPropsType & {[key:string]: any}) => React.JSX.Element,
 }
 
 export function InputContainer({inputStyle,inputAttrs, InputObject, LabelObject}:ContainerProps) { 
@@ -81,8 +74,8 @@ export function InputContainer({inputStyle,inputAttrs, InputObject, LabelObject}
     return (
 
         <InputDiv>
-            <InputObject Style={inputStyle} onFocus={onFocusChange} onBlur={onFocusChange} {...inputAttrs}/>
-            <LabelObject Style={labelStyle} focused={focused} htmlFor={inputAttrs.id?inputAttrs.id:""}>
+            <InputObject style={inputStyle} onFocus={onFocusChange} onBlur={onFocusChange} {...inputAttrs}/>
+            <LabelObject style={labelStyle} focused={focused} htmlFor={inputAttrs.id?inputAttrs.id:""}>
                 {focused?Name+":":Name}
             </LabelObject>
         </InputDiv>

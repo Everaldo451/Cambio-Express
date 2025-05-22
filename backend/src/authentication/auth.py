@@ -1,5 +1,5 @@
 from rest_framework.authentication import BaseAuthentication
-from .extras.jwt import cookie_authenticate
+from src.utils.authentication import cookie_authenticate
 import logging
 
 

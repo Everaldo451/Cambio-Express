@@ -1,5 +1,4 @@
-import React, { ButtonHTMLAttributes, StyleHTMLAttributes } from "react";
-import styled from "styled-components";
+import React from "react";
 
 interface CommonStyleProps {
     borderColor: React.CSSProperties['borderColor'],
@@ -8,44 +7,27 @@ interface CommonStyleProps {
     hoverBg: React.CSSProperties['backgroundColor'],
 }
 
-export const StyledButton = styled.button<{
-        borderColor:CommonStyleProps['borderColor'], 
-        color:CommonStyleProps['borderColor'],
-        hoverColor: CommonStyleProps['hoverColor'],
-        hoverBg:CommonStyleProps['hoverBg']
-    }>`
-    padding: 5px 10px;
-    border: 1px solid ${(props) => props.borderColor};
-    background-color: inherit;
-    color:${(props) => props.color};
-    transition: all 0.2s;
+export function StyledButton(props:CommonStyleProps & React.HTMLAttributes<HTMLButtonElement>) {
+    return (
+        <button 
+            {...props}
+            className={`bg-inherit p-[5px_10px] border-[1px] border-solid border-[${props.borderColor}] text-[${props.color}] transition-all duration-[0.2s] hover:cursor-pointer hover:border-transparent hover:bg-[${props.hoverBg}] hover:color-[${props.hoverColor}]`}
+        >
+            {props.children}
+        </button>
+    )
+}
 
-    &:hover {
-        cursor: pointer;
-        border: 1px solid transparent;
-        background-color: ${(props) => props.hoverBg};
-        color:${(props) => props.hoverColor};
-    }
-`
 
-export const StyledInput = styled.input<{
-        borderColor:CommonStyleProps['borderColor'], 
-        color:CommonStyleProps['borderColor'],
-        hoverColor: CommonStyleProps['hoverColor'],
-        hoverBg:CommonStyleProps['hoverBg']
-    }>`
-    padding: 5px 10px;
-    border: 1px solid ${(props) => props.borderColor};
-    background-color: inherit;
-    color:${(props) => props.color};
-    transition: all 0.2s;
-
-    &:hover {
-        cursor: pointer;
-        border: 1px solid transparent;
-        background-color: ${(props) => props.hoverBg};
-        color:${(props) => props.hoverColor};
-    }
-`
+export function StyledInput(props:CommonStyleProps & React.HTMLAttributes<HTMLInputElement>) {
+    return (
+        <input
+            {...props}
+            className={`bg-inherit p-[5px_10px] border-[1px] border-solid border-[${props.borderColor}] text-[${props.color}] transition-all duration-[0.2s] hover:cursor-pointer hover:border-transparent hover:bg-[${props.hoverBg}] hover:color-[${props.hoverColor}]`}
+        >
+            {props.children}
+        </input>
+    )
+}
 
 export default CommonStyleProps

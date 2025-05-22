@@ -1,6 +1,6 @@
 from django.http import HttpRequest
 from rest_framework_simplejwt.tokens import RefreshToken
-from .extras.generate_jwt_response import generate_token_cookies
+from src.utils.authentication import generate_token_cookies
 
 def RefreshJWT(get_response):
 
