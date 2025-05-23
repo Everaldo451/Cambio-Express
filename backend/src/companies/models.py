@@ -10,15 +10,6 @@ def validate_cnpj(value:str):
 			params={"value":value},
 		)
 
-def validate_phone(value:str):
-	x = re.search(r"\(\d{2}\)\s\d{5}-\d{4}", value)
-	if not x.group():
-		raise ValidationError(
-			("%(value) não é um telefone válido"),
-			params={"value":value}
-		)
-	
-
 class Company(models.Model):
 
 	user = models.OneToOneField(

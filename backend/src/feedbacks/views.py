@@ -1,5 +1,4 @@
 from django.http import HttpRequest
-from django.contrib.auth.models import AnonymousUser
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 
@@ -14,6 +13,7 @@ from feedbacks.models import FeedBack
 from feedbacks.serializers.use_cases import CreateFeedbackSerializer
 from feedbacks.serializers.models import FeedBackSerializer
 
+from core.db import get_all_obj, get_n_last_obj
 import logging
 
 
@@ -26,12 +26,13 @@ class FeedbackList(APIView):
 
 
 	def get(self, request:HttpRequest|Request, format=None):
-		try:
-			feedbacks = FeedBack.objects.all()
-			serializer = FeedBackSerializer(feedbacks, many=True)
-			return Response(serializer.data, status=status.HTTP_200_OK)
-		except:
-			return Response({"message":"Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+		get_feedbacks_data = get_all_obj(FeedBack)
+		if get_feedbacks_data["error"]:
+			return Response({"message":get_feedbacks_data["message"]},status=get_feedbacks_data["status"])
+		
+		users = get_feedbacks_data["obj"]
+		serializer = FeedBackSerializer(users, many=True)
+		return Response(serializer.data, status=get_feedbacks_data["status"])
 		
 		
 	@method_decorator(csrf_protect)
@@ -41,7 +42,7 @@ class FeedbackList(APIView):
 			return Response({"message": "Invalid data. Bad request", "errors":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 	
 		user = request.user
-		if hasattr(user, "company"):
+		if user.company.exists():
 			return Response({"message": "Companys cannot send a feedback."}, status=status.HTTP_403_FORBIDDEN)
 	
 		try:
@@ -57,19 +58,10 @@ class FeedbackList(APIView):
 @api_view(["GET"])
 def search_feedbacks(request:HttpRequest):
 
-	results = None
-	try:
-		last_feedbacks = FeedBack.objects.order_by("-id")[:5]
-		results = FeedBackSerializer(last_feedbacks, many=True)
-	except Exception as e: 
-		return Response({"message":"Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-		
-	try:
-		if request.user is not AnonymousUser:
-			feedback = FeedBack.objects.get(user=request.user)
-			serialized = FeedBackSerializer(feedback)
-			results.data.append(serialized.data) 
-	except Exception as e:
-		return Response({"message":"Internal server error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-	return Response({"message":"Feedbacks fetched sucessful.", "feedbacks":results.data}, status=status.HTTP_200_OK)
+	get_5_last_feedbacks_data = get_n_last_obj(FeedBack, 5)
+	if get_5_last_feedbacks_data["error"]:
+		return Response({"message":get_5_last_feedbacks_data["message"]}, status=get_5_last_feedbacks_data["status"])
+	
+	last_feedbacks = get_5_last_feedbacks_data["obj"]
+	serializer = FeedBackSerializer(last_feedbacks, many=True)
+	return Response(serializer.data, status=get_5_last_feedbacks_data["status"])
