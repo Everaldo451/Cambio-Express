@@ -16,15 +16,9 @@ class MeDetails(APIView):
 	def get(self, request:HttpRequest|Request, format=None):
 		logging.debug("Getting authenticated user data.")
 		serializer = UserSerializer(request.user)
-		data = serializer.data
-		data.pop("id")
-		
-		if not request.user.groups.filter(name="Company").exists():
-			logging.debug("User isn't a company.")
-			data.pop("company")
 			
-		logging.debug(f"Response status 200. User data: {data}")
-		return Response(data, status=status.HTTP_200_OK)
+		logging.debug(f"Response status 200. User data: {serializer.data}")
+		return Response(serializer.data, status=status.HTTP_200_OK)
 	
 
 	def patch(self, request:HttpRequest|Request, format=None):
@@ -44,10 +38,5 @@ class MeDetails(APIView):
 		user = serializer.save()
 		serializer = UserSerializer(user)
 		logging.debug("Response status 200. Authenticated user updated successful.")
-		return Response(
-			{
-				"message":"Authenticated user updated successful.",
-				"user":	serializer.data
-			},
-			status=status.HTTP_200_OK
+		return Response(serializer.data, status=status.HTTP_200_OK
 		)

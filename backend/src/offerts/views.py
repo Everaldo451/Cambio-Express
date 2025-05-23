@@ -1,17 +1,21 @@
-from django.shortcuts import render
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from offerts.models import Offert
 from offerts.serializers.models import OffertSerializer
-# Create your views here.
+
+from core.db import get_n_last_obj
 
 
 @api_view(["GET"])
 def last_five_offerts(request, coin, index_var):
-    try :
-        offerts = Offert.objects.filter(coin=coin,indexVar=index_var).order_by("-id")[:5]
-        serialized = OffertSerializer(offerts, many=True)
-        return Response(serialized.data)
-    except: return Response(None)
+    get_5_last_offerts_data = get_n_last_obj(Offert, 5)
+    if get_5_last_offerts_data["error"]:
+        return Response(
+            {"message": get_5_last_offerts_data["message"]}, 
+            status=get_5_last_offerts_data["status"]
+        )
+    
+    offerts = get_5_last_offerts_data["obj"]
+    serializer = OffertSerializer(offerts, many=True)
+    return Response(serializer.data, status=get_5_last_offerts_data["status"])

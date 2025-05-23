@@ -1,12 +1,14 @@
 from django.urls import path, include
-from . import views
+from .views import logout
+from .oauth.google.views import google_auth_redirect, GoogleOauthCallback
+from .password.views import PasswordRegister, PasswordLogin
 
 urlpatterns = [
-    path("login/",views.password_login,name="login"),
-    path("register/", views.PasswordRegister.as_view()),
-    path("logout/",views.logout,name="logout"),
+    path("login/",PasswordLogin.as_view(),name="login"),
+    path("register/", PasswordRegister.as_view()),
+    path("logout/",logout,name="logout"),
     path("google/", include([
-        path("redirect/", views.google_auth_redirect),
-        path("callback/", views.google_auth_callback, name="oauth2callback")
+        path("redirect/", google_auth_redirect),
+        path("callback/", GoogleOauthCallback.as_view(), name="oauth2callback")
     ]))
 ]
