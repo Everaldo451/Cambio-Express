@@ -1,72 +1,62 @@
-import styled, {keyframes} from "styled-components";
-import HomeImage from "../../../../assets/HomePageImage.jpg"
+import Image from "next/image";
 
-const IntroducSection = styled.section`
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-    color: black;
-    background-color: #191A24;
-    height: 100vh;
+function IntroducSection(props:React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <section 
+            {...props}
+            className="grid grid-cols-[repeat(2,1fr)] h-dvh bg-[#191A24] text-black"
+        >
+            {props.children}
+        </section>
+    )
+}
 
-    & * {
-        margin: 0;
-    }
 
-    & ul > li{
-        margin-top: 20px;
-        list-style: none;
-    }
-`
+function IntroductText(props:React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <section 
+            {...props}
+            className="flex flex-col text-white justify-center font-[InstrumentSans] p-[15%]"
+        >
+            {props.children}
+        </section>
+    )
+}
 
-const IntroductText = styled.section`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    font-family: InstrumentSans;
-    color: white;
-    padding: 15%;
 
-    & p {
-        font-size: 20px;
-    }
-`
+function ImageContainer(props:React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div
+            {...props}
+            className="h-full clip-right-ellipse"
+        >
+            <Image
+                alt="Imagem principal."
+                src="/computer.jpg"
+                className="object-cover object-center"
+            ></Image>
+        </div>
+    )
+}
 
-const ImageContainer = styled.div`
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-image: url(${HomeImage});
-    height: 100%;
-    clip-path: ellipse(100% 100% at right); 
-`
 
-const SlideText = keyframes`
+function P(props:React.HTMLAttributes<HTMLParagraphElement>) {
+    return (
+        <p {...props} className="text-[20px] animate-slide-in">
+            {props.children}
+        </p>
+    )
+}
 
-    0% {
-        transform: translateX(-200%);
-        opacity: 0;
-    }
 
-    40% {
-        opacity: 0.3;
-    }
+function H1(props:React.HTMLAttributes<HTMLHeadingElement>) {
+    return (
+        <h1 {...props} className="text-[32px] animate-slide-in">
+            {props.children}
+        </h1>
+    )
+}
 
-    100% {
-        transform: translateX(0);
-        opacity: 1;
-    }
-`
-
-const P = styled.p`
-    font-size: 20px;
-    animation-name: ${SlideText};
-    animation-duration: 1s
-`
-
-const H1 = styled.h1`
-    font-size: 32px;
-    animation-name: ${SlideText};
-    animation-duration: 1s;
-`
 
 export default function Introduction() {
     return (
