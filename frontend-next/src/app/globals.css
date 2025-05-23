@@ -5,11 +5,38 @@
   --foreground: #171717;
 }
 
+@utility clip-right-ellipse {
+  clip-path: ellipse(100% 100% at right);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --animate-slide-in: slideIn 1s forwards;
+  --font-instrument-sans: "InstrumentSans"
+
+  @keyframes slideIn {
+    0% {
+        transform: translateX(-200%);
+        opacity: 0;
+    }
+
+    40% {
+        opacity: 0.3;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+  }
+
+  @font-face {
+    font-family: InstrumentSans;
+    src: url("/fonts/InstrumentSans-Regular.ttf");
+  }
 }
 
 @media (prefers-color-scheme: dark) {
