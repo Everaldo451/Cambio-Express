@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { UserContext } from "../../main";
 import { useContext, useState, useEffect, ReactNode, useRef } from "react";
 import Triangle from "./assets/Triangle.png"
-import {customAxios} from "../../load";
+import { customAxios } from "@/utils/customAxios";
 
 const Section = styled.section`
     background-color: ${props => props.theme.bgColor};

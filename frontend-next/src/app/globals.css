@@ -14,8 +14,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --animate-slide-in: slideIn 1s forwards;
   --font-instrument-sans: "InstrumentSans"
+  --bg-theme: #3F4156;
+  --animate-slide-in: slideIn 1s forwards;
 
   @keyframes slideIn {
     0% {
