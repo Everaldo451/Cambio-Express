@@ -1,9 +1,8 @@
-import styled from "styled-components";
-import { ConfigRoute } from "../page";
+import { ConfigRoute } from "../styled-components";
 import { useContext } from "react";
 import { UserContext } from "../../../../main";
 
-function DadosPessoais() {
+export default function PersonalData() {
 
     const [user] = useContext(UserContext)
 
@@ -17,7 +16,4 @@ function DadosPessoais() {
             </ul>
         </ConfigRoute>
     )
-
 }
-
-export default DadosPessoais

@@ -1,6 +1,4 @@
 from django.db import DatabaseError
-from django.views.decorators.csrf import csrf_protect
-from django.utils.decorators import method_decorator
 
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -18,7 +16,7 @@ class AccountList(APIView):
             return [IsAuthenticated()]
         return []
     
-    @method_decorator(csrf_protect)
+    
     def post(self, request:Request, format=None):
         serializer = CreateAccountSerializer(data=request.data)
         if not serializer.is_valid():

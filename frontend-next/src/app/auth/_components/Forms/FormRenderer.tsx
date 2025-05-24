@@ -1,13 +1,14 @@
 import React, { ReactNode,  useContext} from 'react'
-import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { CSRFContext } from '../../../main'
+import { useRouter } from 'next/router'
+
 import CommonStyleProps, {StyledInput} from '@/components/CommonButton'
-import { Label, Input } from '@/components/StyledInputLabel'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 import GoogleButton from '../OAuth/GoogleButton'
+
+import { UserType } from '@/types'
+
+import axios from 'axios'
 
 export type FormThemeType = {
     theme: {
@@ -16,44 +17,18 @@ export type FormThemeType = {
     }
 }
 
-export const NLabel = styled(Label)`
-    font-family: ${props => props.theme.fontFamily};
-`
-
-export const NInput = styled(Input)`
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid white;
-    color: #BEC1C1;
-    font-family: ${props => props.theme.fontFamily};
-`
-
-export const SubmitInput = styled(StyledInput)`
-    margin-top: 40px;
-`
-
-export const StyledForm = styled.form`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    & legend {
-        text-align: center;
+interface TokenType {
+    value: string,
+    lifetime: number
+}
+interface AuthenticationFormat {
+    user: UserType,
+    tokens: {
+        refresh_token: TokenType,
+        access_token: TokenType
     }
-`
+}
 
-export const CheckBoxDiv = styled.div`
-    margin-top:20px;
-    display: flex;
-    align-items: center;
-
-    & label {
-        color: white;
-        font-family: ${props => props.theme.fontFamily};
-        font-size: 12px;
-    }
-
-`
 export interface FormProps {
     children?: ReactNode,
     url: "login"|"register",
@@ -64,12 +39,9 @@ export interface onSubmitType {
 }
 
 export default function FormRenderer({url, children}:FormProps) {
-
-    const [_, setCSRFToken] = useContext(CSRFContext)
-    const navigate = useNavigate()
+    const router = useRouter()
 
     const theme:FormThemeType["theme"] = {
-
         inputStyle: {
             paddingTop: 10,
             paddingLeft: 15,
@@ -94,14 +66,14 @@ export default function FormRenderer({url, children}:FormProps) {
                 withCredentials: true,
             })
             const data = response.data
-            if ("csrf_token" in data) {
-                setCSRFToken(data.csrf_token)
+            const tokens = data.get("tokens")
+            if (data satisfies AuthenticationFormat) {
+                const tokens = data["tokens"]
             }
-            navigate("/")
         } catch (error) {
             console.log(error)
-            navigate("/")
         }
+        router.push("/")
     }
 
     return (

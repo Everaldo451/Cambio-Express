@@ -8,7 +8,7 @@ function InputDiv(props:React.HTMLAttributes<HTMLDivElement>) {
 type InputPropsType = {style:React.CSSProperties}
 type LabelPropsType = {style:React.CSSProperties, focused:boolean}
 
-export function Label(props:LabelPropsType & React.HTMLAttributes<HTMLLabelElement>) {
+export function Label(props:LabelPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLLabelElement>, HTMLLabelElement>) {
     return (
         <label 
             {...props}
@@ -24,7 +24,7 @@ export function Label(props:LabelPropsType & React.HTMLAttributes<HTMLLabelEleme
 }
 
 
-export function Input(props:InputPropsType & React.HTMLAttributes<HTMLInputElement>) {
+export function Input(props:InputPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>) {
     return (
         <input 
             {...props}

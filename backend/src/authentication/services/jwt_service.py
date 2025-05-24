@@ -14,7 +14,7 @@ class JWTService:
     def generate_token_data(self, request:HttpRequest|Request, token:Token):
         return {
             "value": str(token),
-            "lifetime": token.lifetime
+            "lifetime": token.lifetime.total_seconds()
         }
 
 
@@ -37,7 +37,6 @@ class JWTService:
                 "data": { 
                     "user": serializer.data,
                     "tokens": {
-                        "csrf_token": get_token(request),
                         **self.generate_tokens_data(request, user) 
                     }
                 }

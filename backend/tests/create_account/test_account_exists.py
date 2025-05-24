@@ -2,13 +2,12 @@ from django.test import Client
 import pytest
 
 @pytest.fixture
-def create_account(client:Client, endpoint, csrf_token, register_user):
+def create_account(client:Client, endpoint, register_user):
     tokens:dict = register_user
     access_token = tokens.get("access_token").get("value")
     response = client.post(endpoint,
         data={
             "code": "USD",
-            "csrfmiddlewaretoken": tokens.get("csrf_token"),
         },
         headers={
             "Authorization": f"Bearer {access_token}"
@@ -16,13 +15,12 @@ def create_account(client:Client, endpoint, csrf_token, register_user):
     )
 
 @pytest.mark.django_db
-def test_success(client:Client, endpoint, csrf_token, register_user, create_account):
+def test_success(client:Client, endpoint, register_user, create_account):
     tokens:dict = register_user
     access_token = tokens.get("access_token").get("value")
     response = client.post(endpoint,
         data={
             "code": "USD",
-            "csrfmiddlewaretoken": tokens.get("csrf_token"),
         },
         headers={
             "Authorization": f"Bearer {access_token}"

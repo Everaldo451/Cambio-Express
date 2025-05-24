@@ -16,7 +16,7 @@ function IntroductText(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
         <section 
             {...props}
-            className="flex flex-col text-white justify-center font-[InstrumentSans] p-[15%]"
+            className="flex flex-col text-white justify-center font-instrument-sans p-[15%]"
         >
             {props.children}
         </section>

@@ -1,15 +1,14 @@
-import { useState, useContext } from 'react'
-import { CSRFContext } from '../../../../main'
+import { useState } from 'react'
 
 
 import { FormThemeType } from './FormRenderer'
 import { InputContainer } from '../../../../components/StyledInputLabel'
-import { NLabel, NInput, SubmitInput, StyledForm, CheckBoxDiv, FormProps, onSubmitType } from './FormRenderer'
+import { FormProps, onSubmitType } from './FormRenderer'
+import { NLabel, NInput, SubmitInput, StyledForm, CheckBoxDiv, CheckBoxLabel } from './styled-components'
 
 
 function RegisterForm ({children,onSubmit, theme}:Pick<FormProps,"children"> & onSubmitType & FormThemeType) {
 
-    const [csrf] = useContext(CSRFContext)
     const [isCompany, setIsCompany] = useState<boolean>(false)
 
     return (
@@ -60,10 +59,9 @@ function RegisterForm ({children,onSubmit, theme}:Pick<FormProps,"children"> & o
                 
             <CheckBoxDiv>
                 <input type='checkbox' name="is_company" id="is_company" onClick={(_) => {setIsCompany(!isCompany)}}/>
-                <label htmlFor='is_company'>Is Company?</label>
+                <CheckBoxLabel htmlFor='is_company'>Is Company?</CheckBoxLabel>
             </CheckBoxDiv>
                 
-            <input type="hidden" name='csrfmiddlewaretoken' value={csrf?csrf:""}/>
             <SubmitInput {...theme.submitProps} type='submit' value="Enter"/>
         </StyledForm>
     )

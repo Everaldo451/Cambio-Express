@@ -7,7 +7,9 @@ interface CommonStyleProps {
     hoverBg: React.CSSProperties['backgroundColor'],
 }
 
-export function StyledButton(props:CommonStyleProps & React.HTMLAttributes<HTMLButtonElement>) {
+export function StyledButton(
+    props:CommonStyleProps & React.DetailedHTMLProps<React.HTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+) {
     return (
         <button 
             {...props}
@@ -19,7 +21,9 @@ export function StyledButton(props:CommonStyleProps & React.HTMLAttributes<HTMLB
 }
 
 
-export function StyledInput(props:CommonStyleProps & React.HTMLAttributes<HTMLInputElement>) {
+export function StyledInput(
+    props:CommonStyleProps & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement> & React.InputHTMLAttributes<HTMLInputElement>
+) {
     return (
         <input
             {...props}

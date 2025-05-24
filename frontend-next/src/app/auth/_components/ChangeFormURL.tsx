@@ -1,65 +1,41 @@
-import styled from "styled-components";
 import { SetStateAction, ReactNode } from "react";
 import { FormProps } from "./Forms/FormRenderer";
 
-const StyledButton = styled.button`
-    position: relative;
-    background-color: #8C8A6C;
-    border: none;
-    border-top: 2px solid white;
-    border-bottom: 2px solid white;
-    padding: 3px;
-    transition: all 0.5s;
-    color: white;
-    z-index: 1;
+function CustomizedButton(props:React.HTMLAttributes<HTMLButtonElement>) {
+    const buttonStyle = `
+        relative z-[1] bg-[#8C8A6C] text-white p-[3px] transition-all duration-[0.5s] border-solid border-y-[2px] border-y-white
+        hover:cursor-pointer hover:transform-[scale(1.1)]
+    `
+    const afterPseudoElementStyle = `
+        after:content-[""] after:absolute after:bg-white after:w-[2px] after:h-[0] after:top-[calc(100%_+_2px)] after:left-[-2px] after:transition-all after:duration-[0.5s]
+        hover:after:h-[calc(100%_+_4px)] hover:after:top-[-2px]
+    `
+    const beforePseudoElementStyle = `
+        before:content-[""] before:absolute before:bg-white before:w-[2px] before:h-[0] before:top-[-2px] before:right-[-2px] before:transition-all before:duration-[0.5s]
+        hover:before:h-[calc(100%_+_4px)]
+    `
+    return (
+        <button
+            {...props}
+            className={
+                [buttonStyle, afterPseudoElementStyle, beforePseudoElementStyle].join("\s").replace("\n","\s")
+            }
+        >
+            {props.children}
+        </button>
+    )
+}
 
-    &:before {
-        content: "";
-        position: absolute;
-        background-color: white;
-        width: 2px;
-        height: 0;
-        top: -2px;
-        right: -2px;
-        transition: all 0.5s;
-    }
-
-    &:after {
-        content: "";
-        position: absolute;
-        background-color: white;
-        borde: 2px solid white;
-        width: 2px;
-        height: 0;
-        top: calc(100% + 2px);
-        left: -2px;
-        transition: all 0.5s;
-    }
-
-    &:hover {
-        cursor: pointer;
-        transform: scale(1.1);
-
-        &:after {
-            height: calc(100% + 4px);
-            top: -2px;
-        }
-
-        &:before{   
-            height: calc(100% + 4px);
-        }
-    }
-
-`
-
-const StyledDiv = styled.div`
-    width: 100%;
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-flow: column;
-    gap: 20px;
-`
+function StyledDiv(props:React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div
+            {...props}
+            className="grid w-full grid-rows-[auto] grid-cols-[repeat(2,_1fr)] grid-flow-col gap-[20px]"
+        >
+            {props.children}
+        </div>
+    )
+}
 
 interface ChangeURLProps {
     children?: ReactNode,
@@ -68,9 +44,9 @@ interface ChangeURLProps {
 }
 
 
-function Button({children,setURL,url}:ChangeURLProps) {
+function ChangeURLButton({children,setURL,url}:ChangeURLProps) {
 
-    return <StyledButton onClick={(e) => {url?setURL(url):null}}>{children?children:""}</StyledButton>
+    return <CustomizedButton onClick={(e) => {url?setURL(url):null}}>{children?children:""}</CustomizedButton>
     
 }
 
@@ -78,8 +54,8 @@ export default function ChangeFormURL({setURL}:ChangeURLProps) {
 
     return (
         <StyledDiv>
-            <Button setURL={setURL} url="login">Entrar</Button>
-            <Button setURL={setURL} url="register">Registrar</Button>
+            <ChangeURLButton setURL={setURL} url="login">Entrar</ChangeURLButton>
+            <ChangeURLButton setURL={setURL} url="register">Registrar</ChangeURLButton>
         </StyledDiv>
     )
 
