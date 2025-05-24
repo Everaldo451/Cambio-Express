@@ -5,8 +5,6 @@ from rest_framework import status
 
 from django.http import HttpRequest
 from django.contrib.auth import authenticate
-from django.views.decorators.csrf import csrf_protect
-from django.utils.decorators import method_decorator
 
 from users.models import User
 from companies.models import Company
@@ -56,7 +54,6 @@ class PasswordRegister(APIView):
 		return self.jwt_service.generate_response(request, user, status.HTTP_201_CREATED)
 	
 
-	@method_decorator(csrf_protect)
 	def post(self, request:Request, format=None):
 		logging.debug("Starting password register route.")
 		serializer = PasswordRegisterSerializer(data=request.data)
@@ -84,7 +81,6 @@ class PasswordLogin(APIView):
 
 	jwt_service = JWTService()
 
-	@method_decorator(csrf_protect)
 	def post(self, request:HttpRequest|Request, format=None):
 		logging.debug("Starting password login route.")
 		serializer = PasswordLoginSerializer(data=request.data)

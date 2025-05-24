@@ -1,7 +1,7 @@
 import React, { HTMLAttributes, useContext } from "react";
 import { useRouter } from "next/router";
 import { ComponentProps } from "react";
-import { UserContext, CSRFContext } from "../../main";
+import { UserContext } from "../../main";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../assets/logo.png"
@@ -30,7 +30,7 @@ function DropdownLink(attrs:ComponentProps<typeof Link>) {
 
 function DropdownButton(attrs:HTMLAttributes<HTMLButtonElement>) {
     return (
-        <button {...attrs} className="block w-full bg-black border-none text-white text-center text-[15px] no-underline hover:cursor-pointer"></Link>
+        <button {...attrs} className="block w-full bg-black border-none text-white text-center text-[15px] no-underline hover:cursor-pointer"></button>
     )
 }
 
@@ -93,7 +93,6 @@ function MenuGridLine({
 export default function Header() {
 
     const [user,_] = useContext(UserContext)
-    const [__, setCSRFToken] = useContext(CSRFContext)
     const router = useRouter()
     
     async function logoutFunc(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -104,7 +103,6 @@ export default function Header() {
                 method:"GET",
                 credentials:"include"
             })
-            setCSRFToken(null)
             router.push("/")
         } catch(e) {
             router.push("/")
@@ -112,7 +110,7 @@ export default function Header() {
     }
     
     return (
-        <header className="fixed top-[0] left-[0] w-full font-[InstrumentSans] shadow-[0_0_3px_gray] z-[2]">
+        <header className="fixed top-[0] left-[0] w-full font-instrument-sans shadow-[0_0_3px_gray] z-[2]">
             <nav>
                 <ul className="flex bg-[ #D9D9D9] p-[5px_10px] m-[0] items-center list-none backdrop-filter-[blur(10px)]">
                     <NavLi>

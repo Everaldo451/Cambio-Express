@@ -3,15 +3,13 @@ from rest_framework.response import Response
 import pytest
 
 @pytest.mark.django_db
-def test_company_bad_request(client:Client, endpoint, csrf_token, user_data, company_data):
-    assert csrf_token is not None
+def test_company_user_bad_request(client:Client, endpoint, user_data, company_data):
     company_data.pop("name")
     response:Response = client.post(endpoint,
         data={
             **user_data,
             **company_data,
             "is_company": True,
-            "csrfmiddlewaretoken": csrf_token
         },
     )
 
@@ -26,14 +24,12 @@ def test_company_bad_request(client:Client, endpoint, csrf_token, user_data, com
 
 
 @pytest.mark.django_db
-def test_user_bad_request(client:Client, endpoint, csrf_token, user_data):
-    assert csrf_token is not None
+def test_common_user_bad_request(client:Client, endpoint, user_data):
     user_data.pop("full_name")
     response:Response = client.post(endpoint,
         data={
             **user_data,
             "is_company": False,
-            "csrfmiddlewaretoken": csrf_token
         },
     )
 

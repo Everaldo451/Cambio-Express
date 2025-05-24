@@ -3,6 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --box-shadow-theme: #2D2F3F;
+  --background-color-theme: #3F4156;
+  --background-div-color: #BEC1C1
 }
 
 @utility clip-right-ellipse {
@@ -12,10 +15,15 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-instrument-sans: "InstrumentSans"
-  --bg-theme: #3F4156;
+
+  --bg-theme: var(--background-color-theme);
+  --bg-div: var(--background-div-color)
+
+
   --animate-slide-in: slideIn 1s forwards;
 
   @keyframes slideIn {
@@ -36,7 +44,7 @@
 
   @font-face {
     font-family: InstrumentSans;
-    src: url("/fonts/InstrumentSans-Regular.ttf");
+    src: url("../../assets/InstrumentSans-Regular.ttf");
   }
 }
 

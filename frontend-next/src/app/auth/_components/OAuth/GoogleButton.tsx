@@ -1,24 +1,25 @@
 import axios, { AxiosError } from "axios"
-import styled from "styled-components"
 
-const StyledGoogleButton = styled.button`
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    background-color: white;
-    outline: none;
-    border: 2px solid gray;
-    border-radius: 5px;
+function StyledGoogleButton(props:React.HTMLAttributes<HTMLButtonElement>) {
+    return (
+        <button
+            {...props}
+            className="flex align-center bg-white p-[5px] mt-[20px] border-solid border-[2px] border-gray-200 rounded-[5px] outline-none hover:cursor-pointer"
+        >
+            {props.children}
+        </button>
+    )
+}
 
-    &:hover {
-        cursor: pointer;
-    }
-`
-const Img = styled.img`
-    width: 20px;
-    margin-right: 10px;
-`
+
+function Img(props:React.ImgHTMLAttributes<HTMLImageElement>) {
+    return (
+        <img
+            {...props}
+            className="w-[20px] mr-[10px]"
+        />
+    )
+}
 
 export default function GoogleButton() {
 

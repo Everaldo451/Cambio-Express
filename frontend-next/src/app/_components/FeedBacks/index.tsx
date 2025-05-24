@@ -1,69 +1,7 @@
-import styled from "styled-components";
 import { UserContext } from "../../main";
-import { useContext, useState, useEffect, ReactNode, useRef } from "react";
+import { useContext, useState, useEffect, ReactNode, useRef, SetStateAction, HTMLAttributes } from "react";
 import Triangle from "./assets/Triangle.png"
 import { customAxios } from "@/utils/customAxios";
-
-const Section = styled.section`
-    background-color: ${props => props.theme.bgColor};
-    padding: 60px 40px;
-
-    & > h2 {
-        color:white;
-        margin:0;
-        font-family: ${props => props.theme.fontFamily};
-    }
-`
-
-const Div = styled.div`
-    margin-top: 30px;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    grid-auto-flow: column;
-`
-
-const FeedSection = styled.section`
-    margin: 0 10px;
-    display: grid;
-    grid-auto-columns: calc(24% - (14px/4));
-    gap: calc(4%/3);
-    grid-auto-flow: column;
-    overflow: hidden;
-`
-
-const FeedBackDIV = styled.div`
-    border-radius: 20px 0;
-    background-color: #BEC1C1;
-    padding:20px;
-    font-family: ${props => props.theme.fontFamily};
-    box-shadow: 7px 10px 10px ${props => props.theme.boxShadowColor};
-
-    & h5 {
-        font-size: 15px;
-        margin: 0;
-    }
-
-    & h6 {
-        font-size: 10px;
-        color: #5F5F5F;
-        margin: 0;
-        font-weight: normal;
-    }
-
-    & p {
-        font-size: 12px;
-        margin: 20px 0 30px 0;
-    }
-`
-
-const Seta = styled.img`
-    width: 20px;
-    margin: auto 0;
-`
-
-const Seta2 = styled(Seta)`
-    transform: rotate(180deg);
-`
 
 export interface FeedBack {
     first_name: string,
@@ -71,42 +9,183 @@ export interface FeedBack {
     comment:string
 }
 
-interface Feed {
-    children: ReactNode,
-    elNum: number,
+interface ArrowProps {
+    setElement: React.Dispatch<SetStateAction<number>>,
+    feedbacks: FeedBack[]
 }
 
-function FeedBack({first_name, date, comment}:FeedBack) {
+/*HTML Css Components*/
+
+function Section(props:React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <section
+            {...props}
+            className="bg-theme p-[60px_40px]"
+        >
+            {props.children}
+        </section>
+    )
+}
+
+
+function H2(props:React.HTMLAttributes<HTMLHeadingElement>) {
+    return (
+        <h2
+            {...props}
+            className="text-white m-[0] font-instrument-sans"
+        >
+            {props.children}
+        </h2>
+    )
+}
+
+
+function GridDiv(props:React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div
+            {...props}
+            className="grid grid-cols-[auto_1fr_auto] grid-flow-col mt-[30px]"
+        >
+            {props.children}
+        </div>
+    )
+}
+
+
+function FeedbackDisplaySection(
+    props:React.DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+) {
+    return (
+        <section
+            {...props}
+            className="grid grid-cols-[calc(24%_-_(14px/4))] grid-flow-col gap-[calc(4%/3)] m-[0_10px] overflow-hidden"
+        >
+            {props.children}
+        </section>
+    )
+}
+
+
+function FeedbackDiv(
+    props:React.DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+) {
+    return (
+        <div
+            {...props}
+            className="bg-[#BEC1C1] rounded-[20px_0] p-[20px] font-instrument-sans shadow-[7px_10px_10px_var(--box-shadow-theme)]"
+        >
+            {props.children}
+        </div>
+    )
+}
+
+function FeedbackH5(props:React.HTMLAttributes<HTMLHeadingElement>) {
+    return (
+        <h5
+            {...props}
+            className="text-[15px] m-[0]"
+        >
+            {props.children}
+        </h5>
+    )
+}
+
+function FeedbackH6(props:React.HTMLAttributes<HTMLHeadingElement>) {
+    return (
+        <h6
+            {...props}
+            className="text-[10px] text-[#5F5F5F] m-[0] font-normal"
+        >
+            {props.children}
+        </h6>
+    )
+}
+
+function FeedbackParagraph(props:React.HTMLAttributes<HTMLParagraphElement>) {
+    return (
+        <p
+            {...props}
+            className="text-[12px] m-[20px_0_30px_0]"
+        >
+            {props.children}
+        </p>
+    )
+}
+
+
+function LeftArrowButton(
+    props:React.ImgHTMLAttributes<HTMLImageElement> & ArrowProps
+) {
+    function onClick(_:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        props.setElement(prev => prev-1>=0?prev-1:prev)
+    }
 
     return (
-        
-        <FeedBackDIV>
+        <button onClick={onClick}>
+            <img 
+                {...props}
+                className="w-[20px] m-[auto_0]"
+            />
+        </button>
+    )
+}
 
-            <h5 className="name">{first_name}</h5>
-            <h6>{`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}</h6>
-            
+
+function RightArrowButton(
+    props:React.ImgHTMLAttributes<HTMLImageElement> & ArrowProps
+) {
+    function onClick(_:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        props.setElement(prev => prev+1<=props.feedbacks.length?prev+1:prev)
+    }
+
+    return (
+        <button onClick={onClick}>
+            <img 
+                {...props}
+                className="w-[20px] m-[auto_0] transform-[rotate(180deg)]"
+            />
+        </button>
+    )
+}
+
+
+/*Process Data Components*/
+
+function FeedbackComponent({first_name, date, comment}:FeedBack) {
+
+    return (
+        <FeedbackDiv>
+            <FeedbackH5 className="name">{first_name}</FeedbackH5>
+            <FeedbackH6>{`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}</FeedbackH6>
             <div className="avaliation">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus, consectetur cum natus sunt iure tempora dolor, aliquid, dolorum praesentium laudantium sequi soluta quibusdam ipsam. Vitae quidem error ipsum velit eos.</p>
+                <FeedbackParagraph>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                    Repellendus, consectetur cum natus sunt iure tempora dolor, aliquid, dolorum 
+                    praesentium laudantium sequi soluta quibusdam ipsam. Vitae quidem error ipsum velit eos.
+                </FeedbackParagraph>
             </div>            
-
-        </FeedBackDIV>
-        
+        </FeedbackDiv>  
     )
 
 }
 
-function FeedComponent({children,elNum}:Feed) {
 
-    const sectionRef = useRef<HTMLElement|null>(null)
+interface FeedDisplayProps {
+    children: ReactNode,
+    elementIndex: number,
+}
+
+function FeedbackDisplay({children,elementIndex}:FeedDisplayProps) {
+
+    const sectionRef = useRef<HTMLDivElement|null>(null)
 
     useEffect(() => {
 
-        console.log(elNum)
+        console.log(elementIndex)
 
         if (sectionRef.current) {
             const childrens = sectionRef.current.querySelectorAll(":scope > div")
 
-            const element = childrens[elNum]
+            const element = childrens[elementIndex]
             console.log(element)
             if (element) {
                 element.scrollIntoView({
@@ -116,12 +195,12 @@ function FeedComponent({children,elNum}:Feed) {
             }
         }
         
-    },[elNum])
+    },[elementIndex])
 
     return (
-        <FeedSection ref={sectionRef}>
+        <FeedbackDisplaySection ref={sectionRef}>
             {children}
-        </FeedSection>
+        </FeedbackDisplaySection>
     )
 }
 
@@ -129,17 +208,17 @@ function FeedComponent({children,elNum}:Feed) {
 function FeedBacks() {
 
     const [user] = useContext(UserContext)
-    const [feedbacks, setFeedBacks] = useState<Array<FeedBack>>([])
+    const [feedbacks, setFeedBacks] = useState<FeedBack[]>([])
     const [element, setElement] = useState<number>(0)
 
     async function GetFeedBacks() {
 
         try{
             const response = await customAxios.get("/api/feedbacks/search/")
-            const feedbacks = response.data
+            const responseData = response.data
 
-            if (feedbacks instanceof Array) {
-                setFeedBacks(feedbacks)
+            if (responseData satisfies FeedBack[]) {
+                setFeedBacks(responseData)
             }
             setFeedBacks(prev => [...prev, 
                 {first_name:"João", date: new Date(), comment: "asadasd"},
@@ -158,29 +237,23 @@ function FeedBacks() {
 
     return (
         <Section>
-            <h2>Comentários</h2>
-            <Div>
-                <Seta 
-                    src={Triangle} 
-                    onClick={(_) => {setElement(prev => prev-1>=0?prev-1:prev)}}
-                />
-                <FeedComponent elNum={element}>
+            <H2>Comentários</H2>
+            <GridDiv>
+                <LeftArrowButton src={Triangle} setElement={setElement} feedbacks={feedbacks}/>
+                <FeedbackDisplay elementIndex={element}>
                     {
                         user && feedbacks?.filter((feedback) => feedback.first_name == user.first_name).length==0?
-                            <FeedBack first_name={user.first_name} comment="adsad" date={new Date()}/>
+                            <FeedbackComponent first_name={user.first_name} comment="adsad" date={new Date()}/>
                         :null
                     }
                     {
                         feedbacks.map((fdb) => 
-                            <FeedBack first_name={fdb.first_name} date={fdb.date} comment={fdb.comment}/>
+                            <FeedbackComponent first_name={fdb.first_name} date={fdb.date} comment={fdb.comment}/>
                         )   
                     }
-                </FeedComponent>
-                <Seta2 
-                    src={Triangle} 
-                    onClick={(_) => {setElement(prev => prev+1<=feedbacks.length?prev+1:prev)}}
-                />
-            </Div>
+                </FeedbackDisplay>
+                <RightArrowButton src={Triangle} setElement={setElement} feedbacks={feedbacks}/>
+            </GridDiv>
         </Section>
     )
 }

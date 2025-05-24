@@ -21,12 +21,9 @@ def endpoint():
     return "/accounts/"
 
 @pytest.fixture
-def register_user(client:Client, csrf_token, user_data):
+def register_user(client:Client, user_data):
     response = client.post("/auth/register/",       
-        data={
-            **user_data,
-            "csrfmiddlewaretoken": csrf_token
-        }
+        data={**user_data}
     )
 
     assert response.status_code == 201

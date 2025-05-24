@@ -1,10 +1,8 @@
-import styled from "styled-components";
-import { ConfigRoute } from "../page";
+import { ConfigRoute } from "../styled-components";
 import { useContext } from "react";
 import { UserContext } from "../../../../main";
 
-
-function Seguranca() {
+export default function Security() {
 
     const [user] = useContext(UserContext)
 
@@ -13,7 +11,4 @@ function Seguranca() {
             <p>Username: <span>{user?.first_name}</span></p>
         </ConfigRoute>
     )
-
 }
-
-export default Seguranca

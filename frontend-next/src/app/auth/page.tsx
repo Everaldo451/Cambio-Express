@@ -4,7 +4,7 @@ import { UserContext } from "../../main";
 import FormRenderer, {FormProps} from "./_components/Forms/FormRenderer";
 import ChangeFormURL from "./_components/ChangeFormURL";
 
-function Main(props:React.HTMLAttributes<HTMLDivElement>) {
+function MainElement(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
         <main
             {...props}
@@ -31,11 +31,11 @@ export default function Auth() {
     else {
         const [url, setURL] = useState<FormProps['url']>("login")
         return (
-            <Main>
+            <MainElement>
                 <FormRenderer url={url}>
                     <ChangeFormURL setURL={setURL}/>
                 </FormRenderer>
-            </Main>
+            </MainElement>
         )
     }
 }

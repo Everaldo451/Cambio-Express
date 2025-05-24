@@ -1,6 +1,4 @@
 from django.http import HttpRequest
-from django.views.decorators.csrf import csrf_protect
-from django.utils.decorators import method_decorator
 
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -35,7 +33,6 @@ class FeedbackList(APIView):
 		return Response(serializer.data, status=get_feedbacks_data["status"])
 		
 		
-	@method_decorator(csrf_protect)
 	def post(self, request:HttpRequest|Request, format=None):
 		serializer = CreateFeedbackSerializer(data=request.data)
 		if not serializer.is_valid():
