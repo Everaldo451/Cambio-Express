@@ -1,7 +1,6 @@
 import { UserContext } from "../../main";
 import { useContext, useState, useEffect, ReactNode, useRef, SetStateAction, HTMLAttributes } from "react";
-import Triangle from "./assets/Triangle.png"
-import { customAxios } from "@/utils/customAxios";
+import { apiAxios } from "@/axios/api";
 
 export interface FeedBack {
     first_name: string,
@@ -211,10 +210,10 @@ function FeedBacks() {
     const [feedbacks, setFeedBacks] = useState<FeedBack[]>([])
     const [element, setElement] = useState<number>(0)
 
-    async function GetFeedBacks() {
+    async function getFeedBacks() {
 
         try{
-            const response = await customAxios.get("/api/feedbacks/search/")
+            const response = await apiAxios.get("/feedbacks/search/")
             const responseData = response.data
 
             if (responseData satisfies FeedBack[]) {
@@ -232,14 +231,14 @@ function FeedBacks() {
     }
 
     useEffect(() => {
-        GetFeedBacks()
+        getFeedBacks()
     },[])
 
     return (
         <Section>
             <H2>Comentários</H2>
             <GridDiv>
-                <LeftArrowButton src={Triangle} setElement={setElement} feedbacks={feedbacks}/>
+                <LeftArrowButton src={"/images/triangle.png"} setElement={setElement} feedbacks={feedbacks}/>
                 <FeedbackDisplay elementIndex={element}>
                     {
                         user && feedbacks?.filter((feedback) => feedback.first_name == user.first_name).length==0?
@@ -252,7 +251,7 @@ function FeedBacks() {
                         )   
                     }
                 </FeedbackDisplay>
-                <RightArrowButton src={Triangle} setElement={setElement} feedbacks={feedbacks}/>
+                <RightArrowButton src={"/images/triangle.png"} setElement={setElement} feedbacks={feedbacks}/>
             </GridDiv>
         </Section>
     )

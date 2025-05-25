@@ -1,6 +1,6 @@
 import Header from "@/components/Header"
 
-export default function App({
+export default async function App({
     children
 }:{
     children:React.ReactNode

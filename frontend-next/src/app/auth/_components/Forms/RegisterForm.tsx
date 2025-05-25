@@ -12,7 +12,7 @@ function RegisterForm ({children,onSubmit, theme}:Pick<FormProps,"children"> & o
     const [isCompany, setIsCompany] = useState<boolean>(false)
 
     return (
-        <StyledForm action={`api/users/`} method='POST' onSubmit={onSubmit}>
+        <StyledForm action={`/users/`} method='POST' onSubmit={onSubmit}>
             {children}
                 {
                     isCompany?

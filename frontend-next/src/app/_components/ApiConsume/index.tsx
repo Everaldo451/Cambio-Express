@@ -1,32 +1,59 @@
-import { ReactNode, useEffect, useState } from "react";
-import styled from "styled-components";
+import { ComponentProps, ReactNode, useEffect, useState, useRef} from "react";
 import CommonStyleProps, { StyledButton } from "../../../components/CommonButton";
 
-const IntroducDiv = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-`
+function GraphImageContainer(props:React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <div
+            {...props}
+            className="flex flex-col justify-center align-center"
+        >
+            {props.children}
+        </div>
+    )
+}
 
-const ImgContainer = styled(IntroducDiv)`
-    align-items: center;
 
-    &> img {
-        width: 60%;
-    }
-`
+function GraphImage(props:React.ImgHTMLAttributes<HTMLImageElement>) {
+    return (
+        <img
+            {...props}
+            className="w-[60%]"
+        >
+            {props.children}
+        </img>
+    )
+}
 
-const Button = styled(StyledButton)`
-    margin: 0 5px;
-`
+
+function Button (props:ComponentProps<typeof StyledButton>) {
+    const styledButtonRef = useRef<HTMLButtonElement|null>(null)
+    const styledButtonElement = <StyledButton {...props} ref={styledButtonRef}/>
+    const [style, setStyle] = useState<string|null>(null)
+
+    useEffect(() => {
+        setStyle(
+            prev => styledButtonRef.current?styledButtonRef.current.className:prev
+        )
+    },[styledButtonRef])
+
+    return (
+        <StyledButton
+            {...props}
+            className={`m-[0_5px] `+style}
+        >
+            {props.children}
+        </StyledButton>
+    )
+
+}
 
 interface ButtonProps {
     children: ReactNode,
     money: string,
-    func:(money:string) => void
+    onClick:(money:string) => void
 }
 
-function ConvertionButton({children,money,func}:ButtonProps) {
+function ConvertionButton({children,money,onClick}:ButtonProps) {
 
     const styleProps:CommonStyleProps = {
         borderColor: "rgb(202, 132, 2)",
@@ -35,43 +62,45 @@ function ConvertionButton({children,money,func}:ButtonProps) {
         hoverBg: "rgb(202, 132, 2)"
     }
 
-    return <Button {...styleProps} onClick={(e) => {func(money)}}>{children}</Button>
+    return (
+        <Button 
+            {...styleProps} 
+            onClick={(_:React.MouseEvent<HTMLButtonElement>) => {onClick(money)}}
+        >
+            {children}
+        </Button>
+    )
     
 }
 
 
-function APIConsumer() {
-
+export default function APIConsumer() {
     const [src, setSrc] = useState("")
 
-
-    async function GetImageWithMoney(money:string) {
+    async function getImageWithMoney(money:string) {
         try {
             const response = await fetch(`/api/graphs/get/${money}`)
             const data = await response.json()
     
-            if (data) {setSrc(data.image)}
-    
-            return
+            if (data) {
+                setSrc(data.image)
+            }
         }
         catch (error) {}
     }
 
     useEffect(() => {
-        GetImageWithMoney("USD")
+        getImageWithMoney("USD")
     }, [])
 
     return (
-        <ImgContainer>
-            <img src={src}/>
+        <GraphImageContainer>
+            <GraphImage src={src}/>
             <section>
-                <ConvertionButton money="USD" func={GetImageWithMoney}>Dólar</ConvertionButton>
-                <ConvertionButton money="EUR" func={GetImageWithMoney}>Euro</ConvertionButton>
-                <ConvertionButton money="BTC" func={GetImageWithMoney}>Bitcoin</ConvertionButton>
+                <ConvertionButton money="USD" onClick={getImageWithMoney}>Dólar</ConvertionButton>
+                <ConvertionButton money="EUR" onClick={getImageWithMoney}>Euro</ConvertionButton>
+                <ConvertionButton money="BTC" onClick={getImageWithMoney}>Bitcoin</ConvertionButton>
             </section>
-        </ImgContainer>
+        </GraphImageContainer>
     )
 }
-
-
-export default APIConsumer

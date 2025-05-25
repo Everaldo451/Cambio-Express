@@ -9,10 +9,8 @@ interface AxiosConfigs {
 export function genericAPIConsumer<T>(a:AxiosConfigs, url:string) {
 
     async function newFunction(setState:React.Dispatch<SetStateAction<T|null>>) {
-
         try {
             const response = await a.instance().get(url,a.configs)
-
             const data = response.data
             setState(data?data.data:null)
         }
@@ -21,6 +19,5 @@ export function genericAPIConsumer<T>(a:AxiosConfigs, url:string) {
             console.log(error)
         }
     }
-
     return newFunction
 }
