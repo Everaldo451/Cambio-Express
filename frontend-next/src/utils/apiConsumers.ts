@@ -1,17 +1,8 @@
 import { genericAPIConsumer } from "./genericAPIConsumer";
-import axios from "axios"
-import { CSRFType, UserType } from "@/types"
-import { customAxios } from "./customAxios";
-
-
-export const getCSRF = genericAPIConsumer<CSRFType>({
-    instance: () => axios,
-    configs: {
-        withCredentials: true
-    }
-}, "/api/getcsrf/")
+import { UserType } from "@/types"
+import { authUserAxios } from "@/axios/authUser";
 
 
 export const getUser = genericAPIConsumer<UserType>({
-    instance: () => customAxios,
+    instance: () => authUserAxios,
 }, "/api/me/")

@@ -7,7 +7,7 @@ import { NLabel, NInput, SubmitInput, StyledForm, } from './styled-components'
 function LoginForm ({children,onSubmit,theme}:Pick<FormProps,"children"> & onSubmitType & FormThemeType) {
 
     return (
-        <StyledForm action={`api/auth/login/`} method='POST' onSubmit={onSubmit}>
+        <StyledForm action={`/auth/login/`} method='POST' onSubmit={onSubmit}>
             {children}
             <InputContainer 
                 inputStyle={theme.inputStyle} 

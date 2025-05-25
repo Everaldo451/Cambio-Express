@@ -14,12 +14,14 @@ export interface UserType {
 }
 export type UserContextType = [UserType|null, React.Dispatch<SetStateAction<UserType|null>>]
 
-export type CSRFType = string
-export type CSRFContextType = [CSRFType|null, React.Dispatch<SetStateAction<CSRFType|null>>]
-
 export type ThemeType = {
     bgColor: string,
     fontFamily: string,
     boxShadowColor: string,
     divColor: string
+}
+
+export interface TokenType {
+    value: string,
+    lifetime: number
 }

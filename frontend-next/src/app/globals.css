@@ -44,7 +44,7 @@
 
   @font-face {
     font-family: InstrumentSans;
-    src: url("../../assets/InstrumentSans-Regular.ttf");
+    src: url("/fonts/InstrumentSans-Regular.ttf");
   }
 }
 

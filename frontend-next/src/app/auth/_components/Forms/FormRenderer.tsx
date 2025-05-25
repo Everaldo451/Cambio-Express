@@ -6,9 +6,8 @@ import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 import GoogleButton from '../OAuth/GoogleButton'
 
-import { UserType } from '@/types'
-
-import axios from 'axios'
+import { UserType, TokenType } from '@/types'
+import { apiAxios } from '@/axios/api'
 
 export type FormThemeType = {
     theme: {
@@ -17,10 +16,6 @@ export type FormThemeType = {
     }
 }
 
-interface TokenType {
-    value: string,
-    lifetime: number
-}
 interface AuthenticationFormat {
     user: UserType,
     tokens: {
@@ -57,18 +52,24 @@ export default function FormRenderer({url, children}:FormProps) {
 
     async function onSubmit(e:React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-
         try {
-            const response = await axios.request({
+            const response = await apiAxios.request({
                 url: e.currentTarget.action,
                 method: e.currentTarget.method,
                 data: new FormData(e.currentTarget),
                 withCredentials: true,
             })
             const data = response.data
-            const tokens = data.get("tokens")
-            if (data satisfies AuthenticationFormat) {
+            if (data instanceof Object && "tokens" in data) {
                 const tokens = data["tokens"]
+                if ("access_token" in tokens) {
+                    const accessToken = tokens["access_token"] as TokenType
+                    document.cookie = `access_token=${accessToken.value}`
+                }
+                if ("refresh_token" in tokens) {
+                    const refreshToken = tokens["refresh_token"] as TokenType
+                    document.cookie = `refresh_token=${refreshToken.value}`
+                }
             }
         } catch (error) {
             console.log(error)
