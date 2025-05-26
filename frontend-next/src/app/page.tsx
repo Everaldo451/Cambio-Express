@@ -1,6 +1,6 @@
-import FeedBacks from "./_components/FeedBacks";
-import Introduction from "./_components/Frames/Introduction";
-import KeyFeatures from "./_components/Frames/KeyFeatures";
+import FeedBacks from "@/components/home/FeedBacks";
+import Introduction from "@/components/home/Frames/Introduction";
+import KeyFeatures from "@/components/home/Frames/KeyFeatures";
 
 export default function Home() {
   

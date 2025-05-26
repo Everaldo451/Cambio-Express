@@ -1,3 +1,5 @@
+"use client"
+
 import React, { InputHTMLAttributes, useState } from "react"
 
 function InputDiv(props:React.HTMLAttributes<HTMLDivElement>) {

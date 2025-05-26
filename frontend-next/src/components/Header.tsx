@@ -1,11 +1,11 @@
 import React, { HTMLAttributes, useContext } from "react";
-import { useRouter } from "next/router";
 import { ComponentProps } from "react";
-import { UserContext } from "../../main";
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "../../assets/logo.png"
 import { Url } from "next/dist/shared/lib/router/router";
+import { redirect } from "next/navigation";
+
+//import { UserContext } from "../../main";
 
 
 function DropdownLi({
@@ -41,7 +41,7 @@ function NavLi({
     children:React.ReactNode
 }) {
     return (
-        <li className="nth-last-1:m-auto">
+        <li className="nth-last-1:ml-auto">
             {children}
         </li>
     )
@@ -92,8 +92,7 @@ function MenuGridLine({
 
 export default function Header() {
 
-    const [user,_] = useContext(UserContext)
-    const router = useRouter()
+    const user = null
     
     async function logoutFunc(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault()
@@ -103,9 +102,9 @@ export default function Header() {
                 method:"GET",
                 credentials:"include"
             })
-            router.push("/")
+            redirect("/")
         } catch(e) {
-            router.push("/")
+            redirect("/")
         }
     }
     
@@ -115,7 +114,7 @@ export default function Header() {
                 <ul className="flex bg-[ #D9D9D9] p-[5px_10px] m-[0] items-center list-none backdrop-filter-[blur(10px)]">
                     <NavLi>
                         <ImageLink href={"/"}>
-                            <Image src={Logo} alt="Cambio Express Logo" className="h-[30px] block"/>
+                            <Image src={"/images/logo.png"} width={50} height={50} alt="Cambio Express Logo" className="h-[30px] block"/>
                         </ImageLink>
                     </NavLi>
                     {user?
@@ -139,7 +138,7 @@ export default function Header() {
                         </section>
                     :
                         <NavLi>
-                            <NavLink href={"/auth"}>Login</NavLink>
+                            <NavLink href={"/login"}>Login</NavLink>
                         </NavLi>
                     }   
                 </ul>
