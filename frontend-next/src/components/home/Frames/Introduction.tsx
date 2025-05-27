@@ -28,14 +28,13 @@ function ImageContainer(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
         <div
             {...props}
-            className="h-full clip-right-ellipse"
+            className="relative h-full clip-right-ellipse"
         >
             <Image
-                width={100}
-                height={100}
                 alt="Imagem principal."
                 src="/images/computer.jpg"
-                className="object-cover object-center"
+                className="object-cover object-[0%_50%]"
+                fill={true}
             ></Image>
         </div>
     )
@@ -53,7 +52,7 @@ function P(props:React.HTMLAttributes<HTMLParagraphElement>) {
 
 function H1(props:React.HTMLAttributes<HTMLHeadingElement>) {
     return (
-        <h1 {...props} className="text-[32px] animate-slide-in">
+        <h1 {...props} className="text-[32px] font-bold animate-slide-in">
             {props.children}
         </h1>
     )

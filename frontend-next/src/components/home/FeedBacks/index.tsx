@@ -20,7 +20,7 @@ function Section(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
         <section
             {...props}
-            className="bg-theme p-[60px_40px]"
+            className="bg-theme p-[60px_40px] font-instrument-sans"
         >
             {props.children}
         </section>
@@ -32,7 +32,7 @@ function H2(props:React.HTMLAttributes<HTMLHeadingElement>) {
     return (
         <h2
             {...props}
-            className="text-white m-[0] font-instrument-sans"
+            className="text-white m-[0] text-[24px] font-instrument-sans"
         >
             {props.children}
         </h2>
@@ -83,7 +83,7 @@ function FeedbackH5(props:React.HTMLAttributes<HTMLHeadingElement>) {
     return (
         <h5
             {...props}
-            className="text-[15px] m-[0]"
+            className="text-[15px] text-black font-semibold m-[0]"
         >
             {props.children}
         </h5>
@@ -105,7 +105,7 @@ function FeedbackParagraph(props:React.HTMLAttributes<HTMLParagraphElement>) {
     return (
         <p
             {...props}
-            className="text-[12px] m-[20px_0_30px_0]"
+            className="text-[12px] text-black m-[20px_0_30px_0] leading-[1.3]"
         >
             {props.children}
         </p>
@@ -155,7 +155,7 @@ function FeedbackComponent({first_name, date, comment}:FeedBack) {
 
     return (
         <FeedbackDiv>
-            <FeedbackH5 className="name">{first_name}</FeedbackH5>
+            <FeedbackH5>{first_name}</FeedbackH5>
             <FeedbackH6>{`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}</FeedbackH6>
             <div className="avaliation">
                 <FeedbackParagraph>Lorem ipsum dolor sit amet consectetur adipisicing elit. 

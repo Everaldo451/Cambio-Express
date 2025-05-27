@@ -56,7 +56,7 @@ function NavLink({
     href: Url,
 }) {
     return (
-        <Link href={href} className="relative block bg-black no-underline p-[5px 8px]">
+        <Link href={href} className="relative block text-black no-underline p-[5px_8px]">
             {children}
         </Link>
     )
@@ -71,7 +71,7 @@ function ImageLink({
     href: Url,
 }) {
     return (
-        <Link href={href} className="relative block bg-black no-underline p-[0]">
+        <Link href={href} className="relative block bg-transparent no-underline p-[0]">
             {children}
         </Link>
     )
@@ -111,10 +111,10 @@ export default function Header() {
     return (
         <header className="fixed top-[0] left-[0] w-full font-instrument-sans shadow-[0_0_3px_gray] z-[2]">
             <nav>
-                <ul className="flex bg-[ #D9D9D9] p-[5px_10px] m-[0] items-center list-none backdrop-filter-[blur(10px)]">
+                <ul className="flex bg-header p-[5px_10px] m-[0] items-center list-none backdrop-filter-[blur(10px)]">
                     <NavLi>
                         <ImageLink href={"/"}>
-                            <Image src={"/images/logo.png"} width={50} height={50} alt="Cambio Express Logo" className="h-[30px] block"/>
+                            <Image src={"/images/logo.png"} width={30} height={30} alt="Cambio Express Logo" className="h-[30px] block"/>
                         </ImageLink>
                     </NavLi>
                     {user?

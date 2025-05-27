@@ -4,7 +4,7 @@ function Container(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
         <section 
             {...props}
-            className="grid grid-cols-[auto_1fr] bg-[#EFF2FE] h-dvh p-[40px]"
+            className="grid grid-rows-[auto_1fr] bg-[#EFF2FE] h-dvh p-[40px]"
         >
             {props.children}
         </section>
@@ -48,7 +48,7 @@ function H3(props:React.HTMLAttributes<HTMLHeadingElement>) {
     return (
         <h3
             {...props}
-            className="m-[0] text-center text-[24px] font-instrument-sans"
+            className="m-[0] text-center text-[24px] text-black font-instrument-sans"
         >
             {props.children}
         </h3>
@@ -60,7 +60,7 @@ function Feature(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
         <div
             {...props}
-            className="flex flex-col p-[20px] font-instrument-sans odd:bg-[#D9D9D9] even:bg-[#000000]"
+            className="flex flex-col p-[20px] text-black font-instrument-sans bg-header"
         >
             {props.children}
         </div>
@@ -71,7 +71,7 @@ function EmptyDiv(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
         <div
             {...props}
-            className="odd:bg-[#D9D9D9] even:bg-[#000000]"
+            className="bg-[#000000]"
         >
         </div>
     )
@@ -82,7 +82,7 @@ function FeatureH4(props:React.HTMLAttributes<HTMLHeadElement>) {
     return (
         <h4
             {...props}
-            className=""
+            className="text-center font-semibold"
         >
             {props.children}
         </h4>
@@ -93,7 +93,7 @@ function FeatureParagraph(props:React.HTMLAttributes<HTMLParagraphElement>) {
     return (
         <p
             {...props}
-            className=""
+            className="m-[auto_0] text-[12px] leading-[1.3]"
         >
             {props.children}
         </p>
