@@ -1,18 +1,10 @@
-import { ReactNode, SetStateAction, useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { redirect } from "next/navigation";
 
 import { ConfigSection, MenuButtonsContainer, StyledLink,  } from "@/components/config/styled-components";
 
 
 
 //import { UserContext } from "../../main";
-
-
-interface ButtonProps {
-    children: ReactNode,
-    configElement: React.JSX.Element,
-    setElement: React.Dispatch<SetStateAction<React.JSX.Element|null>>,
-}
 
 function MainElement(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
@@ -34,14 +26,8 @@ export default function ConfigLayout({
     const user={}
 
     if (!user) {
-        const router=useRouter()
-
-        useEffect(() => {
-            router.push("/")
-        },[router])
-        return <></>
+        redirect("/")
     }
-    const [element, setElement] = useState<React.JSX.Element|null>(null)
     return (
         <MainElement>
             <ConfigSection>
