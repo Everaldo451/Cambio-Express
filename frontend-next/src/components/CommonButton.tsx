@@ -24,10 +24,11 @@ export function StyledButton(
 export function StyledInput(
     props:CommonStyleProps & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement> & React.InputHTMLAttributes<HTMLInputElement>
 ) {
+    const style = `bg-inherit p-[5px_10px] border-[1px] border-solid border-[${props.borderColor}] text-[${props.color}] transition-all duration-[0.2s] hover:cursor-pointer hover:border-transparent hover:bg-[${props.hoverBg}] hover:color-[${props.hoverColor}]`
     return (
         <input
             {...props}
-            className={`bg-inherit p-[5px_10px] border-[1px] border-solid border-[${props.borderColor}] text-[${props.color}] transition-all duration-[0.2s] hover:cursor-pointer hover:border-transparent hover:bg-[${props.hoverBg}] hover:color-[${props.hoverColor}]`}
+            className={props.className?props.className + " " + style:style}
         >
             {props.children}
         </input>

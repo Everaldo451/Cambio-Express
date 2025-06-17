@@ -9,7 +9,7 @@ function MainElement({
 }) {
     return (
         <main
-            className={`flex flex-col align-center justify-center bg-theme h-[100dvh]`}
+            className={`flex flex-col items-center justify-center bg-theme h-[100dvh]`}
         >
             {children}
         </main>

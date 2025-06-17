@@ -3,7 +3,7 @@
 import { useEffect, useRef, ComponentProps, useState } from 'react'
 
 import {StyledInput} from '@/components/CommonButton'
-import { Label, getLabelClassname, Input, getInputClassname } from '@/components/StyledInputLabel'
+import { Label, Input} from '@/components/StyledInputLabel'
 
 
 function omit<T extends object, K extends keyof T>(object:T, keys:K[]) {
@@ -15,50 +15,23 @@ function omit<T extends object, K extends keyof T>(object:T, keys:K[]) {
 }
 
 
-export function NLabel(props:ComponentProps<typeof Label>) {
+export function AuthLabel(props:ComponentProps<typeof Label>) {
     return (
-        <label
-            {...{...props, focused:undefined}}
-            className={"font-instrument-sans" + getLabelClassname(props)}
-        >
-            {props.children}
-        </label>
+        <Label {...props} className='font-instrument-sans'/>
     )
 }
 
 
-export function NInput(props:ComponentProps<typeof Input>) {
+export function AuthInput(props:ComponentProps<typeof Input>) {
     return (
-        <input
-            {...props}
-            className={
-                "bg-transparent text-[#BEC1C1] font-instrument-sans border-solid border-b-[2px] border-b-white" + getInputClassname(props)
-            }
-        >
-            {props.children}
-        </input>
+        <Input {...props} className="bg-transparent text-[#BEC1C1] font-instrument-sans border-solid border-b-[2px] border-b-white"/>
     )
 }
 
 
-export function SubmitInput(props:ComponentProps<typeof StyledInput>) {
-    const submitInputRef = useRef<HTMLInputElement|null>(null)
-    const submitInputElement = <StyledInput {...props} ref={submitInputRef}></StyledInput>
-    const [currentStyle, setCurrentStyle] = useState<string|null>(null)
-
-    useEffect(() => {
-        setCurrentStyle(prev => submitInputRef.current?submitInputRef.current.className:prev)
-    }, [submitInputRef])
-
+export function AuthSubmitInput(props:ComponentProps<typeof StyledInput>) {
     return (
-        <input
-            {...{...props, hoverBg:undefined}}
-            className={
-                "mt-[40px]" + currentStyle
-            }
-        >
-            {props.children}
-        </input>
+        <StyledInput {...props} className="mt-[40px]"/>
     )
 }
 
