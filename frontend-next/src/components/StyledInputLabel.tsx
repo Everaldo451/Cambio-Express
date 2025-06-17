@@ -10,14 +10,19 @@ function InputDiv(props:React.HTMLAttributes<HTMLDivElement>) {
 type InputPropsType = {style:React.CSSProperties}
 type LabelPropsType = {style:React.CSSProperties, focused:boolean}
 
+export function getLabelClassname(
+    props:LabelPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
+) {
+    return `absolute transition-all duration-[0.5s] hover:cursor-pointer` + 
+        props.focused?
+        ` text-[${(props.style.fontSize as number) -3}px] top-[${-((props.style.fontSize as number) + 4)}px] left-[0px] text-[${props.style.color}] transform-none`
+        :` text-[${(props.style.fontSize as number)}px] top-[50%] left-[${props.style.left}px] text-white transform-[translate(0,_-50%)]`
+}
 export function Label(props:LabelPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLLabelElement>, HTMLLabelElement>) {
     return (
         <label 
             {...props}
-            className={`absolute transition-all duration-[0.5s] hover:cursor-pointer` + 
-                props.focused?
-                ` text-[${(props.style.fontSize as number) -3}px] top-[${-((props.style.fontSize as number) + 4)}px] left-[0px] text-[${props.style.color}] transform-none`
-                :` text-[${(props.style.fontSize as number)}px] top-[50%] left-[${props.style.left}px] text-white transform-[translate(0,_-50%)]`}
+            className={getLabelClassname(props)}
         >
             {props.children}
         </label>
@@ -26,11 +31,18 @@ export function Label(props:LabelPropsType & React.DetailedHTMLProps<React.HTMLA
 }
 
 
+export function getInputClassname(
+    props:InputPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
+) {
+    return (
+        `text-[${props.style.fontSize as number}px] p-[${props.style.paddingTop as number}px_${props.style.paddingLeft as number}px] focus:outline-none`
+    )
+}
 export function Input(props:InputPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>) {
     return (
         <input 
             {...props}
-            className={`text-[${props.style.fontSize as number}px] p-[${props.style.paddingTop as number}px_${props.style.paddingLeft as number}px] focus:outline-none`}
+            className={getInputClassname(props)}
         >
             {props.children}
         </input>
@@ -44,7 +56,6 @@ interface ContainerProps {
     InputObject: (props:InputPropsType & {[key:string]: any}) => React.JSX.Element,
     LabelObject: (props:LabelPropsType & {[key:string]: any}) => React.JSX.Element,
 }
-
 export function InputContainer({inputStyle,inputAttrs, InputObject, LabelObject}:ContainerProps) { 
 
     const [focused, setFocused] = useState<boolean>(false)
@@ -74,7 +85,6 @@ export function InputContainer({inputStyle,inputAttrs, InputObject, LabelObject}
     }
         
     return (
-
         <InputDiv>
             <InputObject style={inputStyle} onFocus={onFocusChange} onBlur={onFocusChange} {...inputAttrs}/>
             <LabelObject style={labelStyle} focused={focused} htmlFor={inputAttrs.id?inputAttrs.id:""}>

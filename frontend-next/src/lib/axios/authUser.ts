@@ -34,4 +34,4 @@ authUserAxios.interceptors.request.use((config) => {
     .catch((error) => {})
 
     return config
-})
+}, (error) => {})

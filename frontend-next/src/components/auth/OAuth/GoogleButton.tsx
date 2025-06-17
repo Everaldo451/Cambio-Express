@@ -1,3 +1,4 @@
+"use client";
 import axios, { AxiosError } from "axios"
 
 function StyledGoogleButton(props:React.HTMLAttributes<HTMLButtonElement>) {
