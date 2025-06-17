@@ -1,6 +1,6 @@
 import { InputContainer} from '@/components/StyledInputLabel'
 import FormRenderer from '@/components/auth/FormRenderer'
-import { NLabel, NInput, SubmitInput } from '@/components/auth/styled-components'
+import { AuthLabel, AuthInput, AuthSubmitInput } from '@/components/auth/styled-components'
 import { theme } from "@/theme/auth"
 
 
@@ -11,16 +11,16 @@ export default function LoginPage() {
             <InputContainer 
                 inputStyle={theme.inputStyle} 
                 inputAttrs={{name:"email",id:"email",required: true}}
-                InputObject={NInput}
-                LabelObject={NLabel}
+                InputObject={AuthInput}
+                LabelObject={AuthLabel}
             />
             <InputContainer 
                 inputStyle={theme.inputStyle} 
                 inputAttrs={{name:"password",id:"password",required: true,type:"password"}}
-                InputObject={NInput}
-                LabelObject={NLabel}
+                InputObject={AuthInput}
+                LabelObject={AuthLabel}
             />
-            <SubmitInput {...theme.submitProps} type='submit' value="Enter"/>
+            <AuthSubmitInput {...theme.submitProps} type='submit' value="Enter"/>
         </FormRenderer>
     )
 

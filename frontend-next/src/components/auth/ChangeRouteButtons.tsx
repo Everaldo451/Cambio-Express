@@ -1,9 +1,9 @@
-import { ReactNode, ComponentProps } from "react";
+import { ComponentProps } from "react";
 import Link from "next/link";
 
 function CustomizedLink(props:ComponentProps<typeof Link>) {
     const linkStyle = `
-        relative z-[1] bg-[#8C8A6C] text-white p-[3px] transition-all duration-[0.5s] border-solid border-y-[2px] border-y-white
+        relative z-[1] bg-[#8C8A6C] text-white text-center p-[3px] transition-all duration-[0.5s] border-solid border-y-[2px] border-y-white
         hover:cursor-pointer hover:transform-[scale(1.1)]
     `
     const afterPseudoElementStyle = `
@@ -18,7 +18,7 @@ function CustomizedLink(props:ComponentProps<typeof Link>) {
         <Link
             {...props}
             className={
-                [linkStyle, afterPseudoElementStyle, beforePseudoElementStyle].join("\s").replace("\n","\s")
+                [linkStyle, afterPseudoElementStyle, beforePseudoElementStyle].join(" ").replace("\n"," ")
             }
         >
             {props.children}
@@ -30,7 +30,7 @@ function StyledDiv(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
         <div
             {...props}
-            className="grid w-full grid-rows-[auto] grid-cols-[repeat(2,_1fr)] grid-flow-col gap-[20px]"
+            className="grid grid-rows-[auto] grid-cols-[repeat(2,_1fr)] grid-flow-col gap-[20px]"
         >
             {props.children}
         </div>

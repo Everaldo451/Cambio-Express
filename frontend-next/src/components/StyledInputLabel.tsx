@@ -1,6 +1,6 @@
 "use client"
 
-import React, { InputHTMLAttributes, useState } from "react"
+import React, { useState } from "react"
 
 function InputDiv(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
@@ -10,39 +10,59 @@ function InputDiv(props:React.HTMLAttributes<HTMLDivElement>) {
 type InputPropsType = {style:React.CSSProperties}
 type LabelPropsType = {style:React.CSSProperties, focused:boolean}
 
-export function getLabelClassname(
+function getLabelClassname(
     props:LabelPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
 ) {
-    return `absolute transition-all duration-[0.5s] hover:cursor-pointer` + 
-        props.focused?
-        ` text-[${(props.style.fontSize as number) -3}px] top-[${-((props.style.fontSize as number) + 4)}px] left-[0px] text-[${props.style.color}] transform-none`
-        :` text-[${(props.style.fontSize as number)}px] top-[50%] left-[${props.style.left}px] text-white transform-[translate(0,_-50%)]`
+    return "absolute transition-all duration-[0.5s] hover:cursor-text"
 }
 export function Label(props:LabelPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLLabelElement>, HTMLLabelElement>) {
+    const { style, ...nonStyleProps } = props
     return (
         <label 
-            {...props}
-            className={getLabelClassname(props)}
+            {...nonStyleProps}
+            style={props.focused?
+                {
+                    fontSize: (style.fontSize as number) -3,
+                    top: -((style.fontSize as number) + 4),
+                    left: 0,
+                    color: style.color,
+                    transform: "none",
+                }:{
+                    fontSize: (style.fontSize as number),
+                    top: "50%",
+                    left: props.style.left,
+                    color: "white",
+                    transform: "translate(0, -50%)"
+                }
+            }
+            className={props.className?
+                props.className+ " " + getLabelClassname(props)
+                :getLabelClassname(props)
+            }
         >
             {props.children}
         </label>
     )
-
 }
 
 
-export function getInputClassname(
+function getInputClassname(
     props:InputPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
 ) {
     return (
-        `text-[${props.style.fontSize as number}px] p-[${props.style.paddingTop as number}px_${props.style.paddingLeft as number}px] focus:outline-none`
+        "focus:outline-none"
     )
 }
 export function Input(props:InputPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>) {
+    const { style, ...nonStyleProps } = props
     return (
         <input 
-            {...props}
-            className={getInputClassname(props)}
+            {...nonStyleProps}
+            style={{
+                fontSize: style.fontSize,
+                padding: `${style.paddingTop}px ${style.paddingLeft}px`
+            }}
+            className={props.className?props.className+ " " + getInputClassname(props):getInputClassname(props)}
         >
             {props.children}
         </input>

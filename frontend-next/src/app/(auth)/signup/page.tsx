@@ -1,9 +1,10 @@
+"use client"
 import { useState } from 'react'
 
 
 import FormRenderer from '@/components/auth/FormRenderer'
 import { InputContainer } from '@/components/StyledInputLabel'
-import { NLabel, NInput, SubmitInput, CheckBoxDiv, CheckBoxLabel } from '@/components/auth/styled-components'
+import { AuthLabel, AuthInput, AuthSubmitInput, CheckBoxDiv, CheckBoxLabel } from '@/components/auth/styled-components'
 
 import { theme } from '@/theme/auth'
 
@@ -20,41 +21,41 @@ export default function RegisterPage() {
                         <InputContainer
                             inputStyle={theme.inputStyle} 
                             inputAttrs={{name:"name",id:"name",required: true}}
-                            InputObject={NInput}
-                            LabelObject={NLabel}
+                            InputObject={AuthInput}
+                            LabelObject={AuthLabel}
                         />
                         <InputContainer 
                             inputStyle={theme.inputStyle} 
                             inputAttrs={{name:"CNPJ",id:"CNPJ",required: true}}
-                            InputObject={NInput}
-                            LabelObject={NLabel}
+                            InputObject={AuthInput}
+                            LabelObject={AuthLabel}
                         />
                         <InputContainer 
                             inputStyle={theme.inputStyle} 
                             inputAttrs={{name:"phone",id:"phone",required: true}}
-                            InputObject={NInput}
-                            LabelObject={NLabel}
+                            InputObject={AuthInput}
+                            LabelObject={AuthLabel}
                         />
                     </>
                     :
                     <InputContainer 
                         inputStyle={theme.inputStyle} 
                         inputAttrs={{name:"full_name",id:"full_name",required: true}}
-                        InputObject={NInput}
-                        LabelObject={NLabel}
+                        InputObject={AuthInput}
+                        LabelObject={AuthLabel}
                     />
                 }
             <InputContainer 
                 inputStyle={theme.inputStyle} 
                 inputAttrs={{name:"email",id:"email",required: true}}
-                InputObject={NInput}
-                LabelObject={NLabel}
+                InputObject={AuthInput}
+                LabelObject={AuthLabel}
             />
             <InputContainer 
                 inputStyle={theme.inputStyle} 
                 inputAttrs={{name:"password",id:"password",required: true,type:"password"}}
-                InputObject={NInput}
-                LabelObject={NLabel}
+                InputObject={AuthInput}
+                LabelObject={AuthLabel}
             />
                 
             <CheckBoxDiv>
@@ -62,7 +63,7 @@ export default function RegisterPage() {
                 <CheckBoxLabel htmlFor='is_company'>Is Company?</CheckBoxLabel>
             </CheckBoxDiv>
                 
-            <SubmitInput {...theme.submitProps} type='submit' value="Enter"/>
+            <AuthSubmitInput {...theme.submitProps} type='submit' value="Enter"/>
         </FormRenderer>
     )
 
