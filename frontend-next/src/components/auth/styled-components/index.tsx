@@ -3,22 +3,23 @@
 import { useEffect, useRef, ComponentProps, useState } from 'react'
 
 import {StyledInput} from '@/components/CommonButton'
-import { Label, Input } from '@/components/StyledInputLabel'
+import { Label, getLabelClassname, Input, getInputClassname } from '@/components/StyledInputLabel'
+
+
+function omit<T extends object, K extends keyof T>(object:T, keys:K[]) {
+    const copy = {...object}
+    for (const key of keys) {
+        delete copy[key]
+    }
+    return copy
+}
 
 
 export function NLabel(props:ComponentProps<typeof Label>) {
-    const labelRef = useRef<HTMLLabelElement|null>(null)
-    const labelElement = <Label {...props} ref={labelRef}></Label>
-    const [currentStyle, setCurrentStyle] = useState<string|null>(null)
-
-    useEffect(() => {
-        setCurrentStyle(prev => labelRef.current?labelRef.current.className:prev)
-    }, [labelRef])
-
     return (
         <label
-            {...props}
-            className={"font-instrument-sans" + currentStyle}
+            {...{...props, focused:undefined}}
+            className={"font-instrument-sans" + getLabelClassname(props)}
         >
             {props.children}
         </label>
@@ -27,19 +28,11 @@ export function NLabel(props:ComponentProps<typeof Label>) {
 
 
 export function NInput(props:ComponentProps<typeof Input>) {
-    const inputRef = useRef<HTMLInputElement|null>(null)
-    const inputElement = <Input {...props} ref={inputRef}></Input>
-    const [currentStyle, setCurrentStyle] = useState<string|null>(null)
-
-    useEffect(() => {
-        setCurrentStyle(prev => inputRef.current?inputRef.current.className:prev)
-    }, [inputRef])
-
     return (
         <input
             {...props}
             className={
-                "bg-transparent text-[#BEC1C1] font-instrument-sans border-solid border-b-[2px] border-b-white" + currentStyle
+                "bg-transparent text-[#BEC1C1] font-instrument-sans border-solid border-b-[2px] border-b-white" + getInputClassname(props)
             }
         >
             {props.children}
@@ -59,7 +52,7 @@ export function SubmitInput(props:ComponentProps<typeof StyledInput>) {
 
     return (
         <input
-            {...props}
+            {...{...props, hoverBg:undefined}}
             className={
                 "mt-[40px]" + currentStyle
             }

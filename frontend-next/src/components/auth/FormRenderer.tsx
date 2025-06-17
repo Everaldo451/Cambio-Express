@@ -1,3 +1,4 @@
+"use client";
 import React, { ReactNode } from 'react'
 import { redirect } from 'next/navigation'
 
@@ -31,20 +32,6 @@ export interface onSubmitType {
 }
 
 export default function FormRenderer(props:React.ComponentProps<typeof StyledForm>) {
-
-    const theme:FormThemeType["theme"] = {
-        inputStyle: {
-            paddingTop: 10,
-            paddingLeft: 15,
-            fontSize:15,
-        },
-        submitProps: {
-            color:"white",
-            hoverBg:"#2C2D52",
-            borderColor:"white",
-            hoverColor:"white"
-        }
-    }
 
     async function onSubmit(e:React.FormEvent<HTMLFormElement>) {
         e.preventDefault()

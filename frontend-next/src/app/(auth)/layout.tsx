@@ -2,8 +2,6 @@ import ChangeRouteButtons from "@/components/auth/ChangeRouteButtons";
 import GoogleButton from "@/components/auth/OAuth/GoogleButton";
 import { redirect } from "next/navigation";
 
-//import { UserContext } from "../../main";
-
 function MainElement({
     children
 }: {
@@ -11,7 +9,7 @@ function MainElement({
 }) {
     return (
         <main
-            className={`flex flex-col align-center justify-center bg-theme`}
+            className={`flex flex-col align-center justify-center bg-theme h-[100dvh]`}
         >
             {children}
         </main>
@@ -28,14 +26,13 @@ export default function AuthLayout({
     const user = null
 
     if (user) {
-        
         redirect("/")
     }
     else {
         return (
             <MainElement>
                 <ChangeRouteButtons/>
-                    {children}
+                {children}
                 <GoogleButton/>
             </MainElement>
         )
