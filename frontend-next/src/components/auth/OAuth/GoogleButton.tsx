@@ -5,7 +5,7 @@ function StyledGoogleButton(props:React.HTMLAttributes<HTMLButtonElement>) {
     return (
         <button
             {...props}
-            className="flex align-center bg-white p-[5px] mt-[20px] border-solid border-[2px] border-gray-200 rounded-[5px] outline-none hover:cursor-pointer"
+            className="flex align-center bg-white p-[5px] mt-[20px] border-solid border-[2px] border-[gray] rounded-[5px] outline-none hover:cursor-pointer"
         >
             {props.children}
         </button>
@@ -43,7 +43,7 @@ export default function GoogleButton() {
     return (
         <StyledGoogleButton onClick={onClick}>
             <Img src="https://developers.google.com/identity/images/g-logo.png" alt="Google"/>
-            <span>Entrar com Google</span>
+            <span className="text-black text-[12px]">Entrar com Google</span>
         </StyledGoogleButton>
     )
 }

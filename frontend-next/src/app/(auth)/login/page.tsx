@@ -1,25 +1,17 @@
-import { InputContainer} from '@/components/StyledInputLabel'
 import FormRenderer from '@/components/auth/FormRenderer'
-import { AuthLabel, AuthInput, AuthSubmitInput } from '@/components/auth/styled-components'
+
+import { AuthSubmitInput } from '@/components/auth/styled-components/AuthSubmitButton'
+import AuthInputContainer from '@/components/auth/styled-components/AuthInputContainer'
+
 import { theme } from "@/theme/auth"
+import generateSubmitHandler from '../generateSubmitHandler'
 
 
 export default function LoginPage() {
-
     return (
-        <FormRenderer action={`/auth/login/`} method='POST'>
-            <InputContainer 
-                inputStyle={theme.inputStyle} 
-                inputAttrs={{name:"email",id:"email",required: true}}
-                InputObject={AuthInput}
-                LabelObject={AuthLabel}
-            />
-            <InputContainer 
-                inputStyle={theme.inputStyle} 
-                inputAttrs={{name:"password",id:"password",required: true,type:"password"}}
-                InputObject={AuthInput}
-                LabelObject={AuthLabel}
-            />
+        <FormRenderer action={generateSubmitHandler("/auth/login/")} method='POST'>
+            <AuthInputContainer inputAttrs={{name:"email",id:"email",required: true}}/>
+            <AuthInputContainer inputAttrs={{name:"password",id:"password",required: true,type:"password"}}/>
             <AuthSubmitInput {...theme.submitProps} type='submit' value="Enter"/>
         </FormRenderer>
     )

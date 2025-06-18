@@ -1,62 +1,34 @@
 "use client"
 import { useState } from 'react'
 
-
 import FormRenderer from '@/components/auth/FormRenderer'
-import { InputContainer } from '@/components/StyledInputLabel'
-import { AuthLabel, AuthInput, AuthSubmitInput, CheckBoxDiv, CheckBoxLabel } from '@/components/auth/styled-components'
+
+import AuthInputContainer from '@/components/auth/styled-components/AuthInputContainer'
+import { AuthSubmitInput } from '@/components/auth/styled-components/AuthSubmitButton'
+
+import { CheckBoxDiv, CheckBoxLabel } from '@/components/auth/styled-components/checkboxElements'
 
 import { theme } from '@/theme/auth'
+import generateSubmitHandler from '../generateSubmitHandler'
 
 
 export default function RegisterPage() {
 
     const [isCompany, setIsCompany] = useState<boolean>(false)
-
     return (
-        <FormRenderer action={`/users/`} method='POST'>
+        <FormRenderer action={generateSubmitHandler("/users/")} method='POST'>
                 {
                     isCompany?
                     <>
-                        <InputContainer
-                            inputStyle={theme.inputStyle} 
-                            inputAttrs={{name:"name",id:"name",required: true}}
-                            InputObject={AuthInput}
-                            LabelObject={AuthLabel}
-                        />
-                        <InputContainer 
-                            inputStyle={theme.inputStyle} 
-                            inputAttrs={{name:"CNPJ",id:"CNPJ",required: true}}
-                            InputObject={AuthInput}
-                            LabelObject={AuthLabel}
-                        />
-                        <InputContainer 
-                            inputStyle={theme.inputStyle} 
-                            inputAttrs={{name:"phone",id:"phone",required: true}}
-                            InputObject={AuthInput}
-                            LabelObject={AuthLabel}
-                        />
+                        <AuthInputContainer inputAttrs={{name:"name",id:"name",required: true}}/>
+                        <AuthInputContainer inputAttrs={{name:"CNPJ",id:"CNPJ",required: true}}/>
+                        <AuthInputContainer inputAttrs={{name:"phone",id:"phone",required: true}}/>
                     </>
                     :
-                    <InputContainer 
-                        inputStyle={theme.inputStyle} 
-                        inputAttrs={{name:"full_name",id:"full_name",required: true}}
-                        InputObject={AuthInput}
-                        LabelObject={AuthLabel}
-                    />
+                    <AuthInputContainer inputAttrs={{name:"full_name",id:"full_name",required: true}}/>
                 }
-            <InputContainer 
-                inputStyle={theme.inputStyle} 
-                inputAttrs={{name:"email",id:"email",required: true}}
-                InputObject={AuthInput}
-                LabelObject={AuthLabel}
-            />
-            <InputContainer 
-                inputStyle={theme.inputStyle} 
-                inputAttrs={{name:"password",id:"password",required: true,type:"password"}}
-                InputObject={AuthInput}
-                LabelObject={AuthLabel}
-            />
+            <AuthInputContainer inputAttrs={{name:"email",id:"email",required: true}}/>
+            <AuthInputContainer inputAttrs={{name:"password",id:"password",required: true,type:"password"}}/>
                 
             <CheckBoxDiv>
                 <input type='checkbox' name="is_company" id="is_company" onClick={(_) => {setIsCompany(!isCompany)}}/>

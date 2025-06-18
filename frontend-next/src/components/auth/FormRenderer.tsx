@@ -1,12 +1,11 @@
-"use client";
 import React, { ReactNode } from 'react'
-import { redirect } from 'next/navigation'
+//import { redirect } from 'next/navigation'
 
 import CommonStyleProps from '@/components/CommonButton'
-import { StyledForm } from '@/components/auth/styled-components'
+import { StyledForm } from './styled-components/formElements';
 
 import { UserType, TokenType } from '@/types'
-import { apiAxios } from '@/lib/axios/api'
+//import { apiAxios } from '@/lib/axios/api'
 
 export type FormThemeType = {
     theme: {
@@ -33,6 +32,7 @@ export interface onSubmitType {
 
 export default function FormRenderer(props:React.ComponentProps<typeof StyledForm>) {
 
+    /*
     async function onSubmit(e:React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         try {
@@ -59,10 +59,11 @@ export default function FormRenderer(props:React.ComponentProps<typeof StyledFor
         }
         redirect("/")
     }
+    */
 
     return (
         <StyledForm
-            onSubmit={onSubmit}
+            //onSubmit={onSubmit}
             {...props}
         >
             {props.children}
