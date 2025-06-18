@@ -8,7 +8,7 @@ export const theme:FormThemeType["theme"] = {
         },
         submitProps: {
             color:"white",
-            hoverBg:"#2C2D52",
+            hoverBg:"#2c2d52",
             borderColor:"white",
             hoverColor:"white"
         }
