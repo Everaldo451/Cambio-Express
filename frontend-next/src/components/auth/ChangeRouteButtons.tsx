@@ -3,7 +3,7 @@ import Link from "next/link";
 
 function CustomizedLink(props:ComponentProps<typeof Link>) {
     const linkStyle = `
-        relative z-[1] bg-[#8C8A6C] text-white text-center p-[3px] transition-all duration-[0.5s] border-solid border-y-[2px] border-y-white
+        relative z-[1] bg-[#8C8A6C] text-white text-[14px] text-center p-[3px_10px] transition-all duration-[0.5s] border-solid border-y-[2px] border-y-white
         hover:cursor-pointer hover:transform-[scale(1.1)]
     `
     const afterPseudoElementStyle = `

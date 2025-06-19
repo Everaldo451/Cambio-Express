@@ -4,7 +4,7 @@ import React, { useState } from "react"
 
 function InputDiv(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
-        <div {...props} className="flex flex-col relative mt-[40px]">{props.children}</div>
+        <div {...props} className="flex flex-col relative mt-[30px]">{props.children}</div>
     )
 }
 type InputPropsType = {style:React.CSSProperties}
@@ -16,11 +16,11 @@ function getLabelClassname(
     return "absolute transition-all duration-[0.5s] hover:cursor-text"
 }
 export function Label(props:LabelPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLLabelElement>, HTMLLabelElement>) {
-    const { style, ...nonStyleProps } = props
+    const { style, focused, ...nonStyleProps } = props
     return (
         <label 
             {...nonStyleProps}
-            style={props.focused?
+            style={focused?
                 {
                     fontSize: (style.fontSize as number) -3,
                     top: -((style.fontSize as number) + 4),
