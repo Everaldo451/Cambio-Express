@@ -1,7 +1,10 @@
 import { redirect } from "next/navigation";
 
-import { ConfigSection, MenuButtonsContainer, StyledLink,  } from "@/components/config/styled-components";
+import MainContentContainer from "@/components/config/MainContentContainer";
+import ConfigsNav from "@/components/config/ConfigsNav";
+import ConfigsDisplayer from "@/components/config/ConfigsDisplayer";
 
+import StyledLink from "@/components/config/styled-components/StyledLink";
 
 
 //import { UserContext } from "../../main";
@@ -10,7 +13,7 @@ function MainElement(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
         <main
             {...props}
-            className="flex align-center bg-theme"
+            className="flex min-h-[100dvh] items-center bg-theme"
         >
             {props.children}
         </main>
@@ -30,24 +33,26 @@ export default function ConfigLayout({
     }
     return (
         <MainElement>
-            <ConfigSection>
+            <MainContentContainer>
 
-                <MenuButtonsContainer>
-                    <StyledLink href={"/config/me"}>
-                        Dados Pessoais
-                    </StyledLink>
-                    <StyledLink href={"/config/security"}>
-                        Segurança
-                    </StyledLink>
-                    <StyledLink href={"/config/signatures"}>
-                        Assinaturas
-                    </StyledLink>
-                </MenuButtonsContainer>
-                
                 <section>
-                    {children}
+                    <ConfigsNav>
+                        <StyledLink href={"/config/me"}>
+                            Dados Pessoais
+                        </StyledLink>
+                        <StyledLink href={"/config/security"}>
+                            Segurança
+                        </StyledLink>
+                        <StyledLink href={"/config/signatures"}>
+                            Assinaturas
+                        </StyledLink>
+                    </ConfigsNav>
                 </section>
-            </ConfigSection>
+                
+                <ConfigsDisplayer>
+                    {children}
+                </ConfigsDisplayer>
+            </MainContentContainer>
         </MainElement>
     )
 }

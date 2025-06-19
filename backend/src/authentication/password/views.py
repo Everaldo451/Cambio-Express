@@ -7,12 +7,11 @@ from django.http import HttpRequest
 from django.contrib.auth import authenticate
 
 from users.models import User
-from companies.models import Company
 
 from .serializers import PasswordLoginSerializer, PasswordRegisterSerializer
 
-from authentication.services import register_common_user, register_company_user
 from authentication.services import JWTService
+from authentication.services import get_register_response_creator
 
 import logging
 
@@ -20,39 +19,6 @@ import logging
 class PasswordRegister(APIView):
 
 	jwt_service = JWTService()
-
-	def company_exists(self, request:HttpRequest, data:dict):
-		return Company.objects.filter(
-			CNPJ=data.get("CNPJ")
-		).exists()
-
-	
-	def create_company_user_and_response(self, request:HttpRequest, data:dict):
-		data.pop("is_company")
-		logging.debug("Verifying if company already exists.")
-		if self.company_exists(request, data):
-			logging.debug("Response 409. Company already exists.")
-			return Response({"message":"Company already exists."}, status=status.HTTP_409_CONFLICT)
-		
-		register_data = register_company_user(request, {**data})
-		if register_data["error"] == True:
-			logging.debug(f"Response with error: {register_data["message"]}")
-			return Response({"message": register_data["message"]}, status=register_data["status"])
-		
-		company:Company = register_data["obj"]
-		return self.jwt_service.generate_response(request, company.user, status.HTTP_201_CREATED)
-	
-
-	def create_common_user_and_response(self, request:HttpRequest, data:dict):
-		register_data = register_common_user(request, {**data})
-		if register_data["error"] == True:
-			logging.debug(f"Response with error: {register_data["message"]}")
-			return Response({"message": register_data["message"]}, status=register_data["status"])
-		
-		logging.debug(f"Response with status 201. User registed sucessful.")
-		user = register_data["obj"]
-		return self.jwt_service.generate_response(request, user, status.HTTP_201_CREATED)
-	
 
 	def post(self, request:Request, format=None):
 		logging.debug("Starting password register route.")
@@ -70,10 +36,8 @@ class PasswordRegister(APIView):
 			return Response({"message":"User already exists."}, status=status.HTTP_409_CONFLICT)
 
 		logging.debug("Verifying if the user desire register a company.")
-		user=None
-		if validated_data["is_company"]:
-			return self.create_company_user_and_response(request, validated_data)
-		return self.create_common_user_and_response(request, validated_data)
+		response_creator = get_register_response_creator(request, self.jwt_service, validated_data)
+		return response_creator.create_response(request, validated_data)
 
 
 
