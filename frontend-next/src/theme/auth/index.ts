@@ -2,9 +2,9 @@ import { FormThemeType } from "@/components/auth/FormRenderer"
 
 export const theme:FormThemeType["theme"] = {
         inputStyle: {
-            paddingTop: 10,
-            paddingLeft: 15,
-            fontSize:15,
+            paddingTop: 8,
+            paddingLeft: 12,
+            fontSize:14,
         },
         submitProps: {
             color:"white",
