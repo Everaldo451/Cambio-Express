@@ -12,7 +12,7 @@ from users.models import User
 
 from .serializers import GoogleOAuthSerializer
 
-from authentication.services import register_common_user
+from authentication.registers.common_user_register import CommonUserRegister
 from authentication.services import JWTService
 from authentication.services import generate_oauth_config, check_granted_scopes
 
@@ -55,7 +55,8 @@ class GoogleOauthCallback(APIView):
 	
 
 	def response_for_non_exist_user(self, request:HttpRequest|Request, user_data:dict):
-		register_data = register_common_user(request, {**user_data})
+		register = CommonUserRegister()
+		register_data = register.register_user({**user_data})
 		if register_data["error"] == True:
 			logging.debug(f"Response with error: {register_data["message"]}")
 			return redirect(f"http://localhost:3000/oauth/fail?e='{register_data["message"]}'")
