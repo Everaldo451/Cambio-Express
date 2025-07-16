@@ -1,1 +1,13 @@
 /tests
+
+/venv
+/.venv
+
+/__pycache__
+/.pytest_cache
+
+.pylintrc
+pytest.ini
+.gitignore
+
+README.md

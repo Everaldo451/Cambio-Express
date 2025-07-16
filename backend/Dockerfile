@@ -8,4 +8,4 @@ RUN poetry config virtualenvs.create false
 RUN poetry install --without dev test --no-root
 
 COPY . .
-CMD ["sh","-c","python src/manage.py makemigrations && python src/manage.py migrate && python run.py"]
+CMD [ "sh", "run.sh" ]
