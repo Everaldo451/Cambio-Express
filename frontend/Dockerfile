@@ -13,7 +13,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install --production
 
-COPY --from=build /app/.next ./.next
+COPY --from=build /app/build ./build
 COPY --from=build /app/public ./public
 
 CMD ["npm", "run", "start"]
