@@ -1,5 +1,5 @@
 import logging
-import os
+from decouple import config
 
 print(__name__)
 logger = logging.getLogger(__name__)
@@ -10,7 +10,7 @@ def LogRequest(get_response):
     def middleware(request):
 
         endpoint:str = request.get_full_path()
-        admin_url = os.environ.get("DJANGO_ADMIN_URL")
+        admin_url = config("DJANGO_ADMIN_URL", 'admin/')
 
         if admin_url and endpoint.startswith("/"+admin_url):
             return get_response(request)
