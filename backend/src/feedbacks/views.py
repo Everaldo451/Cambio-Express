@@ -11,7 +11,7 @@ from feedbacks.models import FeedBack
 from feedbacks.serializers.use_cases import CreateFeedbackSerializer
 from feedbacks.serializers.models import FeedBackSerializer
 
-from core.db import get_all_obj, get_n_last_obj
+from backend.core.db import get_all_obj, get_n_last_obj
 import logging
 
 

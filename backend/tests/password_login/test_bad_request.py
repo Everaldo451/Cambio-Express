@@ -13,5 +13,4 @@ def test_bad_request(client, endpoint, invalid_user_data, create_user):
     assert response.status_code==400
     json = response.json()
     assert isinstance(json, dict)
-    message = json.get("message")
-    assert message=="Invalid credentials"
+    assert json.get('password') is not None

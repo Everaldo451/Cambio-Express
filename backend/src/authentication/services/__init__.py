@@ -1,3 +1,2 @@
 from .jwt_service import JWTService
 from .oauth_utils import check_granted_scopes, generate_oauth_config
-from .get_password_register_response_creator import get_register_response_creator

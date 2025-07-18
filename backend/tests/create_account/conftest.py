@@ -1,3 +1,9 @@
+from rest_framework.test import APIRequestFactory
+from rest_framework_simplejwt.tokens import RefreshToken
+from authentication.services import JWTService
+
+from users.serializers.models.user import UserSerializer
+
 from django.test import Client
 import pytest
 
@@ -18,18 +24,27 @@ def invalid_user_data():
 
 @pytest.fixture
 def endpoint():
-    return "/accounts/"
+    return "/api/v1/accounts/"
 
 @pytest.fixture
 def register_user(client:Client, user_data):
-    response = client.post("/auth/register/",       
-        data={**user_data}
+    factory = APIRequestFactory()
+    request = factory.post(
+        endpoint, 
+        {
+            **user_data,
+        },
+        format='json'
     )
 
-    assert response.status_code == 201
+    serializer = UserSerializer(
+        data={**user_data},
+        context={'request':request}
+    )
+    serializer.is_valid()
+    user = serializer.save()
 
-    json = response.json()
-    data:dict = json.get("data")
-    tokens:dict = data.get("tokens")
+    jwt_service = JWTService()
+    tokens = jwt_service.generate_tokens_data(request, user)
 
-    return tokens
+    return user, tokens

@@ -4,10 +4,6 @@ from rest_framework.test import APIRequestFactory
 import pytest
 
 @pytest.fixture
-def company_model():
-    return Company
-
-@pytest.fixture
 def user_data():
     return {
         "email": "valid@gmail.com",
@@ -68,22 +64,6 @@ def create_company(endpoint, user_data, company_data):
     serializer.is_valid()
     user = serializer.save()
     return user, user.company
-    """
-    try:
-        user = None
-        company = None
-        with transaction.atomic():
-            user = django_user_model.objects.create_user(
-				email = user_data.get("email"),
-				password = user_data.get("password")
-			)
-            company = company_model(**company_data, user = user)
-            company.save()
-
-        return user, company
-    except IntegrityError as e:
-        return None, None
-    """
 
 
 @pytest.fixture

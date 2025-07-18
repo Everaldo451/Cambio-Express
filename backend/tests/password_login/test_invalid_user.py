@@ -9,8 +9,7 @@ def test_invalid_user(client, endpoint, invalid_user_data, create_user):
         }
     )
 
-    assert response.status_code==404
+    assert response.status_code==400
     json = response.json()
     assert isinstance(json, dict)
-    message = json.get("message")
-    assert message=="User don't exists"
+    assert json.get('non_field_errors') is not None

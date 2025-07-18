@@ -1,22 +1,36 @@
+from rest_framework.test import APIRequestFactory
+
+from accounts.serializers.models.account import AccountSerializer
+
 from django.test import Client
 import pytest
 
 @pytest.fixture
 def create_account(client:Client, endpoint, register_user):
-    tokens:dict = register_user
-    access_token = tokens.get("access_token").get("value")
-    response = client.post(endpoint,
-        data={
-            "code": "USD",
+    data = {
+        "code": "USD",
+    }
+    user, tokens = register_user
+    factory = APIRequestFactory()
+    request = factory.post(
+        endpoint, 
+        {
+            **data,
         },
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        }
+        format='json'
     )
+    request.user = user
+
+    serializer = AccountSerializer(
+        data={**data},
+        context={'request':request}
+    )
+    serializer.is_valid()
+    account = serializer.save()
 
 @pytest.mark.django_db
 def test_success(client:Client, endpoint, register_user, create_account):
-    tokens:dict = register_user
+    user, tokens = register_user
     access_token = tokens.get("access_token").get("value")
     response = client.post(endpoint,
         data={
@@ -27,7 +41,7 @@ def test_success(client:Client, endpoint, register_user, create_account):
         }
     )
 
-    assert response.status_code==409
+    assert response.status_code==400
     json = response.json()
-    message = json.get("message")
-    assert message == "Account with current code already exists"
+    assert isinstance(json, dict)
+    assert json.get('code') == ["Account with current code already exists"]

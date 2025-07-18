@@ -33,12 +33,9 @@ class JWTService:
         serializer = UserSerializer(user)
         return Response(
             {
-                "message":"Authenticated successful.",
-                "data": { 
-                    "user": serializer.data,
-                    "tokens": {
-                        **self.generate_tokens_data(request, user) 
-                    }
+                "user": serializer.data,
+                "tokens": {
+                    **self.generate_tokens_data(request, user) 
                 }
             },
             status=status

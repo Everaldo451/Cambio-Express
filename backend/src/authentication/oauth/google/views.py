@@ -12,7 +12,7 @@ from users.models import User
 
 from .serializers import GoogleOAuthSerializer
 
-from authentication.registers.common_user_register import CommonUserRegister
+from authentication.strategy.password_register.registers.common_user_register import CommonUserRegister
 from authentication.services import JWTService
 from authentication.services import generate_oauth_config, check_granted_scopes
 

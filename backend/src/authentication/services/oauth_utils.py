@@ -1,13 +1,12 @@
 from google.oauth2.credentials import Credentials
 from django.http import HttpRequest
-from dotenv import load_dotenv
+from decouple import config
 import os
 
 
 def generate_oauth_config(request:HttpRequest, redirect_uri:str):
-    load_dotenv()
-    client_id = os.getenv("OAUTH_CLIENT_ID")
-    client_secret = os.getenv("OAUTH_CLIENT_SECRET")
+    client_id = config("OAUTH_CLIENT_ID")
+    client_secret = config("OAUTH_CLIENT_SECRET")
     client_config = {
 		"web": {
 			"client_id": client_id,

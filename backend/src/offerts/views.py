@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from offerts.models import Offert
 from offerts.serializers.models import OffertSerializer
 
-from core.db import get_n_last_obj
+from backend.core.db import get_n_last_obj
 
 
 @api_view(["GET"])
