@@ -6,49 +6,35 @@ def test_company_user_success(client, endpoint, user_data, company_data):
     response:Response = client.post(endpoint,
         data={
             **user_data,
-            **company_data,
-            "is_company": True,
+            'company': {
+                **company_data
+            }
         },
+        content_type='application/json'
     )
 
-    assert response.status_code==201
+    assert response.status_code==201, f'Error status {response.status_code} - {response.json()}'
 
     json = response.json()
     assert isinstance(json, dict)
-    data:dict = json.get("data")
-    assert data
-
-    user:dict = data.get("user")
-    assert user is not None
-    assert user.get("company") is not None
-
-    tokens:dict = data.get("tokens")
-    access_token = tokens.get("access_token")
-    refresh_token = tokens.get("refresh_token")
-    assert access_token is not None and refresh_token is not None
+    for key, value in json.items():
+        value2 = user_data.get(key)
+        if value2:
+            assert value2 == value
 
 
 @pytest.mark.django_db
 def test_common_user_success(client, endpoint, user_data):
     response:Response = client.post(endpoint,
-        data={
-            **user_data,
-            "is_company": False,
-        },
+        data={**user_data},
+        content_type='application/json'
     )
 
-    assert response.status_code == 201
+    assert response.status_code == 201, f'Error status {response.status_code} - {response.json()}'
     
     json = response.json()
     assert isinstance(json, dict)
-    data:dict = json.get("data")
-    assert data
-
-    user:dict = data.get("user")
-    assert user is not None
-    assert user.get("company") is None
-
-    tokens:dict = data.get("tokens")
-    access_token = tokens.get("access_token")
-    refresh_token = tokens.get("refresh_token")
-    assert access_token is not None and refresh_token is not None
+    for key, value in json.items():
+        value2 = user_data.get(key)
+        if value2:
+            assert value2 == value

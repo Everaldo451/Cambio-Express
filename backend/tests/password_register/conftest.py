@@ -1,5 +1,6 @@
 from django.db import transaction, IntegrityError
-from companies.models import Company
+from users.serializers.models.user import UserSerializer
+from rest_framework.test import APIRequestFactory
 import pytest
 
 @pytest.fixture
@@ -10,39 +11,64 @@ def company_model():
 def user_data():
     return {
         "email": "valid@gmail.com",
-        "full_name": "Any Name",
+        "first_name": "Any",
+        "last_name": "Name",
         "password": "validPassword"
     }
 
 @pytest.fixture
 def company_data():
     return {
-        "CNPJ": "0200000001",
+        "CNPJ": "02000000000001",
         "name": "Any C",
     }
 
 @pytest.fixture
 def endpoint():
-    return "/auth/register/"
+    return "/api/v1/users/"
 
 
 ########USER CREATION
 
 @pytest.fixture
-def create_user(django_user_model, user_data):
-    try:
-        user = django_user_model.objects.create_user(
-            email=user_data.get("email"),
-            password=user_data.get("password")
-        )
-        return user
-    
-    except: return None
+def create_user(endpoint, user_data):
+    factory = APIRequestFactory()
+    request = factory.post(
+        endpoint, 
+        {
+            **user_data,
+        },
+        format='json'
+    )
 
+    serializer = UserSerializer(
+        data={**user_data},
+        context={'request':request}
+    )
+    serializer.is_valid()
+    return serializer.save()
 
 @pytest.fixture
-def create_company(django_user_model, company_model, user_data, company_data):
-
+def create_company(endpoint, user_data, company_data):
+    factory = APIRequestFactory()
+    request = factory.post(
+        endpoint, 
+        {**user_data},
+        format='json'
+    )
+    serializer = UserSerializer(
+        data={
+            **user_data,
+            'company': {
+                **company_data
+            }
+        },
+        context={'request':request}
+    )
+    serializer.is_valid()
+    user = serializer.save()
+    return user, user.company
+    """
     try:
         user = None
         company = None
@@ -57,6 +83,7 @@ def create_company(django_user_model, company_model, user_data, company_data):
         return user, company
     except IntegrityError as e:
         return None, None
+    """
 
 
 @pytest.fixture

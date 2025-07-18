@@ -8,36 +8,35 @@ def test_company_user_bad_request(client:Client, endpoint, user_data, company_da
     response:Response = client.post(endpoint,
         data={
             **user_data,
-            **company_data,
-            "is_company": True,
+            'company': {
+                **company_data
+            }
         },
+        content_type="application/json"
     )
 
-    assert response.status_code==400
+    assert response.status_code==400, f'Error status {response.status_code} - {response.json()}'
     json = response.json()
     assert isinstance(json, dict)
-    message = json.get("message")
-    assert message=="Invalid credentials."
-    errors:dict = json.get("errors")
-    error = errors.get("non_field_errors")
-    assert error[0] == "Company fields are required"
+    company_errors = json.get('company')
+    assert isinstance(company_errors, dict)
+    assert company_errors.get('name')
 
 
 @pytest.mark.django_db
 def test_common_user_bad_request(client:Client, endpoint, user_data):
-    user_data.pop("full_name")
+    user_data.pop("email")
     response:Response = client.post(endpoint,
         data={
             **user_data,
-            "is_company": False,
         },
+        content_type="application/json"
     )
 
-    assert response.status_code==400
+    assert response.status_code==400, f'Error status {response.status_code} - {response.json()}'
     json = response.json()
     assert isinstance(json, dict)
-    message = json.get("message")
-    assert message=="Invalid credentials."
-    errors:dict = json.get("errors")
-    error = errors.get("non_field_errors")
-    assert error[0] == "User fields are required"
+    company_errors = json.get('company')
+    assert not company_errors
+    assert json.get('email') is not None
+

@@ -9,16 +9,19 @@ def test_company_user_exists(client, endpoint, create_company, user_data, compan
     response:Response = client.post(endpoint,
         data={
             **user_data,
-            **company_data,
-            "is_company": True,
+            'company': {
+                **company_data,
+            }
         },
+        content_type='application/json'
     )
 
-    assert response.status_code==409
+    assert response.status_code==400, f'Error status {response.status_code} - {response.json()}'
     json = response.json()
     assert isinstance(json, dict)
-    message = json.get("message")
-    assert message=="Company already exists."
+    company_errors = json.get('company')
+    assert isinstance(company_errors, dict)
+    assert company_errors.get('CNPJ') is not None
 
 
 @pytest.mark.django_db
@@ -27,12 +30,13 @@ def test_common_user_exists(client, endpoint, create_user, user_data):
     response:Response = client.post(endpoint,
         data={
             **user_data,
-            "is_company": False,
         },
+        content_type='application/json'
     )
 
-    assert response.status_code==409
+    assert response.status_code==400, f'Error status {response.status_code} - {response.json()}'
     json = response.json()
     assert isinstance(json, dict)
-    message = json.get("message")
-    assert message=="User already exists."
+    company_errors = json.get('company')
+    assert company_errors is None
+    assert json.get('email') is not None
