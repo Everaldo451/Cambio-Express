@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.core.exceptions import ValidationError
 
+from backend.core.enums import UserTypes
+
 class UserManager(BaseUserManager):
 	
 	def _create_user(self,email, password, **extra_fields):
@@ -34,6 +36,10 @@ class User(AbstractUser, PermissionsMixin):
 	
 	username = None
 	email = models.EmailField(max_length=254, unique=True, null=False, blank=False)
+	user_type = models.TextField(
+		choices=[(item.value, item.name.title()) for item in UserTypes], 
+		default=UserTypes.STANDARD.value,
+	)
 	date_joined = models.DateTimeField(auto_now=True)
 
 	AUTHENTICATION_CHOICES = [

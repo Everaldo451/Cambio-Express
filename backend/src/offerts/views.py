@@ -1,21 +1,39 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from rest_framework import viewsets, mixins, permissions, pagination
+from django_filters.rest_framework import DjangoFilterBackend
 
 from offerts.models import Offert
 from offerts.serializers.models import OffertSerializer
+from .filter import OffertFilter
 
-from backend.core.db import get_n_last_obj
+from backend.core.permissions import IsOwner
 
 
-@api_view(["GET"])
-def last_five_offerts(request, coin, index_var):
-    get_5_last_offerts_data = get_n_last_obj(Offert, 5)
-    if get_5_last_offerts_data["error"]:
-        return Response(
-            {"message": get_5_last_offerts_data["message"]}, 
-            status=get_5_last_offerts_data["status"]
-        )
+class OffertViewSet(
+        mixins.CreateModelMixin,
+        mixins.RetrieveModelMixin,
+        mixins.DestroyModelMixin,
+        mixins.UpdateModelMixin,
+        viewsets.GenericViewSet
+    ):
+    serializer_class = OffertSerializer
+
+    def get_queryset(self):
+        if self.request.method in permissions.SAFE_METHODS or self.request.method == "POST":
+            return Offert.objects.all()
+        return Offert.objects.filter(created_by=self.request.user)
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [permissions.IsAuthenticated()]
+        elif self.request.method not in permissions.SAFE_METHODS:
+            return [permissions.IsAuthenticated(), IsOwner()]
+        return []
+
+
+class OffertSearchViewSet(viewsets.mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = Offert.objects.all()
+    serializer_class = OffertSerializer
+    pagination_class = pagination.LimitOffsetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = OffertFilter
     
-    offerts = get_5_last_offerts_data["obj"]
-    serializer = OffertSerializer(offerts, many=True)
-    return Response(serializer.data, status=get_5_last_offerts_data["status"])

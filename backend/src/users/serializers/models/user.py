@@ -1,6 +1,10 @@
 from django.db import transaction
 from rest_framework import serializers
+
+from backend.core.enums import UserTypes
+
 from users.models import User
+
 from companies.serializers.models import CompanySerializer
 from companies.models import Company
 
@@ -21,5 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
 		user = User.objects.create_user(**validated_data)
 
 		if company_data is not None:
+			user.user_type = UserTypes.COMPANY.value
+			user.save()
 			Company.objects.create(**company_data, user=user)
 		return user

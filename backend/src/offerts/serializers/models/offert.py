@@ -3,10 +3,9 @@ from offerts.models import Offert
 
 class OffertSerializer(serializers.ModelSerializer):
 
-    company_name = serializers.CharField(source="company.name")
-    company_phone = serializers.CharField(source="company.phone")
+    created_by = serializers.CharField(source="created_by.company.name")
 
     class Meta:
         model = Offert
-        fields = ["company_name","company_phone","code","min_value","index_variable","percent"]
-        read_only_fields = ['__all__']
+        fields = ["id","created_by","code","min_value","index_variable","percent"]
+        read_only_fields = ['id', 'created_by']

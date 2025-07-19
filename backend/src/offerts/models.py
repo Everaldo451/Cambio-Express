@@ -8,7 +8,7 @@ CODE_CHOICES = [
 
 class Offert(models.Model):
 
-	company = models.OneToOneField("companies.Company", on_delete=models.CASCADE, null=False)
+	created_by = models.OneToOneField("users.User", on_delete=models.CASCADE, null=False)
 	code = models.CharField(null=False, choices=CODE_CHOICES, max_length=10)
 	min_value = models.FloatField()
 	index_variable= models.CharField(max_length=100)  ####Variaveis como IPCA e Selic

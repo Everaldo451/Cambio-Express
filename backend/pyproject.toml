@@ -24,6 +24,7 @@ numpy = "^2.2.5"
 mysqlclient = "^2.2.7"
 drf-yasg = "^1.21.10"
 python-decouple = "^3.8"
+django-filter = "^25.1"
 
 [tool.poetry.group.dev.dependencies]
 pylint = "^3.3.6"
