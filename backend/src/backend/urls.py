@@ -32,14 +32,13 @@ router = routers.DefaultRouter()
 router.register(r'users', user_views.UserViewSet, basename='users')
 router.register(r'accounts', account_views.AccountViewSet, basename='accounts')
 router.register(r'offerts', offert_views.OffertViewSet, basename='offerts')
-router.register(r'offerts-search', offert_views.OffertSearchViewSet, basename='search')
 
 schema_view = get_schema_view(
     openapi.Info(
         title="Cambio Express API",
         default_version="v1",
     ),
-    public=False
+    public=True
 )
 
 urlpatterns = [

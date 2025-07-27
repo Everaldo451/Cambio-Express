@@ -1,5 +1,5 @@
 from rest_framework import viewsets, mixins, permissions, pagination
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework as filters
 
 from offerts.models import Offert
 from offerts.serializers.models import OffertSerializer
@@ -11,7 +11,7 @@ from backend.core.permissions import IsOwner
 class OffertViewSet(viewsets.ModelViewSet):
     serializer_class = OffertSerializer
     pagination_class = pagination.LimitOffsetPagination
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = OffertFilter
 
     def get_queryset(self):
@@ -29,12 +29,4 @@ class OffertViewSet(viewsets.ModelViewSet):
         elif self.request.method not in permissions.SAFE_METHODS:
             return [permissions.IsAuthenticated(), IsOwner()]
         return []
-
-
-class OffertSearchViewSet(viewsets.mixins.ListModelMixin, viewsets.GenericViewSet):
-    queryset = Offert.objects.all()
-    serializer_class = OffertSerializer
-    pagination_class = pagination.LimitOffsetPagination
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = OffertFilter
     
