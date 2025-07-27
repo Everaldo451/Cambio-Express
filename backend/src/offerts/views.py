@@ -8,19 +8,20 @@ from .filter import OffertFilter
 from backend.core.permissions import IsOwner
 
 
-class OffertViewSet(
-        mixins.CreateModelMixin,
-        mixins.RetrieveModelMixin,
-        mixins.DestroyModelMixin,
-        mixins.UpdateModelMixin,
-        viewsets.GenericViewSet
-    ):
+class OffertViewSet(viewsets.ModelViewSet):
     serializer_class = OffertSerializer
+    pagination_class = pagination.LimitOffsetPagination
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = OffertFilter
 
     def get_queryset(self):
-        if self.request.method in permissions.SAFE_METHODS or self.request.method == "POST":
+        if getattr(self, 'swagger_fake_view', False):
             return Offert.objects.all()
-        return Offert.objects.filter(created_by=self.request.user)
+        elif self.request.method in permissions.SAFE_METHODS or self.request.method == "POST":
+            return Offert.objects.all()
+        elif self.request.user.is_authenticated:
+            return Offert.objects.filter(created_by=self.request.user)
+        return Offert.objects.none()
 
     def get_permissions(self):
         if self.request.method == "POST":

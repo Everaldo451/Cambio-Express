@@ -49,5 +49,5 @@ urlpatterns = [
     	path('', include(router.urls)),
         path('auth/', include('authentication.urls')),
     ])),
-    path("", include("api.urls"))
+    #path("", include("api.urls"))
 ]
