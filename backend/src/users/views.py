@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
+from rest_framework.response import Response
 import logging
 
 from backend.core.permissions import IsSelfOrAdmin, IsNotAuthenticated
