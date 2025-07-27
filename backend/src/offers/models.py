@@ -6,7 +6,7 @@ CODE_CHOICES = [
 	("EUR", "Euro")
 ]
 
-class Offert(models.Model):
+class InvestmentOffer(models.Model):
 
 	created_by = models.OneToOneField("users.User", on_delete=models.CASCADE, null=False)
 	code = models.CharField(null=False, choices=CODE_CHOICES, max_length=10)

@@ -1,5 +1,5 @@
 from django.db import models
-from offerts.models import CODE_CHOICES
+from offers.models import CODE_CHOICES
 
 class Account(models.Model):
 

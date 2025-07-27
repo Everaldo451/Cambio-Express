@@ -4,8 +4,8 @@ class Transaction(models.Model):
 	
 	buyer = models.ForeignKey("users.User", on_delete=models.PROTECT, related_name="bought_offerts")
 	seller = models.ForeignKey("companies.Company", on_delete=models.PROTECT, related_name="selled_offerts")
-	offert = models.ForeignKey(
-		"offerts.Offert", 
+	investment_offer = models.ForeignKey(
+		"offers.InvestmentOffer", 
 		on_delete=models.PROTECT, 
 		limit_choices_to={"company":seller}
 	)

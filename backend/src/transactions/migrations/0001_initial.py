@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('companies', '0002_initial'),
-        ('offerts', '0001_initial'),
+        ('offers', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('value', models.FloatField()),
                 ('date', models.DateTimeField(auto_now=True)),
                 ('buyer', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='bought_offerts', to=settings.AUTH_USER_MODEL)),
-                ('offert', models.ForeignKey(limit_choices_to={'company': models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='selled_offerts', to='companies.company')}, on_delete=django.db.models.deletion.PROTECT, to='offerts.offert')),
+                ('offert', models.ForeignKey(limit_choices_to={'company': models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='selled_offerts', to='companies.company')}, on_delete=django.db.models.deletion.PROTECT, to='offers.investmentoffer')),
                 ('seller', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='selled_offerts', to='companies.company')),
             ],
         ),

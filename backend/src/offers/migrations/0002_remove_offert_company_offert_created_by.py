@@ -8,17 +8,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('offerts', '0001_initial'),
+        ('offers', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='offert',
+            model_name='investmentoffer',
             name='company',
         ),
         migrations.AddField(
-            model_name='offert',
+            model_name='investmentoffer',
             name='created_by',
             field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),

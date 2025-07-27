@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Offert',
+            name='InvestmentOffer',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', models.CharField(choices=[('USD', 'Dólar'), ('BTC', 'Bitcoin'), ('EUR', 'Euro')], max_length=10)),

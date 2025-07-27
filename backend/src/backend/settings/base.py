@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     'companies.apps.CompaniesConfig',
     'feedbacks.apps.FeedbacksConfig',
     'accounts.apps.AccountsConfig',
-    'offerts.apps.OffertsConfig',
+    'offers.apps.OffersConfig',
     'transactions.apps.TransactionsConfig',
     'backend.core.apps.CoreConfig',
     'backend.middlewares.apps.MiddlewaresConfig',

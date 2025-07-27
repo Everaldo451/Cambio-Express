@@ -1,27 +1,27 @@
 from rest_framework import viewsets, mixins, permissions, pagination
 from django_filters import rest_framework as filters
 
-from offerts.models import Offert
-from offerts.serializers.models import OffertSerializer
-from .filter import OffertFilter
+from offers.models import InvestmentOffer
+from offers.serializers.models import InvestmentOfferSerializer
+from .filter import InvestmentOfferFilter
 
 from backend.core.permissions import IsOwner
 
 
-class OffertViewSet(viewsets.ModelViewSet):
-    serializer_class = OffertSerializer
+class InvestmentOfferViewSet(viewsets.ModelViewSet):
+    serializer_class = InvestmentOfferSerializer
     pagination_class = pagination.LimitOffsetPagination
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = OffertFilter
+    filterset_class = InvestmentOfferFilter
 
     def get_queryset(self):
         if getattr(self, 'swagger_fake_view', False):
-            return Offert.objects.all()
+            return InvestmentOffer.objects.all()
         elif self.request.method in permissions.SAFE_METHODS or self.request.method == "POST":
-            return Offert.objects.all()
+            return InvestmentOffer.objects.all()
         elif self.request.user.is_authenticated:
-            return Offert.objects.filter(created_by=self.request.user)
-        return Offert.objects.none()
+            return InvestmentOffer.objects.filter(created_by=self.request.user)
+        return InvestmentOffer.objects.none()
 
     def get_permissions(self):
         if self.request.method == "POST":
