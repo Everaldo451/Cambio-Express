@@ -1,6 +1,6 @@
 from django.test.client import Client
 from urllib.parse import quote
-from dotenv import load_dotenv
+from decouple import config
 import logging
 import pytest
 import os
@@ -8,8 +8,7 @@ os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
 @pytest.fixture
 def email():
-    load_dotenv()
-    oauth_test_user = os.getenv("OAUTH_TEST_USER")
+    oauth_test_user = config("OAUTH_TEST_USER", 'testuser@gmail.com')
     assert oauth_test_user
     return oauth_test_user
 
