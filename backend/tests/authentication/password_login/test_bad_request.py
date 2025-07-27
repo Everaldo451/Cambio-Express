@@ -2,7 +2,7 @@ import pytest
 from rest_framework.response import Response
 
 @pytest.mark.django_db
-def test_bad_request(client, endpoint, invalid_user_data, create_user):
+def test_bad_request(client, endpoint, invalid_user_data, create_standard_user):
     invalid_user_data.pop("password")
     response:Response = client.post(endpoint,
         data={

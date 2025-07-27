@@ -2,7 +2,7 @@ import pytest
 from rest_framework.response import Response
 
 @pytest.mark.django_db
-def test_invalid_user(client, endpoint, invalid_user_data, create_user):
+def test_invalid_user(client, endpoint, invalid_user_data, create_standard_user):
     response:Response = client.post(endpoint,
         data={
             **invalid_user_data,

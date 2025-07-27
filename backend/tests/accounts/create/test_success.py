@@ -2,8 +2,8 @@ from django.test import Client
 import pytest
 
 @pytest.mark.django_db
-def test_success(client:Client, endpoint, register_user):
-    user, tokens = register_user
+def test_success(client:Client, endpoint, login_standard_user):
+    user, tokens = login_standard_user
     access_token = tokens.get("access_token").get("value")
     response = client.post(endpoint,
         data={

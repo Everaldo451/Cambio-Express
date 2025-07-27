@@ -6,11 +6,11 @@ from django.test import Client
 import pytest
 
 @pytest.fixture
-def create_account(client:Client, endpoint, register_user):
+def create_account(client:Client, endpoint, login_standard_user):
     data = {
         "code": "USD",
     }
-    user, tokens = register_user
+    user, tokens = login_standard_user
     factory = APIRequestFactory()
     request = factory.post(
         endpoint, 
@@ -29,8 +29,8 @@ def create_account(client:Client, endpoint, register_user):
     account = serializer.save()
 
 @pytest.mark.django_db
-def test_success(client:Client, endpoint, register_user, create_account):
-    user, tokens = register_user
+def test_success(client:Client, endpoint, login_standard_user, create_account):
+    user, tokens = login_standard_user
     access_token = tokens.get("access_token").get("value")
     response = client.post(endpoint,
         data={

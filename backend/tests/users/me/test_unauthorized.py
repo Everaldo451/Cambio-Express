@@ -1,7 +1,7 @@
 import pytest
 
 @pytest.mark.django_db
-def test_unauthorized(client, endpoint, register_user):
+def test_unauthorized(client, endpoint, create_standard_user):
     response = client.get(
         endpoint
     )

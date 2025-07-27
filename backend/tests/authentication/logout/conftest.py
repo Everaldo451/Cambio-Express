@@ -2,4 +2,4 @@ import pytest
 
 @pytest.fixture
 def endpoint():
-    return "/api/v1/users/me/"
+    return '/api/v1/auth/logout/'

@@ -16,14 +16,14 @@ class AccountSerializer(serializers.ModelSerializer):
 
         if self.instance:
             if Account.objects.filter(
-                user=self.instance.user, code=code
+                created_by=self.instance.user, code=code
             ).exclude(id=self.instance.id).exists():
                 raise serializers.ValidationError({"code": "Account with current code already exists"})
         else:
-            if Account.objects.filter(user=user, code=code).exists():
+            if Account.objects.filter(created_by=user, code=code).exists():
                 raise serializers.ValidationError({"code": "Account with current code already exists"})
         return data
 
     def create(self, validated_data):
         user = self.context.get('request').user
-        return Account.objects.create(**validated_data, user=user)
+        return Account.objects.create(**validated_data, created_by=user)

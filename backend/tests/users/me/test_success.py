@@ -1,8 +1,8 @@
 import pytest
 
 @pytest.mark.django_db
-def test_company_user(client, endpoint, user_data, company_data, register_company):
-    user, tokens = register_company
+def test_company_user(client, endpoint, company_data, login_company_user):
+    user, tokens = login_company_user
     access_token = tokens.get('access_token').get('value')
 
     response = client.get(endpoint,
@@ -23,8 +23,8 @@ def test_company_user(client, endpoint, user_data, company_data, register_compan
         assert value == key_company
 
 @pytest.mark.django_db
-def test_standard_user(client, endpoint, user_data, register_user):
-    user, tokens = register_user
+def test_standard_user(client, endpoint, user_data, login_standard_user):
+    user, tokens = login_standard_user
     access_token = tokens.get('access_token').get('value')
 
     response = client.get(endpoint,

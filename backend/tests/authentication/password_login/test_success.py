@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 
 @pytest.mark.django_db
-def test_success(client:Client, endpoint, user_data, create_user):
+def test_success(client:Client, endpoint, user_data, create_standard_user):
     response:Response = client.post(endpoint,
         data={
             **user_data,
