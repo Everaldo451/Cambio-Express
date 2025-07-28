@@ -15,8 +15,8 @@ class TransactionViewSet(
 
     def get_permissions(self):
         if self.request.method in permissions.SAFE_METHODS:
-            return (permissions.IsAuthenticated(), IsOwnerOrAdmin())
-        return (IsCompanyUser(),)
+            return (permissions.IsAuthenticated(), IsOwnerOrAdmin(),)
+        return (permissions.IsAuthenticated(), IsCompanyUser(),)
     
     def get_queryset(self):
         user = self.request.user

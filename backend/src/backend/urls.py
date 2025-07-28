@@ -25,6 +25,7 @@ from drf_yasg import openapi
 from users import views as user_views
 from accounts import views as account_views
 from offers import views as offert_views
+from transactions import views as transaction_views
 
 from decouple import config
 
@@ -32,6 +33,7 @@ router = routers.DefaultRouter()
 router.register(r'users', user_views.UserViewSet, basename='users')
 router.register(r'accounts', account_views.AccountViewSet, basename='accounts')
 router.register(r'offers', offert_views.InvestmentOfferViewSet, basename='offers')
+router.register(r'transactions', transaction_views.TransactionViewSet, basename='transactions')
 
 schema_view = get_schema_view(
     openapi.Info(
