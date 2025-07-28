@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from backend.core.enums import UserTypes
 
 class IsNotAuthenticated(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -34,3 +35,8 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method not in permissions.SAFE_METHODS:
             return  obj.created_by == request.user
         return True
+    
+class IsCompanyUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        return user.is_authenticated and user.user_type == UserTypes.COMPANY.value
