@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from backend.core.enums import UserTypes
+from backend.core.types.user import UserTypes
 
 from users.models import User
 

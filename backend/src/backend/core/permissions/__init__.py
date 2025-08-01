@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from backend.core.enums import UserTypes
+from backend.core.types.user import UserTypes
 
 class IsNotAuthenticated(permissions.BasePermission):
     def has_permission(self, request, view):
