@@ -17,3 +17,5 @@ def test_success(client:Client, endpoint, login_standard_user):
     assert response.status_code==201
     json = response.json()
     assert isinstance(json, dict)
+    user_in_response = json.pop('user', None)
+    assert user_in_response == user.email

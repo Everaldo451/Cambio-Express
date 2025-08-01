@@ -3,7 +3,7 @@ from accounts.models import Account
 
 class AccountSerializer(serializers.ModelSerializer):
 
-    user = serializers.ReadOnlyField(source='user.email')
+    user = serializers.ReadOnlyField(source='created_by.email')
 
     class Meta:
         model = Account
