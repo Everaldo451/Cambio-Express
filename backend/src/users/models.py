@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.core.exceptions import ValidationError
 
-from backend.core.enums import UserTypes
+from backend.core.types.user import UserTypes
 
 class UserManager(BaseUserManager):
 	
