@@ -12,6 +12,10 @@ from .fixtures.user import (
     login_company_user
 )
 
+from .fixtures.offers import (
+    offer_data
+)
+
 import pytest
 
 @pytest.fixture
