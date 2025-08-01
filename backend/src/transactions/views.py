@@ -3,7 +3,7 @@ from rest_framework import viewsets, mixins, permissions
 from .models import Transaction
 from .serializers.models import TransactionSerializer
 
-from backend.core.permissions import IsOwnerOrAdmin, IsCompanyUser
+from backend.core.permissions import IsOwnerOrAdmin, IsStandardUser
 
 class TransactionViewSet(
     mixins.RetrieveModelMixin,
@@ -16,7 +16,7 @@ class TransactionViewSet(
     def get_permissions(self):
         if self.request.method in permissions.SAFE_METHODS:
             return (permissions.IsAuthenticated(), IsOwnerOrAdmin(),)
-        return (permissions.IsAuthenticated(), IsCompanyUser(),)
+        return (permissions.IsAuthenticated(), IsStandardUser(),)
     
     def get_queryset(self):
         user = self.request.user

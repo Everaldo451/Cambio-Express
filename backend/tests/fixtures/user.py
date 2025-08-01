@@ -37,7 +37,7 @@ def create_standard_user(user_data):
         data={**user_data},
         context={'request':request}
     )
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     return serializer.save()
 
 @pytest.fixture
@@ -72,7 +72,7 @@ def create_company_user(user_data, company_data):
         },
         context={'request':request}
     )
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     user = serializer.save()
     return user, user.company
 

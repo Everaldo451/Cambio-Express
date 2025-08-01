@@ -40,3 +40,8 @@ class IsCompanyUser(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
         return user.is_authenticated and user.user_type == UserTypes.COMPANY.value
+    
+class IsStandardUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        return user.is_authenticated and user.user_type == UserTypes.STANDARD.value
