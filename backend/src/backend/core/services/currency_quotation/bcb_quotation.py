@@ -12,7 +12,7 @@ class BCBCurrencyQuotationService(CurrencyQuotationService):
 
     def get_current_quotation_real(self, base_currency):
         now = datetime.now()
-        date_format = f"{now.day:02d}-{now.month:02d}-{now.year}"
+        date_format = f"{now.month:02d}-{now.day:02d}-{now.year}"
         query_params = {
             '$format':'json',
             '$select':'cotacaoCompra',
@@ -27,9 +27,22 @@ class BCBCurrencyQuotationService(CurrencyQuotationService):
         api_params_string = self.params_to_string(',', api_params)
 
         url = f'https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia({api_params_string})?{query_params_string}'
-        response = requests.get(url)
-        json = response.json()
-        return json.get('cotacaoCompra')
+        try:
+            response = requests.get(url, timeout=5)
+            response.raise_for_status()
+            data = response.json()
+            value = data.get('value')
+            if not value or not isinstance(value, list):
+                raise Exception('Quotation not found in response.')
+            quotation_data = value[0]
+            quotation = quotation_data.get('cotacaoCompra')
+            if quotation is None:
+                raise Exception('cotacaoCompra not found in quotation data.')
+            return quotation
+        except requests.RequestException as e:
+            raise Exception(f'Internal server error. {e}')
+        except ValueError:
+            raise Exception('Response is not valid JSON.')
 
     def get_current_quotation(self, base_currency, target_currency):
         base_currency_quotation_real = Decimal(
