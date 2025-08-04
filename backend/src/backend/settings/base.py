@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'backend.middlewares.apps.MiddlewaresConfig',
     'corsheaders',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'rest_framework',
     'drf_yasg',
     'django_filters'

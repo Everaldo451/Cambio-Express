@@ -1,14 +1,20 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-
-from django.http import HttpRequest
-from django.shortcuts import redirect
+from rest_framework_simplejwt.views import TokenBlacklistView, TokenRefreshView
+from rest_framework_simplejwt.serializers import TokenBlacklistSerializer, TokenRefreshSerializer
+from drf_yasg.utils import swagger_auto_schema
 
 
-@api_view(["GET"])
-def logout(request:HttpRequest):
-	response = Response(status=status.HTTP_204_NO_CONTENT)
-	response.delete_cookie("access_token")
-	response.delete_cookie("refresh_token")
-	return response
+class RefreshView(TokenRefreshView):
+	@swagger_auto_schema(
+		request_body=TokenRefreshSerializer,
+	)
+	def post(self, request, *args, **kwargs):
+		return super().post(request, *args, **kwargs)
+	pass
+
+class LogoutView(TokenBlacklistView):
+	@swagger_auto_schema(
+		request_body=TokenBlacklistSerializer
+	)
+	def post(self, request, *args, **kwargs):
+		return super().post(request, *args, **kwargs)
+	pass
