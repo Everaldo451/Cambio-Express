@@ -9,7 +9,7 @@ class Account(models.Model):
 		max_length=10,
 		choices=[(tag.name, tag.value.title()) for tag in CodeChoices], 
 	)
-	balance = models.FloatField(default=0)
+	balance = models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
 	class Meta:
 		constraints = [
