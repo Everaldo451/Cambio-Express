@@ -1,2 +1,3 @@
 from .create_account import CreateAccountSerializer
 from .transfer_to_account import TransferToAccountSerializer
+from .deposit import DepositSerializer

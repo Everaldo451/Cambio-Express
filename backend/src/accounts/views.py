@@ -10,7 +10,7 @@ from backend.core.services.currency_quotation.bcb_quotation import BCBCurrencyQu
 
 from accounts.models import Account
 from accounts.serializers.models.account import AccountSerializer
-from accounts.serializers.use_cases import TransferToAccountSerializer
+from accounts.serializers.use_cases import TransferToAccountSerializer, DepositSerializer
 from accounts.services.transfer_service import TransferService
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -52,6 +52,36 @@ class AccountViewSet(viewsets.ModelViewSet):
                 "to_account": self.get_serializer(to_account).data
             }
             return Response(response_data,status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"detail": "Unexpected error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    @action(
+        methods=["POST"], 
+        detail=True, 
+        url_path="deposit", 
+        permission_classes = [permissions.IsAuthenticated(), IsOwner()] 
+    )
+    def deposit(self, request, pk=None):
+        serializer = DepositSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        to_account = get_object_or_404(Account, id=pk)
+        self.check_object_permissions(request, to_account)
+        
+        amount = serializer.validated_data['amount']
+        currency = serializer.validated_data['currency']
+        quotation_service = BCBCurrencyQuotationService()
+        transfer_service = TransferService(quotation_service)
+        
+        try:
+            with transaction.atomic():
+                transfer_service.transfer_from_external_account(
+                    to_account, currency, amount
+                )
+            account_serializer = self.get_serializer(to_account)
+            return Response(account_serializer.data,status=status.HTTP_200_OK)
         except ValueError as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
