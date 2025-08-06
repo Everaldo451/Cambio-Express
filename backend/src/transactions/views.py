@@ -19,6 +19,9 @@ class TransactionViewSet(
         return (permissions.IsAuthenticated(), IsStandardUser(),)
     
     def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False):
+            return Transaction.objects.none()
+        
         user = self.request.user
         if self.request.method not in permissions.SAFE_METHODS:
             return Transaction.objects.all()

@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
 
 from backend.core.permissions import IsOwner, IsOwnerOrAdmin
 from backend.core.services.currency_quotation.bcb_quotation import BCBCurrencyQuotationService
@@ -22,6 +23,9 @@ class AccountViewSet(viewsets.ModelViewSet):
             return [permissions.IsAuthenticated()]
         return [permissions.IsAuthenticated(), IsOwnerOrAdmin()]
     
+    @swagger_auto_schema(
+        request_body=TransferToAccountSerializer
+    )
     @action(
         methods=["POST"], 
         detail=True, 
@@ -56,7 +60,10 @@ class AccountViewSet(viewsets.ModelViewSet):
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"detail": "Unexpected error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
+    @swagger_auto_schema(
+        request_body=DepositSerializer
+    )    
     @action(
         methods=["POST"], 
         detail=True, 
