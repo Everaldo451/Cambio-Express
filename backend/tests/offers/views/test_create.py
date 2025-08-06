@@ -1,17 +1,57 @@
 import pytest
 
+@pytest.fixture
+def endpoint():
+    return '/api/v1/offers/'
+
+@pytest.fixture
+def access_token(login_company_user):
+    _, tokens = login_company_user
+    return tokens.get('access_token').get('value')
+
+@pytest.fixture
+def token_standard(login_standard_user):
+    _, tokens = login_standard_user
+    return tokens.get('access_token').get('value')
+
 @pytest.mark.django_db
-class TestInvalidData:
+class TestCreate:
+
+    def test_success(self, client, endpoint, access_token, offer_data):
+        response = client.post(endpoint,
+            data=offer_data,
+            headers={
+                'Authorization': f'Bearer {access_token}'
+            }
+        )
+        assert response.status_code == 201, f'Response status {response.status_code}. Error: {response.json()}'
+        json = response.json()
+        assert isinstance(json, dict)
+        created_by = json.pop('created_by', None)
+        assert created_by is not None
+        for key, value in offer_data.items():
+            response_key = json[key]
+            if response_key:
+                assert response_key == value, f'Value in json: {response_key}. Value in data: {value}'
+
+    def test_is_standard_user(self, client, endpoint, token_standard, offer_data):
+        response = client.post(endpoint,
+            data=offer_data,
+            headers={
+                'Authorization': f'Bearer {token_standard}'
+            }                  
+        )
+        assert response.status_code==403, f'Response status {response.status_code}. Error: {response.json()}'
+        json = response.json()
+        assert isinstance(json,dict)
 
     def test_invalid_code(
             self, 
             client, 
             endpoint, 
-            login_company_user, 
+            access_token, 
             offer_data
         ):
-        _, tokens = login_company_user
-        access_token = tokens.get('access_token').get('value')
         offer_data['code'] = 'CODE'
         response = client.post(endpoint,
             data=offer_data,
@@ -29,11 +69,9 @@ class TestInvalidData:
             self, 
             client, 
             endpoint, 
-            login_company_user, 
+            access_token, 
             offer_data
         ):
-        _, tokens = login_company_user
-        access_token = tokens.get('access_token').get('value')
         offer_data['index_variable'] = 'ANOTHERVAR'
         response = client.post(endpoint,
             data=offer_data,
@@ -51,11 +89,9 @@ class TestInvalidData:
             self, 
             client, 
             endpoint, 
-            login_company_user, 
+            access_token, 
             offer_data
         ):
-        _, tokens = login_company_user
-        access_token = tokens.get('access_token').get('value')
         offer_data['min_value'] = '-90.00'
         response = client.post(endpoint,
             data=offer_data,
@@ -73,11 +109,9 @@ class TestInvalidData:
             self, 
             client, 
             endpoint, 
-            login_company_user, 
+            access_token, 
             offer_data
         ):
-        _, tokens = login_company_user
-        access_token = tokens.get('access_token').get('value')
         offer_data['percent'] = '-90.00'
         response = client.post(endpoint,
             data=offer_data,
