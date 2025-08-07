@@ -1,6 +1,7 @@
 import ChangeRouteButtons from "@/components/auth/ChangeRouteButtons";
 import GoogleButton from "@/components/auth/OAuth/GoogleButton";
 import { redirect } from "next/navigation";
+import { getUser } from "@/lib/server/getUser";
 
 function MainElement({
     children
@@ -17,14 +18,12 @@ function MainElement({
 }
 
 
-export default function AuthLayout({
+export default async function AuthLayout({
     children
 }:{
     children:React.ReactNode
 }) {
-
-    const user = null
-
+    const user = await getUser()
     if (user) {
         redirect("/")
     }

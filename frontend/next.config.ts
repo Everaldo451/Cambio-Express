@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  	distDir: 'build'
+  	distDir: 'build',
+	rewrites: async () => {
+		return [
+			{
+				source: '/api/v1/:path*',
+				destination: `http://${process.env.API_HOST}:${process.env.API_PORT}/api/v1/:path*`
+			}
+		]
+	}
 };
 
 export default nextConfig;

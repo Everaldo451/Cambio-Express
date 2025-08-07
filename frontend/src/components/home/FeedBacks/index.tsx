@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, ReactNode, useRef, SetStateAction, HTMLAttributes } from "react";
-import { apiAxios } from "@/lib/axios/api";
+import { apiAxios } from "@/lib/client/apiAxios";
 import { UserType } from "@/types";
 
 export interface FeedBack {

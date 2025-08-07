@@ -1,4 +1,4 @@
-import Header from "@/components/Header"
+import Header from "@/components/globals/home"
 
 export default async function App({
     children

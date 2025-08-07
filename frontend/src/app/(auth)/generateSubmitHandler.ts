@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 
 import { TokenType } from '@/types'
-import { apiAxios } from '@/lib/axios/api'
+import { apiAxios } from '@/lib/client/apiAxios'
 
 export default function generateSubmitHandler(action:string) {
     async function handleSubmit(formData:FormData) {
@@ -20,7 +20,7 @@ export default function generateSubmitHandler(action:string) {
                 const cookiesHandler = await cookies()
                 for (const [tokenName, tokenData] of tokens) {
                     cookiesHandler.set(tokenName, (tokenData as TokenType).value, {
-                        httpOnly: false,
+                        httpOnly: true,
                         path: "/",
                         maxAge: (tokenData as TokenType).lifetime
                     })

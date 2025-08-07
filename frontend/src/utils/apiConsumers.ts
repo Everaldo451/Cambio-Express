@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosStatic } from "axios"
 import { SetStateAction } from "react"
-import { authUserAxios } from "@/lib/axios/authUser";
+import { authUserAxios } from "@/lib/server/authUser";
 import { UserType } from "@/types"
 
 interface AxiosConfigs {
@@ -23,8 +23,3 @@ export function genericAPIConsumer<T>(a:AxiosConfigs, url:string) {
     }
     return newFunction
 }
-
-
-export const getUser = genericAPIConsumer<UserType>({
-    instance: () => authUserAxios,
-}, "/me/")

@@ -15,7 +15,7 @@
 
 @font-face {
     font-family: "InstrumentSans";
-    src: url("../fonts/InstrumentSans-Regular.ttf") format("truetype");
+    src: url("/fonts/InstrumentSans-Regular.ttf") format("truetype");
 }
 
 @theme inline {
