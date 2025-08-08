@@ -1,6 +1,4 @@
-import React, { SetStateAction } from "react"
-
-interface Company {
+export interface Company {
     name: string,
     phone: string,
     CNPJ: string
@@ -12,7 +10,6 @@ export interface UserType {
     company: Company | null,
     money: number,
 }
-export type UserContextType = [UserType|null, React.Dispatch<SetStateAction<UserType|null>>]
 
 export type ThemeType = {
     bgColor: string,

@@ -1,4 +1,4 @@
-import { authUserAxios } from "./authUser";
+import { authUserAxios } from "./authUserAxios";
 import { cache } from "react";
 
 export const getUser = cache(async () => {

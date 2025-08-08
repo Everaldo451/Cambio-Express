@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosStatic } from "axios"
 import { SetStateAction } from "react"
-import { authUserAxios } from "@/lib/server/authUser";
+import { authUserAxios } from "@/lib/server/authUserAxios";
 import { UserType } from "@/types"
 
 interface AxiosConfigs {

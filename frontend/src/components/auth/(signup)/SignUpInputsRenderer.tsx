@@ -2,30 +2,55 @@
 
 import { useState } from "react"
 
-import AuthInputContainer from "../styled-components/AuthInputContainer"
-import { CheckBoxDiv, CheckBoxLabel } from "../styled-components/checkboxElements"
+
+import { RadioDiv, RadioLabel } from "../styled-components/radioInputElements"
+import UserTypeFields from "./strategy/UserTypeFields"
+
+interface UserTypeInputProps {
+    children: React.ReactNode,
+    inputProps: React.InputHTMLAttributes<React.HTMLAttributes<HTMLInputElement>>,
+    setUserType: React.Dispatch<React.SetStateAction<string>>,
+}
+function UserTypeInput({children, inputProps, setUserType}:UserTypeInputProps) {
+    return (
+        <>
+            <input 
+                type='radio' 
+                name="user_type" 
+                id={inputProps.id} 
+                value={inputProps.value}
+                onClick={(e) => {setUserType(e.currentTarget.value)}}
+            />
+            <RadioLabel htmlFor={inputProps.id}>
+                {children}
+            </RadioLabel>
+        </>
+    )
+}
 
 export default function SignUpInputsRenderer(
     {children}:
     {children: React.ReactNode}
 ) {
-    const [isCompany, setIsCompany] = useState<boolean>(false)
+    const [userType, setUserType] = useState<string>('standard')
     return (
         <>
-            {
-                isCompany?
-                <>
-                    <AuthInputContainer inputAttrs={{name:"name",id:"name",required: true}}/>
-                    <AuthInputContainer inputAttrs={{name:"CNPJ",id:"CNPJ",required: true}}/>
-                </>
-                :
-                <AuthInputContainer inputAttrs={{name:"full_name",id:"full_name",required: true}}/>
-            }
+            <UserTypeFields userType={userType}/>
             {children}
-            <CheckBoxDiv>
-                <input type='checkbox' name="is_company" id="is_company" onClick={(_) => {setIsCompany(!isCompany)}}/>
-                <CheckBoxLabel htmlFor='is_company'>Is Company?</CheckBoxLabel>
-            </CheckBoxDiv>
+            <RadioDiv>
+                <UserTypeInput 
+                    inputProps={{id:'company', value: 'company'}} 
+                    setUserType={setUserType}
+                >
+                    Company
+                </UserTypeInput>
+                <UserTypeInput
+                    inputProps={{id:'standard', value: 'standard'}} 
+                    setUserType={setUserType}
+                >
+                    Person
+                </UserTypeInput>
+            </RadioDiv>
         </>
     )
 }

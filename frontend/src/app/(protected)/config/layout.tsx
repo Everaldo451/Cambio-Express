@@ -7,8 +7,6 @@ import ConfigsDisplayer from "@/components/config/ConfigsDisplayer";
 import StyledLink from "@/components/config/styled-components/StyledLink";
 
 
-//import { UserContext } from "../../main";
-
 function MainElement(props:React.HTMLAttributes<HTMLDivElement>) {
     return (
         <main
@@ -20,7 +18,7 @@ function MainElement(props:React.HTMLAttributes<HTMLDivElement>) {
     )
 }
 
-export default function ConfigLayout({
+export default async function ConfigLayout({
     children
 }:{
     children:React.ReactNode
