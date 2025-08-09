@@ -4,6 +4,12 @@ export interface Company {
     CNPJ: string
 }
 
+export interface AccountType {
+    id: number,
+    code: string,
+    balance: string
+}
+
 export interface UserType {
     first_name: string,
     email: string,
