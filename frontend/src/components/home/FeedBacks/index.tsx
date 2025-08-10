@@ -49,6 +49,24 @@ function GridDiv(props:React.HTMLAttributes<HTMLDivElement>) {
     )
 }
 
+export async function getFeedBacks() {
+        try{
+            const response = await apiAxios.get("/feedbacks/search/")
+            const responseData = response.data
+
+            const data=[
+                {first_name:"João", date: new Date(), comment: "asadasd"},
+                {first_name:"Maria", date: new Date(), comment: "asadasd"},
+                {first_name:"Rafaela", date: new Date(), comment: "asadasd"},
+                {first_name:"José", date: new Date(), comment: "asadasd"},
+            ]
+
+            if (responseData satisfies FeedBack[]) {
+                responseData.forEach((value:FeedBack) => {data.push(value)})
+            }
+            return data
+    } catch(e) {return []}
+}
 export default function FeedBacks() {
 
     const user = {
@@ -57,26 +75,9 @@ export default function FeedBacks() {
     const [feedbacks, setFeedBacks] = useState<FeedBack[]>([])
     const [element, setElement] = useState<number>(0)
 
-    async function getFeedBacks() {
-        try{
-            const response = await apiAxios.get("/feedbacks/search/")
-            const responseData = response.data
-
-            if (responseData satisfies FeedBack[]) {
-                setFeedBacks(responseData)
-            }
-            setFeedBacks(prev => [...prev, 
-                {first_name:"João", date: new Date(), comment: "asadasd"},
-                {first_name:"Maria", date: new Date(), comment: "asadasd"},
-                {first_name:"Rafaela", date: new Date(), comment: "asadasd"},
-                {first_name:"José", date: new Date(), comment: "asadasd"},
-            ])
-
-        } catch(e) {}
-    }
-
     useEffect(() => {
-        getFeedBacks()
+        const feedbacks = getFeedBacks()
+        feedbacks.then((value) => setFeedBacks(value))
     },[])
 
     return (
