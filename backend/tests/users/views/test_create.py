@@ -72,8 +72,8 @@ class TestCreate:
         assert isinstance(company_errors, dict)
         assert company_errors.get('name')
 
-    def test_standard_user_without_email(self, client, endpoint, user_data, client_data):
-        user_data.pop("email")
+    def test_standard_user_without_first_name(self, client, endpoint, user_data, client_data):
+        client_data.pop("first_name")
         response = client.post(endpoint,
             data={
                 **user_data,
@@ -86,7 +86,7 @@ class TestCreate:
         assert isinstance(json, dict)
         company_errors = json.get('company')
         assert not company_errors
-        assert json.get('email') is not None
+        assert json.get('client') is not None
 
     def test_company_user_already_exists(
             self, client, endpoint, create_company_user, user_data, company_data
