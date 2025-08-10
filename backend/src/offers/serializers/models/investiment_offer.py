@@ -7,7 +7,7 @@ class InvestmentOfferSerializer(serializers.ModelSerializer):
     created_by = serializers.SerializerMethodField()
 
     def get_created_by(self, obj):
-        return obj.created_by.company.name
+        return obj.created_by.CNPJ
 
     class Meta:
         model = InvestmentOffer
@@ -17,5 +17,5 @@ class InvestmentOfferSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         user = request.user
-        validated_data['created_by'] = user
+        validated_data['created_by'] = user.company
         return super().create(validated_data)

@@ -25,9 +25,12 @@ class TestCreate:
             if value2:
                 assert value2 == value
 
-    def test_standard_user_success(self, client, endpoint, user_data):
+    def test_standard_user_success(self, client, endpoint, user_data, client_data):
         response = client.post(endpoint,
-            data={**user_data},
+            data={
+                **user_data,
+                'client': {**client_data}
+            },
             content_type='application/json'
         )
         assert response.status_code == 201, f'Error status {response.status_code} - {response.json()}'
@@ -37,6 +40,19 @@ class TestCreate:
             value2 = user_data.get(key)
             if value2:
                 assert value2 == value
+
+    def test_user_without_type(self, client, endpoint, user_data):
+        response = client.post(endpoint,
+            data={
+                **user_data,
+            },
+            content_type='application/json'
+        )
+        assert response.status_code==400, f'Response status {response.status_code} - {response.json()}'
+        json = response.json()
+        assert isinstance(json, dict)
+        user_type_error = json.get('user_type')
+        assert user_type_error is not None
 
     def test_company_user_without_name(self, client, endpoint, user_data, company_data):
         company_data.pop("name")
@@ -56,11 +72,12 @@ class TestCreate:
         assert isinstance(company_errors, dict)
         assert company_errors.get('name')
 
-    def test_standard_user_without_email(self, client, endpoint, user_data):
+    def test_standard_user_without_email(self, client, endpoint, user_data, client_data):
         user_data.pop("email")
         response = client.post(endpoint,
             data={
                 **user_data,
+                'client': {**client_data}
             },
             content_type="application/json"
         )
@@ -94,12 +111,14 @@ class TestCreate:
         assert company_errors.get('CNPJ') is not None
 
     def test_standard_user_already_exists(
-            self, client, endpoint, create_standard_user, user_data
+            self, client, endpoint, create_standard_user, user_data, client_data
         ):
-        assert create_standard_user is not None
+        user, user_client = create_standard_user
+        assert user is not None and user_client is not None
         response = client.post(endpoint,
             data={
                 **user_data,
+                'client': {**client_data}
             },
             content_type='application/json'
         )

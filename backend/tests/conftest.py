@@ -1,7 +1,7 @@
 from django.test import Client
 
 from .fixtures.user import (
-    user_data, company_data, 
+    user_data, company_data, client_data,
     create_standard_user, 
     login_standard_user, 
     create_company_user, 

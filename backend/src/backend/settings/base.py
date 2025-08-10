@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'offers.apps.OffersConfig',
     'transactions.apps.TransactionsConfig',
     'backend.core.apps.CoreConfig',
+    'clients.apps.ClientsConfig',
     'backend.middlewares.apps.MiddlewaresConfig',
     'corsheaders',
     'rest_framework_simplejwt',

@@ -35,6 +35,8 @@ class UserManager(BaseUserManager):
 class User(AbstractUser, PermissionsMixin):
 	
 	username = None
+	first_name = None
+	last_name = None
 	email = models.EmailField(max_length=254, unique=True, null=False, blank=False)
 	user_type = models.TextField(
 		choices=[(item.value, item.name.title()) for item in UserTypes], 

@@ -14,7 +14,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     buyer = serializers.SerializerMethodField()
 
     def get_buyer(self, obj):
-        return obj.created_by.email
+        return f'{obj.created_by.first_name} {obj.created_by.last_name}' 
 
     class Meta:
         model = Transaction
@@ -50,5 +50,5 @@ class TransactionSerializer(serializers.ModelSerializer):
 
         request = self.context.get('request')
         user = request.user
-        validated_data['created_by'] = user
+        validated_data['created_by'] = user.client
         return super().create(validated_data)

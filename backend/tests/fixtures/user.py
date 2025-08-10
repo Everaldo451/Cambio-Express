@@ -10,8 +10,6 @@ import pytest
 def user_data():
     return {
         "email": "valid@gmail.com",
-        "first_name": "Any",
-        "last_name": "Name",
         "password": "validPassword"
     }
 
@@ -23,7 +21,14 @@ def company_data():
     }
 
 @pytest.fixture
-def create_standard_user(user_data):
+def client_data():
+    return {
+        "first_name": "Any",
+        "last_name": "Name",
+    }
+
+@pytest.fixture
+def create_standard_user(user_data, client_data):
     factory = APIRequestFactory()
     request = factory.post(
         '', 
@@ -34,14 +39,19 @@ def create_standard_user(user_data):
     )
 
     serializer = UserSerializer(
-        data={**user_data},
+        data={
+            **user_data,
+            'client': {**client_data}
+        },
         context={'request':request}
     )
     serializer.is_valid(raise_exception=True)
-    return serializer.save()
+    user = serializer.save()
+    return user, user.client
 
 @pytest.fixture
 def login_standard_user(user_data, create_standard_user):
+    user, _ = create_standard_user
     factory = APIRequestFactory()
     request = factory.post(
         '', 
@@ -51,9 +61,9 @@ def login_standard_user(user_data, create_standard_user):
         format='json'
     )
     jwt_service = JWTService()
-    tokens = jwt_service.generate_tokens_data(request, create_standard_user)
+    tokens = jwt_service.generate_tokens_data(request, user)
 
-    return create_standard_user, tokens
+    return user, tokens
 
 @pytest.fixture
 def create_company_user(user_data, company_data):

@@ -12,7 +12,7 @@ def validate_gte_0(value):
 
 class InvestmentOffer(models.Model):
 
-	created_by = models.ForeignKey("users.User", on_delete=models.CASCADE, null=False)
+	created_by = models.ForeignKey("companies.Company", on_delete=models.CASCADE, null=False)
 	code = models.CharField(
 		max_length=10,
 		choices=[(tag.name, tag.value.title()) for tag in CodeChoices], 

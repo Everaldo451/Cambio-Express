@@ -41,7 +41,16 @@ class IsCompanyUser(permissions.BasePermission):
         user = request.user
         return user.is_authenticated and user.user_type == UserTypes.COMPANY.value
     
+class IsCompanyOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user.company and obj.created_by == request.user.company
+    
 class IsStandardUser(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user
         return user.is_authenticated and user.user_type == UserTypes.STANDARD.value
+    
+class IsClientOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user.client and obj.created_by == request.user.client
+    

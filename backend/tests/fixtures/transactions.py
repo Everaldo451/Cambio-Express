@@ -3,5 +3,5 @@ import pytest
 @pytest.fixture
 def transaction_data():
     return {
-        'value': '110.00'
+        'value': '100.00'
     }

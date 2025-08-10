@@ -5,7 +5,7 @@ from offers.models import InvestmentOffer
 from offers.serializers.models import InvestmentOfferSerializer
 from .filter import InvestmentOfferFilter
 
-from backend.core.permissions import IsOwner, IsCompanyUser
+from backend.core.permissions import IsCompanyOwner, IsCompanyUser
 
 
 class InvestmentOfferViewSet(viewsets.ModelViewSet):
@@ -27,6 +27,6 @@ class InvestmentOfferViewSet(viewsets.ModelViewSet):
         if self.request.method == "POST":
             return (permissions.IsAuthenticated(), IsCompanyUser(),)
         elif self.request.method not in permissions.SAFE_METHODS:
-            return (permissions.IsAuthenticated(), IsOwner(),)
+            return (permissions.IsAuthenticated(), IsCompanyUser(), IsCompanyOwner(),)
         return []
     
