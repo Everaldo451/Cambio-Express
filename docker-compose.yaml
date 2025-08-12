@@ -35,6 +35,9 @@ services:
       context: ./frontend
     depends_on:
       - backend
+    environment:
+      - API_HOST=backend
+      - API_PORT=8000
     networks:
       - app-network
 
