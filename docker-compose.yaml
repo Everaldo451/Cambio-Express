@@ -50,10 +50,10 @@ services:
     depends_on:
       frontend:
         condition: 
-          service-healthy
+          service_healthy
       backend:
         condition:
-          service-healthy
+          service_healthy
     ports:
       - "80:80"
     environment:
