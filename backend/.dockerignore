@@ -10,4 +10,7 @@
 pytest.ini
 .gitignore
 
+*.log
+*.sqlite3
+
 README.md
