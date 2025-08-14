@@ -1,7 +1,7 @@
 FROM python:3.12.10-slim
 
 RUN apt-get update -y
-RUN apt-get install python3-dev default-libmysqlclient-dev build-essential pkg-config
+RUN apt-get install -y python3-dev default-libmysqlclient-dev build-essential pkg-config
 
 RUN pip install poetry
 
