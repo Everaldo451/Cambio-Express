@@ -5,7 +5,7 @@ export const getUser = cache(async () => {
     try {
         const response = await authUserAxios.get('/users/me')
         return response.data
-    } catch (error) {
+    } catch (_) {
         return null
     }
 })

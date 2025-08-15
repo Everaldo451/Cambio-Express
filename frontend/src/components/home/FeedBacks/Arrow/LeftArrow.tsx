@@ -2,7 +2,7 @@
 import Arrow, {FeedbackArrowProps} from "."
 
 export default function LeftArrow(
-    {feedbacks, imgProps, setElement}: FeedbackArrowProps
+    {imgProps, setElement}: Omit<FeedbackArrowProps, 'feedbacks'>
 ) {
     function onClick(_:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         setElement(prev => prev-1>=0?prev-1:prev)

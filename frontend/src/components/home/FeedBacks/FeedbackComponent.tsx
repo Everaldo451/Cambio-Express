@@ -62,9 +62,8 @@ export default function FeedbackComponent({first_name, date, comment}:FeedBack) 
             <FeedbackH5>{first_name}</FeedbackH5>
             <FeedbackH6>{`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`}</FeedbackH6>
             <div className="avaliation">
-                <FeedbackParagraph>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Repellendus, consectetur cum natus sunt iure tempora dolor, aliquid, dolorum 
-                    praesentium laudantium sequi soluta quibusdam ipsam. Vitae quidem error ipsum velit eos.
+                <FeedbackParagraph>
+                    {comment}
                 </FeedbackParagraph>
             </div>            
         </FeedbackDiv>  

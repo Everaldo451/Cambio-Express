@@ -2,9 +2,9 @@ import React, { useEffect, ComponentProps } from "react"
 import { useRouter } from "next/router"
 
 
-export default function withAuth(Component:(props?:any) => React.JSX.Element) {
+export default function withAuth(Component:(_props: {[key:string]: unknown}) => React.JSX.Element) {
 
-    return (props:ComponentProps<typeof Component>) => {
+    return (props: ComponentProps<typeof Component>) => {
 
         if (!("user" in props) || props.user) {
             return <Component {...props}></Component>

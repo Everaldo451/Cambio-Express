@@ -65,7 +65,7 @@ export async function getFeedBacks() {
                 responseData.forEach((value:FeedBack) => {data.push(value)})
             }
             return data
-    } catch(e) {return []}
+    } catch(_) {return []}
 }
 export default function FeedBacks() {
 
@@ -86,8 +86,7 @@ export default function FeedBacks() {
             <GridDiv>
                 <LeftArrow 
                     imgProps={{src: "/images/triangle.png"}}
-                    setElement={setElement} 
-                    feedbacks={feedbacks}
+                    setElement={setElement}
                 />
                 <FeedbackDisplay elementIndex={element}>
                     {
@@ -96,8 +95,13 @@ export default function FeedBacks() {
                         :null
                     }
                     {
-                        feedbacks.map((fdb) => 
-                            <FeedbackComponent first_name={fdb.first_name} date={fdb.date} comment={fdb.comment}/>
+                        feedbacks.map((feedback, idx) => 
+                            <FeedbackComponent 
+                                key={idx}
+                                first_name={feedback.first_name} 
+                                date={feedback.date} 
+                                comment={feedback.comment}
+                            />
                         )   
                     }
                 </FeedbackDisplay>

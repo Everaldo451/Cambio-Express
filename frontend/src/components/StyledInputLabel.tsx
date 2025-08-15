@@ -11,7 +11,7 @@ type InputPropsType = {style:React.CSSProperties}
 type LabelPropsType = {style:React.CSSProperties, focused:boolean}
 
 function getLabelClassname(
-    props:LabelPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
+    _props:LabelPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLLabelElement>, HTMLLabelElement>
 ) {
     return "absolute transition-all duration-[0.5s] hover:cursor-text"
 }
@@ -47,7 +47,7 @@ export function Label(props:LabelPropsType & React.DetailedHTMLProps<React.HTMLA
 
 
 function getInputClassname(
-    props:InputPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
+    _props:InputPropsType & React.DetailedHTMLProps<React.HTMLAttributes<HTMLInputElement>, HTMLInputElement>
 ) {
     return (
         "focus:outline-none"
@@ -73,8 +73,8 @@ export function Input(props:InputPropsType & React.DetailedHTMLProps<React.HTMLA
 interface ContainerProps {
     inputStyle:React.CSSProperties,
     inputAttrs: React.HTMLProps<HTMLInputElement>,
-    InputObject: (props:InputPropsType & {[key:string]: any}) => React.JSX.Element,
-    LabelObject: (props:LabelPropsType & {[key:string]: any}) => React.JSX.Element,
+    InputObject: (_:InputPropsType & {[key:string]: unknown}) => React.JSX.Element,
+    LabelObject: (_:LabelPropsType & {[key:string]: unknown}) => React.JSX.Element,
 }
 export function InputContainer({inputStyle,inputAttrs, InputObject, LabelObject}:ContainerProps) { 
 
