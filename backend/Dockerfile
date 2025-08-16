@@ -19,6 +19,9 @@ ENV PORT=8000
 
 EXPOSE 8000
 
+ENV DJANGO_SETTINGS_MODULE=backend.settings
+ENV PYTHONPATH=/app/src:/app
+
 COPY . .
 
 RUN chmod +x run.sh
