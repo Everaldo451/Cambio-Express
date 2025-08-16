@@ -26,6 +26,7 @@ from users import views as user_views
 from accounts import views as account_views
 from offers import views as offert_views
 from transactions import views as transaction_views
+from api.views.ok import healtycheck
 
 from decouple import config
 
@@ -46,6 +47,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path(config("DJANGO_ADMIN_URL", 'admin/'), admin.site.urls),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('ok/', healtycheck),
     path('api/v1/', include([
     	path('', include(router.urls)),
         path('auth/', include('authentication.urls')),

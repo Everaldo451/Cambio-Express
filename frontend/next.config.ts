@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
 		return [
 			{
 				source: '/api/:path*',
-				destination: `http://${process.env.API_HOST}:${process.env.API_PORT}/api/v1/:path*`
+				destination: `http://${process.env.PROXY_HOST}:${process.env.PROXY_PORT}/api/:path*`
 			}
 		]
 	}

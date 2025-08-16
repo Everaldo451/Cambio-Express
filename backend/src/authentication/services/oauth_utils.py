@@ -5,8 +5,8 @@ import os
 
 
 def generate_oauth_config(request:HttpRequest, redirect_uri:str):
-    client_id = config("OAUTH_CLIENT_ID")
-    client_secret = config("OAUTH_CLIENT_SECRET")
+    client_id = config("GOOGLE_OAUTH_CLIENT_ID")
+    client_secret = config("GOOGLE_OAUTH_CLIENT_SECRET")
     client_config = {
 		"web": {
 			"client_id": client_id,

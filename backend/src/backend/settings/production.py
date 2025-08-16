@@ -4,6 +4,7 @@ from .base import *
 DEBUG = False
 
 SECRET_KEY = config("SECRET_KEY")
+ALLOWED_HOSTS = ['localhost', '0.0.0.0']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

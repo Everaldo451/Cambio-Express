@@ -20,4 +20,6 @@ ENV PORT=8000
 EXPOSE 8000
 
 COPY . .
+
+RUN chmod +x run.sh
 CMD ["./run.sh" ]
