@@ -5,7 +5,17 @@ server {
     location /api/ {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_pass http://${API_HOST}:${API_PORT}/api/v1/;
+        proxy_pass http://${API_HOST}:${API_PORT}/api/;
+    }
+
+    location /admin/ {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://${API_HOST}:${API_PORT}/admin/;
+    }
+
+    location /static/ {
+        alias /var/www/staticfiles/;
     }
 
     location / {

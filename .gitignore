@@ -1,2 +1,4 @@
 .env
 
+#Django staticfiles volume
+staticfiles

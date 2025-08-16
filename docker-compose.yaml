@@ -19,6 +19,8 @@ services:
       - FRONT_PORT=80
     networks:
       - app-network
+    volumes:
+      - ./staticfiles:/app/staticfiles
   
   frontend:
     container_name: frontend
@@ -50,6 +52,8 @@ services:
       - API_PORT=8000
     networks:
       - app-network
+    volumes:
+      - ./staticfiles:/var/www/staticfiles/
 
   db:
     image: mysql:latest

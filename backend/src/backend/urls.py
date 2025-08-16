@@ -46,10 +46,10 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path(config("DJANGO_ADMIN_URL", 'admin/'), admin.site.urls),
-    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('ok/', healtycheck),
     path('api/v1/', include([
     	path('', include(router.urls)),
+        path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+        path('ok/', healtycheck),
         path('auth/', include('authentication.urls')),
     ])),
     #path("", include("api.urls"))
