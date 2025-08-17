@@ -2,7 +2,7 @@ import pytest
 
 @pytest.fixture
 def endpoint():
-    return '/api/v1/accounts/deposit/'
+    return '/api/v1/accounts/'
 
 @pytest.fixture
 def access_token(login_standard_user):
@@ -15,7 +15,7 @@ class TestDeposit:
     def test_success(self, client, endpoint, access_token, create_account):
         account = create_account
         account_balance = account.balance
-        response = client.post(endpoint+f'{account.id}/',
+        response = client.post(endpoint+f'{account.id}/deposit/',
             data = {
                 'amount': 80,
                 'currency': 'EUR'
@@ -24,4 +24,4 @@ class TestDeposit:
                 'Authorization': f'Bearer {access_token}'
             }
         )
-        assert response.status_code == 200
+        assert response.status_code == 200, f'Response status {response.status_code}. Error: {response.json()}'

@@ -47,7 +47,10 @@ class BCBCurrencyQuotationService(CurrencyQuotationService):
     def get_current_quotation(self, base_currency, target_currency):
         now = datetime.now()
         weekday = now.weekday()
-        tries = (weekday//5)*(weekday%5 + 2)
+        if weekday//5==1:
+            tries = weekday%5 + 2
+        else:
+            tries = 1
         error = None
         for days_ago in range(tries):
             try:

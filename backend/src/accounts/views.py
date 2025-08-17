@@ -14,6 +14,8 @@ from accounts.serializers.models.account import AccountSerializer
 from accounts.serializers.use_cases import TransferToAccountSerializer, DepositSerializer
 from accounts.services.transfer_service import TransferService
 
+import logging
+
 class AccountViewSet(viewsets.ModelViewSet):
     queryset=Account.objects.all()
     serializer_class=AccountSerializer
@@ -78,7 +80,7 @@ class AccountViewSet(viewsets.ModelViewSet):
         self.check_object_permissions(request, to_account)
         
         amount = serializer.validated_data['amount']
-        currency = serializer.validated_data['currency']
+        currency = serializer.validated_data['currency'].code
         quotation_service = BCBCurrencyQuotationService()
         transfer_service = TransferService(quotation_service)
         
@@ -92,4 +94,5 @@ class AccountViewSet(viewsets.ModelViewSet):
         except ValueError as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
+            logging.debug(str(e))
             return Response({"detail": "Unexpected error."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
