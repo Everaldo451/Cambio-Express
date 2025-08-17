@@ -45,14 +45,14 @@ class TestCreate:
         json = response.json()
         assert isinstance(json,dict)
 
-    def test_invalid_code(
+    def test_invalid_monetary_index(
             self, 
             client, 
             endpoint, 
             access_token, 
             offer_data
         ):
-        offer_data['code'] = 'CODE'
+        offer_data['monetary_index'] = 'ANOTHERVAR'
         response = client.post(endpoint,
             data=offer_data,
             headers={
@@ -62,27 +62,7 @@ class TestCreate:
         assert response.status_code==400, f'Response status {response.status_code}. Error: {response.json()}'
         json = response.json()
         assert isinstance(json,dict)
-        code_error = json.pop('code', None)
-        assert code_error is not None
-
-    def test_invalid_index_variable(
-            self, 
-            client, 
-            endpoint, 
-            access_token, 
-            offer_data
-        ):
-        offer_data['index_variable'] = 'ANOTHERVAR'
-        response = client.post(endpoint,
-            data=offer_data,
-            headers={
-                'Authorization': f'Bearer {access_token}'
-            }                  
-        )
-        assert response.status_code==400, f'Response status {response.status_code}. Error: {response.json()}'
-        json = response.json()
-        assert isinstance(json,dict)
-        index_variable_error = json.pop('index_variable', None)
+        index_variable_error = json.pop('monetary_index', None)
         assert index_variable_error is not None
 
     def test_negative_min_value(

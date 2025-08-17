@@ -6,9 +6,8 @@ from offers.serializers.models import InvestmentOfferSerializer
 @pytest.fixture
 def offer_data():
     return {
-        'code': 'USD',
         'min_value': '100.00',
-        'index_variable': 'SELIC',
+        'monetary_index': 'SELIC',
         'percent': '95.55'
     }
 

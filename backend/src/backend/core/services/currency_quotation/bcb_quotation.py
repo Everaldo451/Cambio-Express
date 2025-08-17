@@ -1,5 +1,5 @@
 from .base import CurrencyQuotationService
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 import requests
 
@@ -10,9 +10,10 @@ class BCBCurrencyQuotationService(CurrencyQuotationService):
             ["=".join([key, value]) for key, value in params.items()]
         )
 
-    def get_current_quotation_real(self, base_currency):
-        now = datetime.now()
-        date_format = f"{now.month:02d}-{now.day:02d}-{now.year}"
+    def get_quotation_real_by_day(self, base_currency, date_str:str):
+        self.date_format
+        date = datetime.strptime(date_str, self.date_format)
+        date_format = f"{date.month:02d}-{date.day:02d}-{date.year}"
         query_params = {
             '$format':'json',
             '$select':'cotacaoCompra',
@@ -25,7 +26,6 @@ class BCBCurrencyQuotationService(CurrencyQuotationService):
         }
         query_params_string = self.params_to_string('&', query_params)
         api_params_string = self.params_to_string(',', api_params)
-
         url = f'https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia({api_params_string})?{query_params_string}'
         try:
             response = requests.get(url, timeout=5)
@@ -45,13 +45,23 @@ class BCBCurrencyQuotationService(CurrencyQuotationService):
             raise Exception('Response is not valid JSON.')
 
     def get_current_quotation(self, base_currency, target_currency):
-        base_currency_quotation_real = Decimal(
-            self.get_current_quotation_real(base_currency)
-        )
-        target_currency_currency_quotation_real = Decimal(
-            self.get_current_quotation_real(target_currency)
-        )
-        return base_currency_quotation_real/target_currency_currency_quotation_real
+        #Three tries are needed because on Sunday we need to get Friday's quotation.
+        tries = 3
+        error = None
+        for days_ago in range(tries):
+            try:
+                date = datetime.now() - timedelta(days=days_ago)
+                date_str = datetime.strftime(date, self.date_format)
+                base_currency_quotation_real = Decimal(
+                    self.get_quotation_real_by_day(base_currency, date_str)
+                )
+                target_currency_quotation_real = Decimal(
+                    self.get_quotation_real_by_day(target_currency, date_str)
+                )
+                return base_currency_quotation_real/target_currency_quotation_real
+            except Exception as err:
+                error = err
+        raise error
     
     def get_quotation_by_day(self, base_currency, target_currency):
         return super().get_quotation_by_day(base_currency, target_currency)

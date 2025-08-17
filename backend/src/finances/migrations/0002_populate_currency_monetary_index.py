@@ -2,6 +2,24 @@
 
 from django.db import migrations
 
+def populate_currency(apps, schema_editor):
+    Currency = apps.get_model("finances", "Currency")
+    currencies = [
+        {'name': 'Brazilian Real', 'code': 'BRL', 'symbol': 'R$'},
+        {'name': 'US Dollar', 'code': 'USD', 'symbol': '$'},
+        {'name': 'Euro', 'code': 'EUR', 'symbol': '€'},
+        {'name': 'Pound Sterling', 'code': 'GBP', 'symbol': '£'},
+        {'name': 'Japanese Yen', 'code': 'JPY', 'symbol': '¥'},
+        {'name': 'Australian Dollar', 'code': 'AUD', 'symbol': 'A$'},
+        {'name': 'Canadian Dollar', 'code': 'CAD', 'symbol': 'C$'},
+        {'name': 'Swiss Franc', 'code': 'CHF', 'symbol': 'CHF'},
+        {'name': 'Danish Krone', 'code': 'DKK', 'symbol': 'kr'},
+        {'name': ' Norwegian Krone', 'code': 'NOK', 'symbol': 'kr'},
+        {'name': 'Swedish Krona', 'code': 'SEK', 'symbol': 'kr'},
+    ]
+    for currency in currencies:
+        Currency.objects.create(**currency)
+
 
 class Migration(migrations.Migration):
 
@@ -10,5 +28,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython()
+        migrations.RunPython(populate_currency),
     ]

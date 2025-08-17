@@ -19,7 +19,7 @@ class TransferService:
             raise ValueError("Insufficient balance.")
         
         converted_ammount = self.calculate_converted_amount(
-            from_account.code, to_account.code, amount
+            from_account.currency.code, to_account.currency.code, amount
         )
         
         from_account.balance -= amount
@@ -29,7 +29,7 @@ class TransferService:
 
     def transfer_from_external_account(self, to_account:Account, currency:str, amount):
         converted_ammount = self.calculate_converted_amount(
-            currency, to_account.code, amount
+            currency, to_account.currency.code, amount
         )
 
         to_account.balance += converted_ammount

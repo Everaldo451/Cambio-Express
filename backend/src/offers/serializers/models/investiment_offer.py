@@ -1,13 +1,19 @@
 from rest_framework import serializers
 from offers.models import InvestmentOffer
+from finances.models import MonetaryIndex
 
 import logging
 
 class InvestmentOfferSerializer(serializers.ModelSerializer):
     created_by = serializers.SerializerMethodField()
+    monetary_index = serializers.SlugRelatedField(
+        many=False,
+        slug_field='symbol',
+        queryset=MonetaryIndex.objects.all()
+    )
 
     def get_created_by(self, obj):
-        return obj.created_by.CNPJ
+        return obj.created_by.legal_id
 
     class Meta:
         model = InvestmentOffer

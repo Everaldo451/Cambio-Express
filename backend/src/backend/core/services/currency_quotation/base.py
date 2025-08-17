@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 
 class CurrencyQuotationService(ABC):
 
+    def __init__(self):
+        self.date_format = "%d/%m/%Y"
+
     @abstractmethod
     def get_current_quotation(self, base_currency: str, target_currency: str) -> float:
         pass

@@ -6,13 +6,13 @@ from accounts.serializers.models import AccountSerializer
 @pytest.fixture
 def account_data():
     return {
-        'code': 'USD',
+        'currency': 'USD',
     }
 
 @pytest.fixture
 def other_account_data():
     return {
-        'code': 'EUR',
+        'currency': 'EUR',
     }
 
 @pytest.fixture
