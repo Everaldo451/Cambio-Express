@@ -45,12 +45,13 @@ class BCBCurrencyQuotationService(CurrencyQuotationService):
             raise Exception('Response is not valid JSON.')
 
     def get_current_quotation(self, base_currency, target_currency):
-        #Three tries are needed because on Sunday we need to get Friday's quotation.
-        tries = 3
+        now = datetime.now()
+        weekday = now.weekday()
+        tries = (weekday//5)*(weekday%5 + 2)
         error = None
         for days_ago in range(tries):
             try:
-                date = datetime.now() - timedelta(days=days_ago)
+                date = now - timedelta(days=days_ago)
                 date_str = datetime.strftime(date, self.date_format)
                 base_currency_quotation_real = Decimal(
                     self.get_quotation_real_by_day(base_currency, date_str)
