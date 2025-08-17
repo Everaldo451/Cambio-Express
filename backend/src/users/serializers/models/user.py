@@ -3,13 +3,8 @@ from rest_framework import serializers
 
 from backend.core.types.user import UserTypes
 
-from users.models import User
-
-from companies.serializers.models import CompanySerializer
-from companies.models import Company
-
-from clients.serializers.models import ClientSerializer
-from clients.models import Client
+from users.models import User, Client, Company
+from users.serializers.models import ClientSerializer, CompanySerializer
 
 class UserSerializer(serializers.ModelSerializer):
 	company = CompanySerializer(required=False)

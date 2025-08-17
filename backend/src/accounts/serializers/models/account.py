@@ -2,12 +2,11 @@ from rest_framework import serializers
 from accounts.models import Account
 
 class AccountSerializer(serializers.ModelSerializer):
-
     user = serializers.ReadOnlyField(source='created_by.email')
 
     class Meta:
         model = Account
-        fields = ["id", "user", "code", "balance"]
+        fields = ["id", "user", "currency", "balance"]
         read_only_fields = ['id', "user", "balance"]
 
     def validate(self, data):

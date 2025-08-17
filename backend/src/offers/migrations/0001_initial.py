@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('companies', '0001_initial'),
+        ('users', '0004_client_company'),
     ]
 
     operations = [
@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('min_value', models.FloatField()),
                 ('index_variable', models.CharField(max_length=100)),
                 ('percent', models.FloatField()),
-                ('company', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='companies.company')),
+                ('company', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='users.company')),
             ],
         ),
     ]

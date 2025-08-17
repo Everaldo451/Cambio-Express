@@ -8,4 +8,4 @@ class InvestmentOfferFilter(django_filters.FilterSet):
 
     class Meta:
         model = InvestmentOffer
-        fields = ['code','index_variable']
+        fields = ['monetary_index']

@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('companies', '0003_alter_company_cnpj'),
+        ('users', '0004_client_company'),
         ('offers', '0008_alter_investmentoffer_percent'),
     ]
 
@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='investmentoffer',
             name='created_by',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='companies.company'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.company'),
         ),
     ]

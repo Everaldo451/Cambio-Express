@@ -32,8 +32,8 @@ class UserManager(BaseUserManager):
 
 		return self._create_user(email, password, **extra_fields)
 
+
 class User(AbstractUser, PermissionsMixin):
-	
 	username = None
 	first_name = None
 	last_name = None
@@ -59,7 +59,6 @@ class User(AbstractUser, PermissionsMixin):
 
 	def __str__(self):
 		username = ""
-
 		if not hasattr(self,"company"):
 			if self.first_name:
 				username = self.first_name
@@ -67,5 +66,30 @@ class User(AbstractUser, PermissionsMixin):
 				username = self.email
 		else:
 			username = self.company.name
-
 		return username
+
+
+class Client(models.Model):
+	user = models.OneToOneField(
+		"users.User",
+		on_delete=models.CASCADE,
+		related_name="client",
+	)
+	first_name = models.CharField(max_length=50, null=False, blank=False)
+	last_name = models.CharField(max_length=100, null=False, blank=False)
+
+	def __str__(self):
+		return f"{self.first_name} {self.last_name}"
+	
+
+class Company(models.Model):
+	user = models.OneToOneField(
+		"users.User",
+		on_delete=models.CASCADE,
+		related_name="company",
+	)
+	name = models.CharField(max_length=100, null=False, blank=False)
+	legal_id = models.CharField(unique=True, max_length=100, null=False, blank=False)
+
+	def __str__(self):
+		return f"{self.name}, Legal Identifier: {self.legal_id}"

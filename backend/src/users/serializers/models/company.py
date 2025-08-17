@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from companies.models import Company
+from users.models import Company
 
 class CompanySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Company
-		fields = ["id", "name", "CNPJ"]
+		fields = ["id", "name", "legal_id"]
 		read_only_fields = ['id']
 

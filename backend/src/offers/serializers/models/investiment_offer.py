@@ -11,7 +11,7 @@ class InvestmentOfferSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InvestmentOffer
-        fields = ["id","created_by","code","min_value","index_variable","percent"]
+        fields = ["id","created_by","min_value","monetary_index","percent"]
         read_only_fields = ['id', 'created_by']
 
     def create(self, validated_data):
