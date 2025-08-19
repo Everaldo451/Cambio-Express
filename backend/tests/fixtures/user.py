@@ -16,7 +16,7 @@ def user_data():
 @pytest.fixture
 def company_data():
     return {
-        "CNPJ": "02000000000001",
+        "legal_id": "02000000000001",
         "name": "Any C",
     }
 

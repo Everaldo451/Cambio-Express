@@ -1,8 +1,6 @@
 from django.db import models
 from backend.core.types.finances import DataFrequencies, CalculationTypes
-from finances.validators.api_config_validators import validate_keys_type, validate_parameters
 
-# Create your models here.
 class Currency(models.Model):
     name = models.CharField(unique=True, max_length=50)
     code = models.CharField(unique=True, max_length=10) #BRL, USD, EUR
@@ -19,7 +17,10 @@ class MonetaryIndex(models.Model):
     )
     name = models.CharField(max_length=100)
     symbol = models.CharField(max_length=20) #IPCA, SELIC
-    api_config = models.JSONField(validators=[validate_keys_type, validate_parameters])
+    api_config = models.OneToOneField(
+        "apis.APIConfig",
+        models.DO_NOTHING
+    )
     data_frequency = models.TextField(
         choices=[(dt_frequency.value, dt_frequency.value.title()) for dt_frequency in DataFrequencies]
     )

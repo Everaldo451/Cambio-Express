@@ -26,7 +26,7 @@ from users import views as user_views
 from accounts import views as account_views
 from offers import views as offert_views
 from transactions import views as transaction_views
-from api.views.ok import healtycheck
+from apis.views.ok import healtycheck
 
 from decouple import config
 

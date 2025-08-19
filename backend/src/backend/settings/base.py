@@ -70,7 +70,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api.apps.ApiConfig',
+    'apis.apps.ApisConfig',
     'authentication.apps.AuthenticationConfig',
     'marketplace.apps.MarketplaceConfig',
     'users.apps.UsersConfig',
