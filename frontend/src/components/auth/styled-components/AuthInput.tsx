@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react'
-import { Input } from '@/components/StyledInputLabel'
+import Input from '@/components/globals/inputContainer/Input'
 
 export default function AuthInput(props:ComponentProps<typeof Input>) {
     return (

@@ -4,7 +4,7 @@ export default function AccountRouteDisplay({
     children: React.ReactNode
 }) {
     return (
-        <div className="bg-[#2B2B28] p-[10px_20px]">
+        <div className="bg-[#2B2B28] p-[10px_20px] flex flex-col">
             {children}
         </div>
     )

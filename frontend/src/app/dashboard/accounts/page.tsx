@@ -1,17 +1,10 @@
 import AddButton from "@/components/dashboard/(accounts)/AddButton"
 import AccountComponent from "@/components/dashboard/(accounts)/AccountComponent"
-import { authUserAxios } from "@/lib/server/authUserAxios"
+import { getUserAccounts } from "@/lib/server/getUserAccounts"
 
 import { AccountType } from "@/types"
 
-async function getUserAccounts() {
-    try{
-        const response = await authUserAxios.get('/accounts/')
-        return response.data
-    } catch (error) {
-        return null
-    }
-}
+
 export default async function AccountPage() {
     const accounts = (await getUserAccounts()) as AccountType[]
     return (

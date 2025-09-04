@@ -2,20 +2,20 @@
 import { ComponentProps } from "react"
 
 import InputContainer from "@/components/globals/inputContainer"
-import AuthInput from "./AuthInput"
-import AuthLabel from "./AuthLabel"
+import AccountRouteInput from "./AccountRouteInput"
+import AccountRouteLabel from "./AccountRouteLabel"
 
 import { theme } from "@/theme/auth"
 
-export default function AuthInputContainer(
+export default function AccountRouteInputContainer(
     {inputAttrs}: Pick<ComponentProps<typeof InputContainer>, "inputAttrs">
 ) {
     return (
         <InputContainer 
             inputAttrs={inputAttrs} 
             inputStyle={theme.inputStyle}
-            InputObject={AuthInput}
-            LabelObject={AuthLabel}
+            InputObject={AccountRouteInput}
+            LabelObject={AccountRouteLabel}
         />
     )
 }
