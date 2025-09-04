@@ -1,42 +1,19 @@
 import AuthInputContainer from "@/components/auth/styled-components/AuthInputContainer"
-import { useEffect, useState } from "react"
+import UserTypeForm from "./UserTypeForm"
 
 export default function CompanyFields() {
-    const [name, setName] = useState("")
-    const [CNPJ, setCNPJ] = useState("")
-    const [companyValue, setCompanyValue] = useState("")
-
-    useEffect(() => {
-        setCompanyValue(JSON.stringify({
-            'name':name,
-            'CNPJ':CNPJ
-        }))
-    },[name, CNPJ])
     return (
-        <>
+        <UserTypeForm userTypeField="company">
             <AuthInputContainer 
                 inputAttrs={
-                    {
-                        name:"name",
-                        id:"name",
-                        required:false,
-                        value:name,
-                        onInput:(e) => {setName(e.currentTarget.value)}
-                    }
+                    {name:"name",id:"name",required:false}
                 }
             />
             <AuthInputContainer 
                 inputAttrs={
-                    {
-                        name:"CNPJ",
-                        id:"CNPJ",
-                        required:false,
-                        value:CNPJ,
-                        onInput:(e) => {setCNPJ(e.currentTarget.value)}
-                    }
+                    {name:"CNPJ",id:"CNPJ",required:false}
                 }
             />
-            <input type="hidden" name="company" value={companyValue} required/>
-        </>
+        </UserTypeForm>
     )
 }
