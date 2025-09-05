@@ -4,7 +4,6 @@ import AccountBlackMask from "@/components/dashboard/(accounts)/[id]/AccountBlac
 import AccountMenu from "@/components/dashboard/(accounts)/[id]/AccountMenu";
 
 import { AccountType } from "@/types"
-import { getUserAccount } from "@/lib/server/getUserAccounts";
 
 
 export default async function AccountLayout({
@@ -15,8 +14,9 @@ export default async function AccountLayout({
     children:React.ReactNode
 }) {
     const user={}
+    const account={}
 
-    if (!user) {
+    if (!user || !account) {
         redirect("/")
     }
     return (

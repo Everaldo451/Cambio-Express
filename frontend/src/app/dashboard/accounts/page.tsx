@@ -18,13 +18,13 @@ export default async function AccountPage() {
                     <AccountComponent 
                         id={account.id} 
                         balance={account.balance} 
-                        code={account.code} 
+                        currency={account.currency} 
                         key={account.id}
                     />
                 )}
-                <AccountComponent id={1} balance="100.00" code="USD"/>
-                <AccountComponent id={2} balance="250.00" code="EUR"/>
-                <AccountComponent id={3} balance="1000.00" code="BRL"/>
+                <AccountComponent id={1} balance="100.00" currency="USD"/>
+                <AccountComponent id={2} balance="250.00" currency="EUR"/>
+                <AccountComponent id={3} balance="1000.00" currency="BRL"/>
             </section>
         </>
     )

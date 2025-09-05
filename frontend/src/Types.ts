@@ -6,7 +6,7 @@ export interface Company {
 
 export interface AccountType {
     id: number,
-    code: string,
+    currency: string,
     balance: string
 }
 

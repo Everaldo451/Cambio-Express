@@ -4,14 +4,15 @@ import AuthInputContainer from '@/components/auth/styled-components/AuthInputCon
 import { AuthSubmitInput } from '@/components/auth/styled-components/AuthSubmitButton'
 
 import { theme } from '@/theme/auth'
-import generateSubmitHandler from '../generateSubmitHandler'
+
 
 import SignUpInputsRenderer from '@/components/auth/(signup)/SignUpInputsRenderer'
+import { registerUser } from '../actions'
 
 
 export default function RegisterPage() {
     return (
-        <FormRenderer action={generateSubmitHandler("/users/")} method='POST'>
+        <FormRenderer action={registerUser} method='POST'>
             <SignUpInputsRenderer>
                 <AuthInputContainer inputAttrs={{name:"email",id:"email",required: true}}/>
                 <AuthInputContainer inputAttrs={{name:"password",id:"password",required: true,type:"password"}}/>
