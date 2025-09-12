@@ -27,7 +27,7 @@ export default function InputContainer({inputStyle,inputAttrs, InputObject, Labe
     }
 
     
-    let Name = inputAttrs.name?inputAttrs.name:""
+    let Name = inputAttrs.name?inputAttrs.name:inputAttrs.id?inputAttrs.id:""
     if (Name.includes("_")) {
         console.log(true)
         let n = ""

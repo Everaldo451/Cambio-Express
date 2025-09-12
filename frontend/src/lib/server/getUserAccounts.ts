@@ -2,7 +2,7 @@ import { authUserAxios } from "@/lib/server/authUserAxios"
 import { cache } from "react";
 import { AccountType } from "@/types"
 
-export const getUserAccounts = cache(async () => {
+export const getUserAccounts = cache(async (): Promise<AccountType[]|null> => {
     try{
         const response = await authUserAxios.get('/accounts/')
         return response.data

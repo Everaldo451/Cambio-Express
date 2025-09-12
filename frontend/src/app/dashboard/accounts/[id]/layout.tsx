@@ -10,7 +10,7 @@ export default async function AccountLayout({
     params,
     children
 }:{
-    params: Promise<{id: Pick<AccountType, "id">}>,
+    params: Promise<{id: Pick<AccountType, "id">["id"]}>,
     children:React.ReactNode
 }) {
     const user={}

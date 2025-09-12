@@ -1,7 +1,7 @@
 import NavLink from "./NavLink"
 import { AccountType } from "@/types"
 
-export default function AcccountNav({id}:{id:Pick<AccountType, "id">}) {
+export default function AcccountNav({id}:{id:Pick<AccountType, "id">["id"]}) {
     return (
         <div className="bg-[#423E36]">
             <ul className="flex justify-center gap-[15px] p-[0_20px] m-[0] list-none">

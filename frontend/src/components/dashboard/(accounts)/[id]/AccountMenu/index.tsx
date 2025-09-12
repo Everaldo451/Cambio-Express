@@ -6,7 +6,7 @@ export default function AccountMenu({
     accountId,
     children
 }: {
-    accountId: Pick<AccountType, "id">
+    accountId: Pick<AccountType, "id">["id"]
     children: React.ReactNode
 }) {
     return (
