@@ -20,22 +20,19 @@ function verifyRequiredFieldsErrors(
     return [errorExist, errors]
 }
 
-export async function transferToAnotherAccount(formData:FormData) {
+export async function depositIntoAccount(formData:FormData) {
     const requiredFieldsAndErrorMessage = {
         "id": "You must send an account id.",
-        "target_id": "You must send an target account id."
     }
     const [errorExist, _] = verifyRequiredFieldsErrors(formData, requiredFieldsAndErrorMessage)
     if (errorExist) {
         return 
     }
     const id = formData.get("id")
-    const targetId = formData.get("target_id")
     formData.delete("id")
-    formData.delete("target_id")
     try {
         await authUserAxios.request({
-            url: `/accounts/${id}/transfer/${targetId}`,
+            url: `/accounts/${id}/deposit/`,
             method: "POST",
             data: JSON.stringify(formDataToJson(formData)),
             withCredentials: true,

@@ -9,9 +9,9 @@ export default async function AccountConversionPage({
 }:{
     params: Promise<{id: Pick<AccountType, "id">["id"]}>,
 }) {
-    const accounts = await getUserAccounts() || []
+    const accounts = await getUserAccounts() || [{id: 2, balance: "100.0", currency: "USD"}]
     const id = (await params).id
-    if (!accounts || !id) {
+    if (!accounts) {
         return redirect("/")
     }
     return <Form id={id} accounts={accounts}/>

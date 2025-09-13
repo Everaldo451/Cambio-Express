@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import CustomButton from "@/components/dashboard/(accounts)/[id]/CustomButton"
 import AccountRouteInputContainer from "@/components/dashboard/(accounts)/[id]/styled-components/AccountRouteInputContainer"
 
-import { transferToAnotherAccount } from "@/app/dashboard/accounts/[id]/convert/actions"
+import { transferToAnotherAccount } from "@/actions/accounts/convert"
 import { AccountType } from "@/types"
 
 interface FormProps {
